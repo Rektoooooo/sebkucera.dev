@@ -21,6 +21,30 @@ body{
     overflow-x: hidden;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #111111;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(22 163 74);
+    box-shadow: rgb(32,194,14, 0.8) 3px 0 30px;
+;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    color: rgb(14, 100, 46);
+    box-shadow: rgb(32,194,14, 0.8) 1px 0 10px;
+;
+}
+
 
 .con {
     width: 100%;
