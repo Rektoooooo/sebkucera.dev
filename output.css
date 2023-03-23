@@ -52,6 +52,7 @@ html {
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
+  width: 100%;
 }
 
 /*
@@ -66,6 +67,9 @@ body {
   /* 2 */
 
   font-family: 'B612 Mono', monospace;
+
+  width: 100%;
+
 }
 
 /*
