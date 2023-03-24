@@ -3,6 +3,9 @@ module.exports = {
   content: ["./*.{html,js}"],
   theme: {
     extend: {
+      backgroundImage: {
+        'Battle-ships': "url('/img/battleshipsscreen.png')",
+      },
       colors : {
         'linked': '#0072b1',
         'insta' : '#fbad50',
