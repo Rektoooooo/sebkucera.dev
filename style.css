@@ -175,6 +175,23 @@ footer{
     padding: 20px;
 }
 
+@media only screen and (max-width: 600px) {
+    .nav{
+        font-size: 10px;
+    }
+    .in-nav{
+        width: 100vw;
+}
+    .px-10{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .title{
+        text-align: center;
+    }
+
+}
 
 
 
