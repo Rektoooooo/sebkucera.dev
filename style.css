@@ -139,6 +139,10 @@ a .keep-focus:focus{
     transition-duration: 300ms;
 }
 
+.link-border{
+    border-bottom: solid 2px rgb(22 163 74);
+}
+
 .brd{
     border-radius: 0.5rem;
     padding: 5px 10px;
@@ -188,6 +192,9 @@ footer{
     }
 
     .title{
+        text-align: center;
+    }
+    footer{
         text-align: center;
     }
 
