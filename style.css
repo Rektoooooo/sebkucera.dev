@@ -181,7 +181,7 @@ footer{
 
 @media only screen and (max-width: 600px) {
     .nav{
-        font-size: 15px;
+        font-size: 12px;
     }
     .in-nav{
         width: 100vw;
