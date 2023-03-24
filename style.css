@@ -170,6 +170,11 @@ a .keep-focus:focus{
     text-shadow: rgb(32,194,14, 0.8) 1px 0 10px;
 }
 
+footer{
+    background-color: black;
+    padding: 20px;
+}
+
 
 
 
