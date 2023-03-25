@@ -25,9 +25,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const targetElementContact = document.getElementById('contact-wrap');
     const targetElementSkill = document.getElementById('skill-wrap');
     const targetElementProject = document.getElementById('project-wrap');
+    const targetElementAbout = document.getElementById('about-wrap');
     const getContact = document.getElementById('contact-button')
     const getSkill = document.getElementById('skill-button')
     const getProject = document.getElementById('projects-button')
+    const getAbout = document.getElementById('about-button')
 
 
     const observerContact = new IntersectionObserver((entries) => {
@@ -66,10 +68,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    const observerAbout = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                getAbout.classList.add('active')
+                getAbout.classList.remove('darken')
+            } else {
+                getAbout.classList.remove('active')
+                getAbout.classList.remove('darken')
+            }
+        });
+    });
+
 
         observerProject.observe(targetElementProject);
         observerContact.observe(targetElementContact);
         observerSkill.observe(targetElementSkill);
+        observerAbout.observe(targetElementAbout);
 
 
 });
