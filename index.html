@@ -23,11 +23,11 @@
 <p class="absolute text-black text-opacity-0" id="top">top</p>
 <div class="w-screen h-fit text-green-600 flex justify-center z-10 fixed nav">
     <div class="w-3/4 flex items-center justify-between in-nav">
-        <a href="#top" id="logo" class="p-2 keep-focus">sebkucera.dev</a>
+        <a onclick="scrollToSection('top')" id="logo" class="p-2 keep-focus">sebkucera.dev</a>
         <div class="flex flex-row justify-between but">
-            <a class="px-10 keep-focus nav-link" href="#contacts" id="contact-button">Contacts</a>
-            <a class="px-10 keep-focus nav-link" href="#skill" id="skill-button">Skills</a>
-            <a class="px-10 keep-focus nav-link" href="#projects" id="projects-button">Projects</a>
+            <a class="px-10 keep-focus nav-link" onclick="scrollToSection('contacts')" id="contact-button">Contacts</a>
+            <a class="px-10 keep-focus nav-link" onclick="scrollToSection('skill')" id="skill-button">Skills</a>
+            <a class="px-10 keep-focus nav-link" onclick="scrollToSection('projects')" id="projects-button">Projects</a>
         </div>
     </div>
 </div>
