@@ -106,6 +106,7 @@ body{
 
 .nav-link{
     color: rgb(14, 100, 46);
+    cursor: pointer;
 }
 
 .but:hover{
@@ -137,6 +138,7 @@ a .keep-focus:focus{
     color: rgb(22 163 74);
     text-shadow: rgb(32,194,14, 0.8) 1px 0 10px;
     transition-duration: 300ms;
+    cursor: pointer;
 }
 
 .link-border{
