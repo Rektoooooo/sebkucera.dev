@@ -1,0 +1,271 @@
+.flex{
+    display: flex;
+    justify-content: space-between;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.navbar{
+    color: black;
+    width: 100%;
+    height: fit-content;
+    border-bottom: solid lightgray 1px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    position: fixed;
+    margin-top: 28px;
+    background-color: white;
+    z-index: 10;
+}
+
+.kod {
+    padding: 20px 10px;
+    border: solid black 1px;
+    border-radius: 1rem;
+}
+
+.insidenav{
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+}
+
+.main {
+    width: 100%;
+    padding-top: 150px;
+}
+
+.icons{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.icons > p:hover{
+    transition-duration: 200ms;
+    transform: scale(1.1);
+}
+
+.icons > p {
+    margin: 5px;
+    background-color: #29234b;
+    border-radius: 2rem;
+    justify-content: center;
+    padding: 10px;
+    font-size: 15px;
+    color: #7763db;
+    border: solid 2px #443a7c;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition-duration: 200ms;
+}
+
+.hdr {
+    width: 100%;
+    height: fit-content;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    padding: 5px;
+    z-index: 10;
+
+}
+
+.mainbot{
+    width: 50%;
+    display: flex;
+    margin: auto;
+    text-align: center;
+    color: #7763db;
+    flex-direction: column;
+}
+
+input{
+    border: #7763db solid 2px;
+    border-radius: 2rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 13px;
+    margin: 20px;
+    transition-duration: 200ms;
+}
+
+input:focus {
+    outline:none;
+    transition-duration: 200ms;
+    transform: scale(1.1);
+}
+
+
+.trend{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.border{
+    border: #443a7c solid 2px;
+    border-radius: 2rem;
+    padding: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.mainbot > h1 {
+    margin: 30px;
+}
+
+.navbarmid{
+    color: white;
+    background-color: black;
+    width: 100%;
+    height: fit-content;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    margin-top: 28px;
+}
+
+.insidenavmid{
+    width: 70%;
+    display: flex;
+    justify-content: flex-start;
+    margin: auto;
+}
+
+.navbut{
+    color: black;
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+
+}
+
+.navbut > a {
+    color: black;
+    gap: 50px;
+    transition-duration: 200ms;
+}
+
+.navbut > a:hover {
+    transition-duration: 200ms;
+    transform: scale(1.1);
+}
+
+.mainpop {
+    width: 70%;
+    display: flex;
+    justify-content: space-evenly;
+    margin: auto;
+    margin-top: 30px;
+
+}
+
+.module{
+    width: 300px;
+    color: black;
+    display: flex;
+    flex-direction: row;
+    transform: scale(0.85);
+    transition-duration: 200ms;
+}
+
+.module:hover{
+    transition-duration: 200ms;
+    transform: scale(1);
+}
+
+.mini {
+    font-size: 6px;
+    padding: 5px;
+}
+
+.left {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4edf9;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
+
+.right{
+    width: 50%;
+    font-size: 20px;
+    display: flex;
+    color: #7763db;
+    font-weight: bold;
+    padding: 20px 10px;
+    text-align: center;
+    background-color: #29234b;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.evo{
+    width: fit-content;
+    background-color: #7864dc;
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    padding: 5px 10px;
+}
+
+.center{
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.big{
+    color: #7763db;
+    font-size: 50px;
+    background-color: white;
+    width: fit-content;
+    padding: 14px;
+    border-radius: 0.3rem;
+    margin: 0;
+}
+
+.under{
+    display: flex;
+    flex-direction: column;
+}
+
+.sec{
+    display: flex;
+    flex-direction: row;
+}
+
+.txt {
+    margin-top: 5px;
+}
+
+.bottxt {
+    display: flex;
+    flex-direction: row;
+}
+
+.bottxt > p {
+    background-color: #6e747c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 0.3rem;
+    margin-top: 5px;
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+.row{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 70%;
+    margin: auto;
+}
