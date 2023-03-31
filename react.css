@@ -7,7 +7,7 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-image: url("https://lh4.googleusercontent.com/FTUNAzg5PSgIOf-PwUJRZOFamgVz7Ck6mqmUl4jrfkL14Xdxl3k9VPPEwzgkdNtgq31r2W1Hs3wAcZo=w2880-h1580");
+    background-color: #003C9E;
 }
 
 .main{
