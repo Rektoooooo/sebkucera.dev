@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         'Battle-ships': "url('/img/battleshipsscreen.png')",
+        'classroom' : "url('https://gstatic.com/classroom/themes/img_bookclub.jpg')",
       },
       colors : {
         'linked': '#0072b1',

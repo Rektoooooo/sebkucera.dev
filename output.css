@@ -536,6 +536,11 @@ video {
   margin: auto;
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -569,6 +574,18 @@ video {
   height: 100vh;
 }
 
+.h-48 {
+  height: 12rem;
+}
+
+.h-1\/2 {
+  height: 50%;
+}
+
+.h-56 {
+  height: 14rem;
+}
+
 .w-3\/4 {
   width: 75%;
 }
@@ -588,6 +605,14 @@ video {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-1\/3 {
+  width: 33.333333%;
+}
+
+.w-28 {
+  width: 7rem;
 }
 
 .flex-grow {
@@ -622,8 +647,27 @@ video {
   overflow-x: hidden;
 }
 
+.rounded-full {
+  border-radius: 9999px;
+}
+
 .rounded {
   border-radius: 0.25rem;
+}
+
+.rounded-l {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.rounded-r {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.rounded-t {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
 }
 
 .border {
@@ -707,8 +751,30 @@ video {
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-red-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity));
+}
+
+.bg-classroom {
+  background-image: url('https://gstatic.com/classroom/themes/img_bookclub.jpg');
+}
+
+.bg-cover {
+  background-size: cover;
+}
+
 .p-2 {
   padding: 0.5rem;
+}
+
+.p-4 {
+  padding: 1rem;
 }
 
 .px-10 {
@@ -782,6 +848,12 @@ video {
   --tw-text-opacity: 0;
 }
 
+.shadow-xl {
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 .drop-shadow-md {
   --tw-drop-shadow: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -790,6 +862,17 @@ video {
 html{
   scroll-behavior: smooth;
   scroll-padding-top: 50px;
+  overflow-x: hidden;
+}
+
+.body{
+  padding: 0;
+  margin: 0;
+  font-family: 'B612 Mono', monospace;
+  background-color: #222222;
+  background-image: radial-gradient(#111111 1px, transparent 0);
+  background-size: 40px 40px;
+  background-position: -19px -19px;
   overflow-x: hidden;
 }
 
