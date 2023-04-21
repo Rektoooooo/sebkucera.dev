@@ -20,6 +20,7 @@ module.exports = {
         'toxic' : 'rgb(22 163 74)',
         'premier' : '#D88EF1',
         'ps' : '#4FCCFE',
+        'maingray' : "#222222",
       }
     },
   },
