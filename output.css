@@ -1050,10 +1050,6 @@ html{
 
 /* Handle on hover */
 
-::-webkit-scrollbar-thumb:hover {
-  color: rgb(14, 100, 46);
-  box-shadow: rgb(32,194,14, 0.8) 1px 0 10px;
-}
 
 .con {
   width: 100%;
@@ -1121,17 +1117,6 @@ html{
 .but:hover{
   color: rgb(14, 100, 46);
   transition-duration: 300ms;
-}
-
-.nav a:hover{
-  color: rgb(22 163 74);
-  text-shadow: rgb(32,194,14, 0.8) 1px 0 10px;
-  transition-duration: 300ms;
-}
-
-a .keep-focus:focus{
-  color: rgb(22 163 74);
-  text-shadow: rgb(32,194,14, 0.8) 1px 0 10px;
 }
 
 .active{
