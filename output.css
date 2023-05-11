@@ -1100,11 +1100,6 @@ html{
   }
 }
 
-.nav{
-  background-color: #121212;
-  animation-duration: 200ms;
-}
-
 .nav a{
   transition-duration: 300ms;
 }
