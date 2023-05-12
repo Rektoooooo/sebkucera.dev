@@ -1,0 +1,52 @@
+@media only screen and (max-width: 600px) {
+    .nav-a a{
+        display: none;
+    }
+    nav i {
+        display: flex;
+    }
+    .nav-width{
+        width: 100%;
+    }
+    .rez{
+        display: none;
+    }
+    .about{
+        display: block;
+        font-size: 10px;
+        width: 100%;
+    }
+    .infooter{
+        display: flex;
+        flex-direction: column;
+    }
+
+    footer{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .footer-text{
+        width: 100%;
+    }
+
+    .photos img {
+        width: 200px;
+        height: 120px;
+    }
+
+}
+
+@media only screen and (min-width: 600px) {
+    .bi-list{
+        display: none;
+    }
+    .about{
+        width: 25%;
+        position: absolute;
+        margin: 20px;
+    }
+    .footer-text {
+        width: 25%;
+    }
+}
