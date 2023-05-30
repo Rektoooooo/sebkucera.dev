@@ -21,6 +21,7 @@ module.exports = {
         'premier' : '#D88EF1',
         'ps' : '#4FCCFE',
         'maingray' : "#222222",
+        'tailwind' : "#0991cd",
       }
     },
   },
