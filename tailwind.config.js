@@ -29,8 +29,7 @@ module.exports = {
   plugins: [],
 }
 
-// run this everytime npx tailwindcss -i ./style.css -o ./output.css --watch
-
+// run this everytime npx tailwindcss -o ./output.css --watch
 
 
 
