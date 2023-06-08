@@ -6,6 +6,7 @@ module.exports = {
       backgroundImage: {
         'Battle-ships': "url('/img/battleshipsscreen.png')",
         'classroom' : "url('https://gstatic.com/classroom/themes/img_bookclub.jpg')",
+        'node' : "url('https://nodered.org/images/title-wave.png')",
       },
       colors : {
         'linked': '#0072b1',

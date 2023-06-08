@@ -576,6 +576,11 @@ video {
   margin-bottom: 1rem;
 }
 
+.my-10 {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -594,10 +599,6 @@ video {
 
 .mt-80 {
   margin-top: 20rem;
-}
-
-.mt-0 {
-  margin-top: 0px;
 }
 
 .mt-\[-100px\] {
@@ -915,6 +916,10 @@ video {
   background-image: url('https://gstatic.com/classroom/themes/img_bookclub.jpg');
 }
 
+.bg-node {
+  background-image: url('https://nodered.org/images/title-wave.png');
+}
+
 .bg-cover {
   background-size: cover;
 }
@@ -1041,6 +1046,14 @@ video {
   font-weight: 800;
 }
 
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
 .text-amber-800 {
   --tw-text-opacity: 1;
   color: rgb(146 64 14 / var(--tw-text-opacity));
@@ -1076,6 +1089,21 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-gray-200 {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}
+
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+
 .text-opacity-0 {
   --tw-text-opacity: 0;
 }
@@ -1105,4 +1133,5 @@ html{
   scroll-padding-top: 50px;
   overflow-x: hidden;
 }
+
 
