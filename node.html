@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -12,44 +12,67 @@
 </head>
 <body>
 
-<nav class="w-full p-4 bg-maingray text-white">
-    <div class="flex flex-row justify-between font-bold items-center">
+<nav class="w-full p-4 bg-maingray text-white fixed pc:mt-[-80px]">
+    <div class="flex flex-row justify-between font-bold items-center pc:w-3/4 pc:m-auto">
         <p class="text-gray-300">Node-RED</p>
-        <p class="bi bi-list text-xl text-gray-400"></p>
+
+        <div class="relative inline-block group pc:flex pc:flex-row">
+            <p class="bi bi-list text-xl text-gray-400 pc:hidden"></p>
+            <div class="hidden absolute bg-maingray min-w-[140px] px-6 py-4 z-10 group-hover:block text-white right-0 mr-[-17px] pc:static pc:flex pc:group-hover:flex pc:gap-14 ">
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Blog</a>
+                <a href="#">Documents</a>
+                <a href="#">Forums</a>
+                <a href="#">Flows</a>
+                <a href="#">Github</a>
+            </div>
+        </div>
     </div>
 </nav>
 
-<div class="w-full bg-node text-white flex-col justify-center text-center py-6">
+
+<div class="w-full bg-node bg-no-repeat bg-cover text-white flex-col justify-center text-center py-6 pt-24 pc:p-20 pc:mt-20">
     <h1 class="font-bold text-2xl">Node - RED</h1>
     <p class="text-gray-300">Low-code programming for event-driven applications</p>
     <p class="text-gray-300">Latest version: v3.0.2 (npm)</p>
 </div>
 
-<main class="px-4 border-b-red-500 border-b-4">
+<main class="px-4 border-b-red-500 border-b-4 pc:w-3/4 pc:m-auto">
 
-    <img class="py-4" src="https://nodered.org/images/nr-image-1.png">
+    <div class="flex flex-col my-10 pc:flex-row pc:gap-20 pc:items-center">
 
+        <img class="py-4 pc:w-3/4 pc:h-3/4" src="https://nodered.org/images/nr-image-1.png">
+        <div>
+            <h2 class="text-xl font-semibold">Browser-based flow editing</h2>
+            <p class="text-gray-600 my-2">Node-RED provides a browser-based flow editor that makes it easy to wire
+                together flows using the wide range of nodes in the palette. Flows can be then deployed to the runtime
+                in a single-click.</p>
+            <p class="text-gray-600 my-2">JavaScript functions can be created within the editor using a rich text
+                editor. </p>
+            <p class="text-gray-600 my-2">A built-in library allows you to save useful functions, templates or flows for
+                re-use.</p>
+        </div>
 
-    <div class="flex flex-col my-24">
-        <h2 class="text-xl font-semibold">Browser-based flow editing</h2>
-        <p class="text-gray-600 my-2">Node-RED provides a browser-based flow editor that makes it easy to wire together flows using the wide range of nodes in the palette. Flows can be then deployed to the runtime in a single-click.</p>
-        <p class="text-gray-600 my-2">JavaScript functions can be created within the editor using a rich text editor. </p>
-        <p class="text-gray-600 my-2">A built-in library allows you to save useful functions, templates or flows for re-use.
-        </p>
     </div>
 
-    <div class="flex flex-col my-24">
-        <h2 class="text-xl font-semibold">Built on Node.js</h2>
-        <p class="text-gray-600 my-2">The light-weight runtime is built on Node.js, taking full advantage of its event-driven, non-blocking model. This makes it ideal to run at the edge of the network on low-cost hardware such as the Raspberry Pi as well as in the cloud.</p>
-        <p class="text-gray-600 my-2">With over 225,000 modules in Node's package repository, it is easy to extend the range of palette nodes to add new capabilities.</p>
-    </div>
+    <div class="flex flex-col my-10 pc:flex-row pc:gap-20 pc:items-center">
+        <div>
+            <h2 class="text-xl font-semibold">Built on Node.js</h2>
+            <p class="text-gray-600 my-2">The light-weight runtime is built on Node.js, taking full advantage of its
+                event-driven, non-blocking model. This makes it ideal to run at the edge of the network on low-cost
+                hardware such as the Raspberry Pi as well as in the cloud.</p>
+            <p class="text-gray-600 my-2">With over 225,000 modules in Node's package repository, it is easy to extend
+                the range of palette nodes to add new capabilities.</p>
+        </div>
+        <img class="py-4 pc:w-3/4 pc:h-3/4" src="https://nodered.org/images/nr-image-2.png">
 
-    <img class="py-4" src="https://nodered.org/images/nr-image-2.png">
+    </div>
 
 
     <h2 class="font-bold text-center font-xl">Who is using Node-RED ?</h2>
 
-    <div class="flex flex-wrap justify-between">
+    <div class="flex flex-wrap gap-5 justify-center">
         <img class="py-4" src="https://nodered.org/users/flowforge.png">
         <img class="py-4" src="https://nodered.org/users/flowforge.png">
         <img class="py-4" src="https://nodered.org/users/flowforge.png">
@@ -71,38 +94,152 @@
     </div>
 
     <div class="my-6">
-    <h2 class="text-center text-xl text-red-400">Want to feature here? Let us know!</h2>
-    <p class="text-xs text-center pb-10">All logos used with permission. These links do not constitute an endorsement or approval by the Node-RED project of any of the products, services or opinions of the companies listed.</p>
+        <h2 class="text-center text-xl text-red-400">Want to feature here? Let us know!</h2>
+        <p class="text-xs text-center pb-10">All logos used with permission. These links do not constitute an
+            endorsement or approval by the Node-RED project of any of the products, services or opinions of the
+            companies listed.</p>
     </div>
 </main>
-<div class="flex flex-row p-4 items-center gap-5">
-<h1 class="">Community</h1>
-<a class="py-2 px-4 border-2 border-red-400" href="#">More</a>
+
+<div class="pc:w-3/4 pc:m-auto">
+
+    <div class="flex flex-col pc:flex-row pc:justify-around">
+
+        <div class="pc:w-2/5">
+            <div class="flex flex-row p-4 items-center gap-5">
+                <h1 class="">Community</h1>
+                <a class="py-2 px-4 border-2 border-red-400" href="#">More</a>
+            </div>
+
+            <div class="flex flex-wrap justify-around">
+
+                <div class="flex flex-col justify-center text-center text-red-400 border-2 border-red-400 w-2/5 py-4 my-4">
+                    <i class="bi bi-chat-dots text-3xl"></i>
+                    <p>Forum</p>
+                </div>
+
+                <div class="flex flex-col justify-center text-center text-red-400 border-2 border-red-400 w-2/5 py-4 my-4">
+                    <i class="bi bi-hash text-3xl"></i>
+                    <p>Slack team</p>
+                </div>
+
+                <div class="flex flex-col justify-center text-center text-red-400 border-2 border-red-400 w-2/5 py-4 my-4">
+                    <i class="bi bi-stack-overflow text-3xl"></i>
+                    <p>Stack overflow</p>
+                </div>
+
+                <div class="flex flex-col justify-center text-center text-red-400 border-2 border-red-400 w-2/5 py-4 my-4">
+                    <i class="bi bi-github text-3xl"></i>
+                    <p>Github</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="pc:w-2/5">
+
+            <div class="flex flex-row p-4 items-center gap-5">
+                <h1 class="">On the blog</h1>
+                <a class="py-2 px-4 border-2 border-red-400" href="#">More</a>
+            </div>
+
+            <div class="mx-4 my-4">
+
+                <div class="flex flex-row justify-between items-center border-dotted border-b-2 border-black text-red-400 py-1">
+                    <p class="py-2">2023 Community Survey</p>
+                    <p class="text-xs">23 feb 2023</p>
+                </div>
+
+                <div class="flex flex-row justify-between items-center border-dotted border-b-2 border-black text-red-400 py-1">
+                    <p class="py-2">2023 Community Survey</p>
+                    <p class="text-xs">23 feb 2023</p>
+                </div>
+
+                <div class="flex flex-row justify-between items-center border-dotted border-b-2 border-black text-red-400 py-1">
+                    <p class="py-2">2023 Community Survey</p>
+                    <p class="text-xs">23 feb 2023</p>
+                </div>
+
+                <div class="flex flex-row justify-between items-center border-dotted border-b-2 border-black text-red-400 py-1">
+                    <p class="py-2">2023 Community Survey</p>
+                    <p class="text-xs">23 feb 2023</p>
+                </div>
+
+                <div class="flex flex-row justify-between items-center border-dotted border-b-2 border-black text-red-400 py-1">
+                    <p class="py-2">2023 Community Survey</p>
+                    <p class="text-xs">23 feb 2023</p>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="flex flex-wrap justify-around">
+<footer class="w-full bg-maingray text-white px-2">
 
-<div class="flex flex-col justify-center text-center text-red-400 border-2 border-red-400  w-2/5 py-4 my-4">
-    <i class="bi bi-chat-dots text-3xl"></i>
-    <p>Forum</p>
-</div>
+    <div class="pc:w-3/4 pc:m-auto">
 
-<div class="flex flex-col justify-center text-center text-red-400 border-2 border-red-400 w-2/5 py-4 my-4">
-    <i class="bi bi-hash text-3xl"></i>
-    <p>Slack team</p>
-</div>
 
-<div class="flex flex-col justify-center text-center text-red-400 border-2 border-red-400 w-2/5 py-4 my-4">
-    <i class="bi bi-stack-overflow text-3xl"></i>
-    <p>Stack overflow</p>
-</div>
+        <div class="pc:flex pc:flex-row pc:justify-between pc:py-6">
+            <br>
 
-<div class="flex flex-col justify-center text-center text-red-400 border-2 border-red-400 w-2/5 py-4 my-4">
-    <i class="bi bi-github text-3xl"></i>
-    <p>Github</p>
-</div>
+            <p class="text-xs">Node-RED: Low-code programming for event-driven applications.</p>
 
-</div>
+            <br>
+
+            <div class="text-xs">
+                <li>GitHub</li>
+                <li>npm</li>
+                <li>Documentation</li>
+                <li>APIs</li>
+            </div>
+
+            <br>
+
+            <div class="text-xs">
+                <li>Flow Library</li>
+                <li>About</li>
+                <li>Code of Conduct</li>
+                <li>Community</li>
+            </div>
+
+            <br>
+
+            <div class="text-xs">
+                <li>Blog</li>
+                <li>Twitter</li>
+                <li>Forum</li>
+                <li>Slack</li>
+                <li>Mastodon</li>
+            </div>
+
+        </div>
+
+        <div class="pc:flex pc:flex-row pc:justify-between pc:gap-14">
+            <img class="w-2/5 h-2/5 my-4" src="https://nodered.org/images/openjs_foundation-logo.svg">
+
+            <div class="pc:p-4">
+                <p class="text-xs">Copyright OpenJS Foundation and Node-RED contributors. All rights reserved. The
+                    OpenJS Foundation
+                    has registered trademarks and uses trademarks. For a list of trademarks of the OpenJS Foundation,
+                    please see our
+                    Trademark Policy and Trademark List. Trademarks and logos not indicated on the list of OpenJS
+                    Foundation
+                    trademarks are trademarks™ or registered® trademarks of their respective holders. Use of them does
+                    not imply any
+                    affiliation with or endorsement by them.</p>
+                <br>
+                <p class="text-xs">The OpenJS Foundation | Terms of Use | Privacy Policy | OpenJS Foundation Bylaws |
+                    Trademark
+                    Policy | Trademark List | Cookie Policy</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    </div>
+</footer>
 
 </body>
 </html>

@@ -23,7 +23,11 @@ module.exports = {
         'ps' : '#4FCCFE',
         'maingray' : "#222222",
         'tailwind' : "#0991cd",
+      },
+      screens: {
+        'pc': '1024px',
       }
+
     },
   },
   plugins: [],
