@@ -1,4 +1,4 @@
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 900px) {
     .nav-a a{
         display: none;
     }
@@ -30,21 +30,29 @@
         width: 100%;
     }
 
-    .photos img {
-        width: 200px;
-        height: 120px;
-    }
 
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 900px) {
     .bi-list{
         display: none;
     }
     .about{
         width: 25%;
         position: absolute;
-        margin: 20px;
+        margin: 1vh;
+    }
+
+    .about > p{
+        font-size: 1vw;
+    }
+
+    .about > h2{
+        font-size: 1vw;
+    }
+
+    .imgb{
+        position: relative;
     }
     .footer-text {
         width: 25%;
