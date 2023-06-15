@@ -1,4 +1,7 @@
 .imgs li {
     width: 80px;
     height: 80px;
+    align-items: center;
+    display: flex;
 }
+
