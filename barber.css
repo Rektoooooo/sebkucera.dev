@@ -1,4 +1,4 @@
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 700px) {
     .nav-a a{
         display: none;
     }
@@ -37,7 +37,7 @@
 
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 700px) {
     .bi-list{
         display: none;
     }
