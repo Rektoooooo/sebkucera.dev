@@ -30,6 +30,10 @@
         width: 100%;
     }
 
+    .mrdka{
+        width: 66.6%;
+    }
+
 
 }
 
@@ -56,5 +60,9 @@
     }
     .footer-text {
         width: 25%;
+    }
+
+    .mrdka{
+        width: 300px;
     }
 }
