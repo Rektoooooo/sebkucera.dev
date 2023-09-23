@@ -66,9 +66,12 @@
 </div>
 <div class="justify-center items-center flex flex-col">
     <div>
-<input id="moneyId" class="bg-maingray border-yellow-500 p-2" type="number" placeholder="Money received">
+<input id="moneyId" onchange="returnMoney()" class="bg-maingray border-yellow-500 p-2" type="number" placeholder="Money received">
     </div>
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap justify-center">
+        <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="10">10 Kč</button>
+        <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="20">20 Kč</button>
+        <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="50">50 Kč</button>
         <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="100">100 Kč</button>
         <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="200">200 Kč</button>
         <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="300">300 Kč</button>
