@@ -729,6 +729,14 @@ video {
   width: 20%;
 }
 
+.w-1\/4 {
+  width: 25%;
+}
+
+.w-4\/5 {
+  width: 80%;
+}
+
 .flex-grow {
   flex-grow: 1;
 }
