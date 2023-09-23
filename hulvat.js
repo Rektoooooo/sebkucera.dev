@@ -27,4 +27,6 @@ function reset() {
     getReturn.innerText = 0;
     input.value = 0;
     summ.innerText = 0;
+    summNumber = 0;
+    inputNumber = 0;
 }
