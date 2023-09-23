@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="output.css">
+    <title>Hulvat Calculator</title>
+</head>
+<body>
+
+<h1 class="text-center text-2xl">Hulvat calculator</h1>
+
+<div class="w-2/3 flex flex-row m-auto flex-wrap justify-center">
+
+    <div class="p-10 text-center">
+        <p class="text-center text-2xl p-4">Hulvat 8</p>
+        <button onclick="addValue(this)" id="hulvat85" value="50" class="border-2 border-yellow-500 p-4 m-4 rounded" >50 Kc / 0,5</button>
+        <button onclick="addValue(this)" class="hulvat83 border-2 border-yellow-500 p-4 m-4 rounded" value="40">40 Kc / 0,3</button>
+    </div>
+
+
+    <div class="p-10 text-center">
+        <p class="text-center text-2xl p-4">Hulvat 10</p>
+        <button onclick="addValue(this)" class="hulvat105 border-2 border-yellow-500 p-4 m-4 rounded" value="60">60 Kc / 0,5</button>
+        <button onclick="addValue(this)" class="hulvat103 border-2 border-yellow-500 p-4 m-4 rounded" value="50">50 Kc / 0,3</button>
+    </div>
+
+
+    <div class="p-10 text-center">
+        <p class="text-center text-2xl p-4">Hulvat 11</p>
+        <button onclick="addValue(this)" class="hulvat115 border-2 border-yellow-500 p-4 m-4 rounded" value="60">60 Kc / 0,5</button>
+        <button onclick="addValue(this)" class="hulvat113 border-2 border-yellow-500 p-4 m-4 rounded" value="50">50 Kc / 0,3</button>
+    </div>
+
+
+
+    <div class="p-10 text-center">
+        <p class="text-center text-2xl p-4">Hulvat 11 APL</p>
+        <button onclick="addValue(this)" class="hulvatAPL5 border-2 border-yellow-500 p-4 m-4 rounded" value="70">70 Kc / 0,5</button>
+        <button onclick="addValue(this)" class="hulvatAPL3 border-2 border-yellow-500 p-4 m-4 rounded" value="55">55 Kc / 0,3</button>
+    </div>
+
+
+    <div class="p-10 text-center">
+        <p class="text-center text-2xl p-4">Hulvat 12 Gaia</p>
+        <button onclick="addValue(this)" class="hulvatGAIA5 border-2 border-yellow-500 p-4 m-4 rounded" value="70">70 Kc / 0,5</button>
+        <button onclick="addValue(this)" class="hulvatGAIA3 border-2 border-yellow-500 p-4 m-4 rounded" value="55">55 Kc / 0,3</button>
+    </div>
+
+
+    <div class="p-10 text-center">
+        <p class="text-center text-2xl p-4">Hulvat 12,5 SV</p>
+        <button onclick="addValue(this)" class="hulvatSV5 border-2 border-yellow-500 p-4 m-4 rounded" value="70">70 Kc / 0,5</button>
+        <button onclick="addValue(this)" class="hulvatSV3 border-2 border-yellow-500 p-4 m-4 rounded" value="55">55 Kc / 0,3</button>
+    </div>
+
+</div>
+
+<div class="flex flex-wrap flex-row justify-center w-full gap-10">
+<div class="justify-center flex flex-row">
+<p id="summ" class="justify-center text-4xl text-center p-2">0</p>
+<p class="justify-center text-4xl text-center p-2">Kč</p>
+</div>
+<div class="justify-center items-center flex flex-col">
+    <div>
+<input id="moneyId" class="appearance-none p-2" type="number" placeholder="Money receved">
+    </div>
+    <div>
+        <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="100">100 Kč</button>
+        <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="200">200 Kč</button>
+        <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="300">300 Kč</button>
+        <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="500">500 Kč</button>
+        <button onclick="addMoneyValue(this), returnMoney()" class="border-2 border-yellow-500 p-1 m-2 rounded" value="1000">1000 Kč</button>
+    </div>
+</div>
+</div>
+
+
+<div class="justify-center flex flex-row">
+    <p class="justify-center text-4xl text-center p-2">Return : </p>
+    <p id="return" class="justify-center text-4xl text-center p-2">0</p>
+    <p class="justify-center text-4xl text-center p-2">Kč</p>
+    <button onclick="reset()" class="border-2 border-yellow-500 p-1 m-2 rounded">Reset</button>
+</div>
+
+
+
+<script src="hulvat.js"></script>
+</body>
+</html>
