@@ -1,11 +1,20 @@
-for ( i = 1; i <= 8; i++) {
-    console.log(`Mám rád JavaScript po ${i}`)
+const nums = [3,5,7,8,11,12,13,16,17,18];
+
+for (let i = 0; i < nums.length; i++) {
+    if (nums[i] % 2 === 0) {
+        console.log(nums[i])
+    }
 }
 
-let split = 'adam'.split("")
-let nameReverseArray = split.reverse()
-let nameReverse = nameReverseArray.join("")
+const stringName = 'Aurel Danel Leonard'
+const name = stringName.split(" ")
 
-for (let i = 1; i <= 3; i++) {
-    console.log(nameReverse)
+for (const get of name) {
+    console.log(get.slice(0,1))
+    console.log(get)
 }
+
+
+
+
+
