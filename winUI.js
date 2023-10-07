@@ -1,45 +1,21 @@
-function changeMirage() {
-const img = document.getElementById('mirage')
-    img.src = 'maps/green/mirage.png'
-}
+document.addEventListener("DOMContentLoaded", function() {
+    // An array of map names to check local storage and update on load
+    const maps = ['mirage', 'office', 'dust2', 'anubis', 'nuke', 'inf', 'ancient', 'vertigo', 'overpass'];
 
-function changeOffice() {
-    const img = document.getElementById('office')
-    img.src = 'maps/green/office.png'
-}
+    maps.forEach((mapName) => {
+        const img = document.getElementById(mapName);
+        const savedImageSrc = localStorage.getItem(mapName + 'ImageSrc');
 
-function changeDust2() {
-    const img = document.getElementById('dust2')
-    img.src = 'maps/green/dust.png'
-}
+        if (savedImageSrc) {
+            img.src = savedImageSrc;
+        }
+    });
+});
 
-function changeAnubis() {
-    const img = document.getElementById('anubis')
-    img.src = 'maps/green/anubis.png'
-}
+function changeMapImage(mapName, newSrc) {
+    const img = document.getElementById(mapName);
+    img.src = newSrc;
 
-function changeNuke() {
-    const img = document.getElementById('nuke')
-    img.src = 'maps/green/nuke.png'
+    // Save the new image source to localStorage
+    localStorage.setItem(mapName + 'ImageSrc', newSrc);
 }
-
-function changeInf() {
-    const img = document.getElementById('inf')
-    img.src = 'maps/green/inferno.png'
-}
-
-function changeAnciant() {
-    const img = document.getElementById('anciant')
-    img.src = 'maps/green/ancient.png'
-}
-function changeVertigo() {
-    const img = document.getElementById('vertigo')
-    img.src = 'maps/green/vertigo.png'
-}
-
-function changeOverpass() {
-    const img = document.getElementById('overpass')
-    img.src = 'maps/green/overpass.png'
-}
-
-// test
