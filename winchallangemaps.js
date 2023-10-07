@@ -36,7 +36,7 @@ function changeVertigo() {
     const img = document.getElementById('vertigo')
     img.src = 'maps/green/vertigo.png'
 }
-    
+
 function changeOverpass() {
     const img = document.getElementById('overpass')
     img.src = 'maps/green/overpass.png'
