@@ -1,0 +1,23 @@
+.item {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 100px;
+    align-items: center;
+    margin: 20px;
+}
+.remove {
+    background-color: red;
+    color: black;
+    padding: 8px 15px;
+    border-radius: 0.5rem;
+}
+
+.otl:focus {
+    outline: dodgerblue solid 2px;
+    transition: outline-color 0.3s ease-out;
+}
+
+.otl {
+    transition: outline-color 0.3s ease-out;
+}

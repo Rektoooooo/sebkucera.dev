@@ -6,8 +6,19 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet" href="js.css">
 </head>
-<body style="background: black; color: white; font-family: -apple-system,serif">
-<script src="list.js"></script>
+<body id="body" style="font-family: -apple-system,serif">
+
+<form id="form" class="flex flex-row gap-5 justify-center p-10">
+    <input id="input" class="p-2 rounded border-none shadow-2xl outline-none otl" type="text">
+    <button id="add" class="bg-blue-600 px-4 rounded shadow">Add</button>
+</form>
+
+<div id="todo" class="flex flex-col justify-center text-center">
+
+</div>
+<script src="func.js"></script>
 </body>
 </html>

@@ -1,0 +1,7 @@
+body {
+    font-family: 'Roboto Slab', serif;
+    background-image: radial-gradient(#111111 1px, transparent 0);
+    background-size: 40px 40px;
+    background-position: -19px -19px;
+    overflow-x: hidden;
+}
