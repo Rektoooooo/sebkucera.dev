@@ -1,0 +1,32 @@
+.tweet {
+    margin: 10px;
+    padding: 10px 5px;
+    border: solid 2px #222222;
+    border-radius: 0.5rem;
+}
+
+.tweet h2 {
+    color: #ffffff;
+    margin: 10px;
+    font-weight: bold;
+}
+
+.tweet h3 {
+    color: #b8b8b8;
+    margin: 10px;
+}
+
+.tweet p {
+    color: #b8b8b8;
+    margin: 10px 50px 10px 10px;
+    text-align: end;
+    font-size: 15px;
+}
+
+.tweet a {
+    color: #b8b8b8;
+    margin-right: 10px;
+    font-size: 15px;
+    float: right;
+    text-decoration: underline;
+}

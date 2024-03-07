@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Create / X</title>
+    <link rel="shortcut icon" href="//abs.twimg.com/favicons/twitter.3.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="bg-zinc-800">
+
+<div class="bg-zinc-900 flex flex-row items-center justify-center fixed w-full shadow-2xl">
+    <div class="w-3/5 py-2 flex flex-row justify-between items-center">
+        <a href="feed.html">
+            <img class="w-8" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/X11.svg/768px-X11.svg.png">
+        </a>
+        <div class="flex flex-row gap-10">
+            <div class="flex flex-row rounded bg-gradient-to-r from-cyan-500 to-blue-500 h-fit">
+                <i class="bi bi-plus px-1 py-2 font-extrabold"></i>
+                <a href="twitterCreate.html" class="py-2 pr-3 hover:transition transition font-bold ">Create new</a>
+            </div>
+            <a href="twitterEditUser.html" class="flex flex-row rounded bg-gradient-to-r from-cyan-500 to-blue-500 h-fit gap-2">
+                <i class="bi bi-person-circle pl-3 py-2"></i>
+                <p id="user" class="py-2 pr-3 font-bold">Username</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+
+<div class="w-full flex flex-col justify-center text-center">
+    <h1 class="text-4xl text-white m-8">Create new tweet</h1>
+    <form id="form" class="flex flex-row gap-10 items-center justify-center">
+        <input name="text" class="border-white border-2 w-80 rounded h-10" placeholder="What are you thinking ..." type="text">
+        <input class="rounded bg-gradient-to-r from-cyan-500 to-blue-500 h-fit font-bold px-4 py-2" type="submit" name="submit" value="Submit">
+    </form>
+</div>
+
+<script src="twitter.js"></script>
+<script src="js.js"></script>
+</body>
+</html>
