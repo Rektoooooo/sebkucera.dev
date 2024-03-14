@@ -1,31 +1,38 @@
-const form = document.getElementById("form")
+let cn = new URL(window.location.href)
 
 
 addEventListener("load", (event) => {
     fetchData()
     fetchUser()
 });
+const tweets = document.getElementById("tweets")
 
-form.addEventListener("submit",c => {
-    c.preventDefault()
-    while (tweets.firstChild) {
-        tweets.removeChild(tweets.firstChild);
+    function fetchUser() {
+        const url = new URL(`https://wjs-api.vercel.app/api/x/users/${cn.searchParams.get("id")}`)
+        fetch(url, {
+            headers: new Headers({
+                "Authorization": "Custom Khx6QxGSGD"
+            })
+        }).then(r => r.json())
+            .then(data => renderUsers(data))
+        console.log('Fetched user')
     }
-    const data = new FormData(form)
-    fetchData(data.get("search"))
-})
 
-function search() {
-    while (tweets.firstChild) {
-        tweets.removeChild(tweets.firstChild);
-    }
-    const data = new FormData(form)
-    fetchData(data.get("search"))
+function renderUsers(data) {
+    const username = document.getElementById("username")
+    const desc = document.getElementById("desc")
+    username.innerText = data.data.fullName
+    desc.innerText = `${data.data.fullName}'s posts :`
 }
 
+
+
+
+console.log(cn.searchParams.get("id"))
+
 function fetchData(search) {
-    const url = new URL("https://wjs-api.vercel.app/api/x/posts")
-    url.searchParams.set("search", search || "");
+    const url = new URL(`https://wjs-api.vercel.app/api/x/posts`)
+    url.searchParams.set("userId", cn.searchParams.get("id"));
     fetch(url, {
         headers: new Headers({
             "Authorization": "Custom Khx6QxGSGD"
@@ -34,7 +41,6 @@ function fetchData(search) {
         .then(data => renderData(data))
 }
 
-const tweets = document.getElementById("tweets")
 
 function renderData(data) {
     console.log(data)
@@ -45,7 +51,7 @@ function renderData(data) {
 
         const name = document.createElement('a')
         name.innerText = fetch.author.fullName
-        name.href = `users.html?id=${fetch.author.id}`
+        name.href = `users?id=${fetch.author.id}`
         div.appendChild(name)
 
         const content = document.createElement('h3')
@@ -73,13 +79,14 @@ function renderData(data) {
         }
         like.addEventListener('click',function () {
             toggleLike(like,fetch.post.id,fetch.likeStatus).then(r =>
-                window.location.replace("feed.html")
+                window.location.replace(`users.html?id=${fetch.author.id}`)
             )
         })
         div.appendChild(like)
 
     }
 }
+
 
 function toggleLike(x,id,status) {
     if (status) {
@@ -113,23 +120,5 @@ function dislike(id) {
 
 function renderLikes(data) {
 
-}
-
-
-const username = document.getElementById('user')
-
-function fetchUser() {
-    const url = new URL("https://wjs-api.vercel.app/api/x/users/ca6481fc-6a2e-446f-b063-a383379a8f99")
-    fetch(url, {
-        headers: new Headers({
-            "Authorization": "Custom Khx6QxGSGD"
-        })
-    }).then(r => r.json())
-        .then(data => renderUsers(data))
-    console.log('Fetched user')
-}
-
-function renderUsers(data) {
-        username.innerText = data.data.fullName
 }
 

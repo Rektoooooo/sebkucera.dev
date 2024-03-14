@@ -11,6 +11,12 @@
     font-weight: bold;
 }
 
+.tweet a {
+    color: #ffffff;
+    margin: 10px;
+    font-weight: bold;
+}
+
 .tweet h3 {
     color: #b8b8b8;
     margin: 10px;
@@ -23,7 +29,7 @@
     font-size: 15px;
 }
 
-.tweet a {
+a.edit {
     color: #b8b8b8;
     margin-right: 10px;
     font-size: 15px;
