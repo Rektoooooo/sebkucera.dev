@@ -37161,7 +37161,7 @@ const blocksArray = jsonData.map(item => new Block(item));
 
 
 function getRandomDiggableElement(arr) {
-    const diggableElements = arr.filter(item => item.diggable === true);
+    const diggableElements = arr.filter(item => item.diggable === true).filter(item => item.boundingBox === "block");
     const randomIndex = Math.floor(Math.random() * diggableElements.length);
     return diggableElements[randomIndex];
 }
