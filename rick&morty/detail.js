@@ -31,7 +31,12 @@ function renderData(data) {
         status.innerText = data.status
         div.appendChild(status)
 
-        const img = document.createElement("img")
+        const species = document.createElement("p")
+        species.innerText = data.species
+        div.appendChild(species)
+
+
+    const img = document.createElement("img")
         img.src = data.image
         img.width = 200
         div.appendChild(img)
