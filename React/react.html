@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@18.1.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.1.0/umd/react-dom.development.js"></script>
+    <script src="reactjs.js"></script>
+</head>
+<body id="body" style="background: black; color: white; font-family: -apple-system,serif">
+
+<div id="react"></div>
+
+<script>
+    function First() {
+        return (
+            <div>
+                <h1>First page in react ! MUGAAA</h1>
+                <img src={"https://placekitten.com/g/200/300"} alt={"meow"}/>
+                <ul>
+                    <li>Java</li>
+                    <li>Typescript</li>
+                </ul>
+            </div>
+        )
+    }
+    const root = ReactDOM.createRoot(First)
+    const reactElement = React.createElement(First)
+    root.render(reactElement)
+</script>
+
+</body>
+</html>
