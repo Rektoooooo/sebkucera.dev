@@ -1,19 +1,20 @@
 {
-  "name": "sebkucera.dev",
+  "name": "sebkuceranew",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tailwindcss -i ./src/styles.css -o ./dist/output.css --watch",
+    "build": "tailwindcss -i ./src/styles.css -o ./dist/output.css -m"
   },
+  "private": true,
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "tailwindcss": "^3.3.1",
-    "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.19.1"
+    "@tailwindcss/cli": "^4.1.13",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13"
   }
 }
