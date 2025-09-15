@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* optional: inline theme tweaks in v4 */
+@theme {
+    --font-sans: ui-sans-serif, system-ui, sans-serif;
+}
+
+:root, :host {
+    --font-sans: "Helvetica", "Arial", sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --color-toxic-swift: #0AC5F4;
+
+}
+
+.text-toxic {
+    color: #0AC5F4; /* Swift blue */
+    text-shadow:
+            0 0 2px rgba(10, 197, 244, 0.6),
+            0 0 6px rgba(10, 197, 244, 0.4);
+}
+
+/* smooth, performant mesh background (no blur/mix-blend) */
+.mesh-bg{
+    /* deep base so the blue pops */
+    background:
+            radial-gradient(40vmax 40vmax at 15% 20%, rgba(10,197,244,0.18), transparent 60%),
+            radial-gradient(35vmax 35vmax at 85% 25%, rgba(59,130,246,0.20), transparent 65%),
+            radial-gradient(45vmax 45vmax at 30% 75%, rgba(14,165,233,0.16), transparent 60%),
+            radial-gradient(30vmax 30vmax at 80% 80%, rgba(0,212,255,0.12), transparent 60%),
+            #000; /* base */
+    will-change: transform;
+    animation: mesh-move 26s ease-in-out infinite;
+}
+
+/* gentle drift so it feels alive but not laggy (transform-only) */
+@keyframes mesh-move{
+    0%,100% { transform: translate3d(0,0,0) scale(1); }
+    50%     { transform: translate3d(2%, -1.5%, 0) scale(1.04) rotate(0.6deg); }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .mesh-bg{ animation: none; }
+}
