@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>sebkucera.dev</title>
+    <link rel="icon" href="icons/logo.png" />
+    <!-- Tailwind v4 output (built by your CLI) -->
+    <link rel="stylesheet" href="./dist/output.css" />
+
+    <!-- Optional: your additional overrides -->
+    <style>
+        :root, :host {
+            --font-sans: "Helvetica", "Arial", sans-serif;
+            --radius-xl: 1.25rem;
+        }
+        /* Prefer smooth scrolling even without the class */
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="relative min-h-screen bg-black text-white">
+<!-- Neon liquid background -->
+<!-- smooth blue mesh background -->
+<div class="mesh-bg pointer-events-none absolute inset-0 -z-10"></div>
+
+<!-- Top bar -->
+<header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/70 bg-black/80 border-b border-b-black">
+    <nav class="mx-auto max-w-6xl px-4 md:px-6">
+        <div class="h-16 flex items-center justify-between">
+            <a href="#top" class="text-lg font-bold text-toxic tracking-widest">sebkucera.dev</a>
+
+            <button id="menuBtn" class="md:hidden inline-flex items-center justify-center rounded-lg p-2 hover:bg-zinc-100 focus:outline-none" aria-label="Open menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="pointer-events-none">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+
+            <ul id="menu" class="hidden md:flex items-center gap-6 text-sm text-toxic transition-colors duration-200 ">
+                <li><a class="hover:opacity-70 font-bold tracking-widest" href="#about">About</a></li>
+                <li><a class="hover:opacity-70 font-bold tracking-widest" href="#skills">Skills</a></li>
+                <li><a class="hover:opacity-70 font-bold tracking-widest" href="#projects">Projects</a></li>
+                <li><a class="hover:opacity-70 font-bold tracking-widest" href="#contact">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- mobile drawer -->
+        <div id="drawer" class="md:hidden hidden border-t border-zinc-200 py-2">
+            <ul class="grid gap-2 py-2 text-sm">
+                <li><a class="block px-2 py-2 rounded-lg hover:bg-zinc-100" href="#about">About</a></li>
+                <li><a class="block px-2 py-2 rounded-lg hover:bg-zinc-100" href="#skills">Skills</a></li>
+                <li><a class="block px-2 py-2 rounded-lg hover:bg-zinc-100" href="#projects">Projects</a></li>
+                <li><a class="block px-2 py-2 rounded-lg hover:bg-zinc-100" href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<!-- Hero -->
+<main id="top" class="mx-auto max-w-6xl px-4 md:px-6">
+    <section class="pt-20 md:pt-28 pb-14">
+        <div class="grid items-center gap-10 md:grid-cols-2">
+            <div>
+                <h1 class="text-4xl/tight md:text-5xl/tight font-bold tracking-tight">
+                    Sebastian Kučera
+                </h1>
+                <p class="mt-3 text-lg">
+                    iOS Developer • Swift / SwiftUI • Student in Prague
+                </p>
+                <div class="mt-8 flex items-center gap-3">
+                    <a href="#projects" class="inline-flex items-center rounded-2xl px-5 py-3 bg-zinc-900 text-white hover:bg-zinc-800 transition">View Projects</a>
+                    <a href="#contact" class="inline-flex items-center px-5 py-3 hover:text-zinc-400 transition">Contact</a>
+                </div>
+            </div>
+            <div class="content-center flex flex-col items-center">
+                <!-- stack on mobile, 2 cols on desktop -->
+                <div class="grid w-full gap-4 md:grid-cols-2 max-w-sm sm:max-w-md md:max-w-2xl">
+                    <img
+                            src="./images/main-portrait.png"
+                            alt="Main app screen"
+                            class="block w-56 sm:w-64 md:w-full h-auto mx-auto rounded-xl"
+                            loading="lazy"
+                    />
+                    <img
+                            src="./images/settings-portrait.png"
+                            alt="Settings screen"
+                            class="block w-56 sm:w-64 md:w-full h-auto mx-auto rounded-xl"
+                            loading="lazy"
+                    />
+                </div>
+
+                <div class="mt-6 text-center w-full max-w-sm sm:max-w-md md:max-w-2xl">
+                    <p class="text-sm">
+                        Currently building a strength-training app in SwiftUI to track progress efficiently.
+                    </p>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-14 border-t border-zinc-200">
+        <div class="max-w-3xl">
+            <h2 class="text-2xl font-semibold tracking-tight">About</h2>
+            <p class="mt-4  leading-relaxed">
+                Hi, I’m Sebastian - a student of Software engineering at Unicorn University and an iOS developer focused on Swift & SwiftUI. I love working on ambitious projects like my fitness app, and I’m always up for learning, collaborating, and shipping clean, thoughtful interfaces.
+            </p>
+            <p class="mt-4  leading-relaxed">
+                Outside coding I’m into training and staying active. If you’re interested in working together, feel free to reach out.
+            </p>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="py-14 border-t border-zinc-200">
+        <h2 class="text-2xl font-semibold tracking-tight">Skills</h2>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- card -->
+            <article class="p-5 hover:shadow-sm transition">
+                <h3 class="font-bold">Swift / SwiftUI / UIKit</h3>
+                <p class="mt-2 text-sm">Modern iOS development with declarative and imperative UI stacks.</p>
+            </article>
+            <article class="p-5 hover:shadow-sm transition">
+                <h3 class="font-bold">Java</h3>
+                <p class="mt-2 text-sm ">Object‑oriented foundations, APIs, and tooling.</p>
+            </article>
+            <article class="p-5 hover:shadow-sm transition">
+                <h3 class="font-bold">JavaScript / Web</h3>
+                <p class="mt-2 text-sm">Interactive UIs, TailwindCSS, and lightweight tooling.</p>
+            </article>
+            <article class="p-5 hover:shadow-sm transition">
+                <h3 class="font-bold">Design</h3>
+                <p class="mt-2 text-sm">Minimal, accessible interfaces with focus on typography and spacing.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="py-14 border-t border-zinc-200">
+        <div class="flex items-end justify-between gap-4">
+            <h2 class="text-2xl font-semibold tracking-tight">Projects</h2>
+            <a href="https://github.com/Rektoooooo" target="_blank" class="text-sm hover:text-zinc-400">All on GitHub →</a>
+        </div>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <!-- Project card template -->
+
+            <a href="https://github.com/Rektoooooo/Fitness-app" id="fitness" target="_blank" class="group hover:shadow-sm transition flex flex-col items-center">
+                <img src="./images/main-portrait.png"
+                     alt="Main app screen"
+                     class="w-64 rounded-xl object-cover"
+                     loading="lazy">
+                <div class="p-5">
+                    <h3 class="font-bold group-hover:opacity-60 text-center">Fitness App</h3>
+                    <p class="mt-2 text-sm text-zinc-400">Track strength progress and optimize workouts.</p>
+                </div>
+            </a>
+
+
+            <a href="https://github.com/Rektoooooo/SwiftUIBattleShips/tree/main/Battleship-SwiftUI" target="_blank" class="group hover:shadow-sm transition flex flex-col items-center">
+                <img src="./images/battle-ships-portrait.png"
+                     alt="Main app screen"
+                     class="w-64 rounded-xl object-cover"
+                     loading="lazy">
+                <div class="p-5">
+                    <h3 class="font-bold group-hover:opacity-60 text-center">BattleShips</h3>
+                    <p class="mt-2 text-sm text-zinc-400">Smart Battleship opponent with UI and features.</p>
+                </div>
+            </a>
+
+            <a href="https://apps.apple.com/us/app/fl-smart-id-thales/id1560687532" target="_blank" class="group hover:shadow-sm transition flex flex-col items-center">
+                <img src="./images/thales-portrait.png"
+                     alt="Main app screen"
+                     class="w-64 rounded-xl object-cover"
+                     loading="lazy">
+                <div class="p-5">
+                    <h3 class="font-bold group-hover:opacity-60 text-center">SwiftUI – Smart ID sample</h3>
+                    <p class="mt-2 text-sm text-zinc-400">Sample app work for Smart ID SDK.</p>
+                </div>
+            </a>
+
+            <a href="https://github.com/Rektoooooo/Pushly" target="_blank" class="group hover:shadow-sm transition flex flex-col items-center">
+                <img src="./images/pushly-portrait.png"
+                     alt="Main app screen"
+                     class="w-64 rounded-xl object-cover"
+                     loading="lazy">
+                <div class="p-5">
+                    <h3 class="font-bold group-hover:opacity-60 text-center">Pushly</h3>
+                    <p class="mt-2 text-sm text-zinc-400">SwiftUI app that nudges people to exercise.</p>
+                </div>
+            </a>
+
+            <a href="https://github.com/Rektoooooo/Rick-Morty" target="_blank" class="group hover:shadow-sm transition flex flex-col items-center">
+                <img src="./images/rick-portrait.png"
+                     alt="Main app screen"
+                     class="w-64 rounded-xl object-cover"
+                     loading="lazy">
+                <div class="p-5">
+                    <h3 class="font-bold group-hover:opacity-60 text-center">API Fetch – Rick & Morty</h3>
+                    <p class="mt-2 text-sm text-zinc-400">Simple API client built in SwiftUI.</p>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-14 border-t border-zinc-200">
+        <h2 class="text-2xl font-semibold tracking-tight">Contact</h2>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <a href="mailto:sebastian.kucera@icloud.com" class="p-5 hover:shadow-sm transition">
+                <h3 class="font-bold">Email</h3>
+                <p class="mt-2 text-sm text-zinc-400">sebastian.kucera@icloud.com</p>
+            </a>
+            <a href="https://www.linkedin.com/in/sebastian-kucera-31719b1b0/" target="_blank" class="p-5 hover:shadow-sm transition">
+                <h3 class="font-bold">LinkedIn</h3>
+                <p class="mt-2 text-sm text-zinc-400">Professional profile</p>
+            </a>
+            <a href="https://github.com/Rektoooooo" target="_blank" class="p-5 hover:shadow-sm transition">
+                <h3 class="font-bold">GitHub</h3>
+                <p class="mt-2 text-sm text-zinc-400">Projects & code</p>
+            </a>
+            <a href="https://www.instagram.com/seb.kuc/" target="_blank" class="p-5 hover:shadow-sm transition">
+                <h3 class="font-bold">Instagram</h3>
+                <p class="mt-2 text-sm text-zinc-400">Personal</p>
+            </a>
+        </div>
+    </section>
+</main>
+
+<footer class="border-b-black backdrop-blur supports-[backdrop-filter]:bg-black/90 bg-black/95 border-b">
+    <div class="mx-auto max-w-6xl px-4 md:px-6 py-10 text-sm text-zinc-400 font-bold">
+        <p>© 2025 sebkucera.dev. All rights reserved.</p>
+        <p class="mt-2">Connect on <a class="underline decoration-zinc-300 hover:decoration-zinc-800" href="https://www.linkedin.com/in/sebastian-kucera-31719b1b0/" target="_blank">LinkedIn</a> and <a class="underline decoration-zinc-300 hover:decoration-zinc-800" href="https://github.com/Rektoooooo" target="_blank">GitHub</a>.</p>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    const btn = document.getElementById('menuBtn');
+    const drawer = document.getElementById('drawer');
+    const menuList = document.getElementById('menu');
+    btn?.addEventListener('click', () => {
+        drawer.classList.toggle('hidden');
+    });
+    // Close drawer on navigation
+    drawer?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.add('hidden')));
+    // Hydrate desktop menu (in case JS needs to ensure visible)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) drawer?.classList.add('hidden');
+    });
+</script>
+</body>
+</html>
