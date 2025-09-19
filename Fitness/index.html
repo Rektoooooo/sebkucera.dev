@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Docs Viewer</title>
+  <style>
+    :root { --maxw: 1000px; }
+    html { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    body { margin: 0; padding: 0 1rem 4rem; display: flex; justify-content: center; background: #0b0d10; color: #e6e6e6; }
+    main { width: 100%; max-width: var(--maxw); }
+
+    /* Top bar */
+    .topbar { position: sticky; top: 0; z-index: 2; backdrop-filter: blur(8px); background: rgba(12,14,17,0.7); border-bottom: 1px solid #222; }
+    .topbar-inner { display: flex; align-items: center; gap: .5rem; padding: .65rem 0; }
+    .brand { font-size: .95rem; font-weight: 600; margin-right: .5rem; letter-spacing: .02em; color: #fff; }
+    nav { display: inline-flex; gap: .25rem; flex-wrap: wrap; }
+    .tab { appearance: none; border: 1px solid #2a2f3a; background: #0f1217; color: #cfd6e4; padding: .4rem .65rem; border-radius: 8px; cursor: pointer; font: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; }
+    .tab:hover { background: #141821; }
+    .tab.active { background: #1b2230; border-color: #3b4658; color: #fff; }
+    .spacer { flex: 1; }
+    .muted { color: #a8a8a8; }
+
+    /* Markdown content */
+    #readme { line-height: 1.6; padding-top: 1rem; }
+    #readme h1, #readme h2, #readme h3, #readme h4 { color: #fff; }
+    #readme a { color: #7cc0ff; text-decoration: none; }
+    #readme a:hover { text-decoration: underline; }
+    #readme code { background: #121418; padding: .15rem .35rem; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    #readme pre { background: #0f1115; padding: 1rem; border-radius: 10px; overflow: auto; }
+    #readme img { max-width: 100%; height: auto; }
+
+    .error { background: #2a0e0e; color: #ffd4d4; border: 1px solid #4a1b1b; padding: 1rem; border-radius: 8px; margin-top: 1rem; }
+  </style>
+  <!-- Marked for Markdown -> HTML -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- highlight.js for code blocks (optional) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+</head>
+<body>
+  <main>
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">Project Docs</div>
+        <nav id="tabs">
+          <a href="?doc=README" class="tab" data-doc="README">README</a>
+          <a href="?doc=ARCHITECTURE" class="tab" data-doc="ARCHITECTURE">ARCHITECTURE</a>
+          <a href="?doc=USER_GUID" class="tab" data-doc="USER_GUID">USER_GUID</a>
+        </nav>
+        <div class="spacer"></div>
+      </div>
+    </div>
+
+    <div id="readme"><p class="muted">Loading…</p></div>
+  </main>
+
+  <script>
+    // Configure marked
+    marked.setOptions({
+      gfm: true,
+      breaks: false,
+      headerIds: true,
+      mangle: false,
+      highlight: function(code, lang) {
+        try { if (lang && hljs.getLanguage(lang)) { return hljs.highlight(code, {language: lang}).value; } } catch (e) {}
+        try { return hljs.highlightAuto(code).value; } catch (e) { return code; }
+      }
+    });
+
+    // Map logical doc names to actual files on disk
+    const DOCS = {
+      README: 'README.md',
+      ARCHITECTURE: 'ARCHITECTURE.md',
+      USER_GUID: 'USER_GUIDE.md', // label says USER_GUID, file is USER_GUIDE.md
+    };
+
+    const contentEl = document.getElementById('readme');
+    const tabsEl = document.getElementById('tabs');
+
+    function setActiveTab(name) {
+      document.querySelectorAll('.tab').forEach(a => {
+        a.classList.toggle('active', a.dataset.doc === name);
+      });
+    }
+
+    async function loadMarkdownFile(file) {
+      try {
+        const res = await fetch(file, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+        const text = await res.text();
+        contentEl.innerHTML = marked.parse(text);
+        // Re-apply hash scrolling inside the loaded doc
+        if (location.hash) {
+          const id = decodeURIComponent(location.hash.slice(1));
+          const target = document.getElementById(id);
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+        }
+      } catch (err) {
+        contentEl.innerHTML = `
+          <div class="error">
+            <strong>Could not load <code>${file}</code></strong><br>
+            <div style="margin-top:.25rem" class="muted">${err.message}</div>
+            <ul>
+              <li>Make sure <code>${file}</code> is deployed next to <code>index.html</code>.</li>
+              <li>If opening as <code>file://</code>, run a local server (<code>python -m http.server</code> or <code>npx serve</code>).</li>
+            </ul>
+          </div>`;
+      }
+    }
+
+    function getDocFromURL() {
+      const params = new URLSearchParams(location.search);
+      const q = params.get('doc');
+      if (q && DOCS[q]) return q;
+      return 'README';
+    }
+
+    async function showDoc(name, push = false) {
+      const file = DOCS[name];
+      setActiveTab(name);
+      await loadMarkdownFile(file);
+      if (push) {
+        const url = new URL(location.href);
+        url.searchParams.set('doc', name);
+        history.pushState({ doc: name }, '', url);
+      }
+    }
+
+    // Tab click handling
+    tabsEl.addEventListener('click', (e) => {
+      const a = e.target.closest('a.tab');
+      if (!a) return;
+      e.preventDefault();
+      const name = a.dataset.doc;
+      showDoc(name, true);
+    });
+
+    // Handle back/forward
+    window.addEventListener('popstate', (e) => {
+      const name = (e.state && e.state.doc) || getDocFromURL();
+      showDoc(name, false);
+    });
+
+    // Initial load
+    const initialDoc = getDocFromURL();
+    showDoc(initialDoc, false);
+  </script>
+</body>
+</html>

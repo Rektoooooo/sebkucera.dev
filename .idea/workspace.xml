@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2d466e35-c006-4221-9a4c-e44b8faf7282" name="Changes" comment="iuh">
+      <change afterPath="$PROJECT_DIR$/Fitness/ARCHITECTURE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Fitness/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Fitness/USER_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Fitness/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="CSS File" />
+        <option value="JavaScript File" />
+        <option value="HTTP Request" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Rektoooooo&quot;
+  }
+}</component>
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: []
+}</component>
+  <component name="GitLabMergeRequestsSettings">{}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Rektoooooo/sebkucera.dev.git&quot;,
+    &quot;accountId&quot;: &quot;9118cd8e-9da1-45c6-8f77-10e24ffabb7d&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2UbyDlIGjoUiUKEy2A74TodXFDm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Node.js.Block.js.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.17.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.17.19&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/sebastiankucera/Documents/GitHub/sebkucera.dev/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Fitness" />
+      <recent name="$PROJECT_DIR$/winui" />
+      <recent name="$PROJECT_DIR$/sp1" />
+      <recent name="$PROJECT_DIR$/react" />
+      <recent name="$PROJECT_DIR$/pushly" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Node.js.Block.js">
+    <configuration name="Block.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/minecraft/Block.js" working-dir="$PROJECT_DIR$/minecraft">
+      <method v="2" />
+    </configuration>
+    <configuration name="cykly.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/JavaScript/cykly.js" working-dir="$PROJECT_DIR$/javaScript">
+      <method v="2" />
+    </configuration>
+    <configuration name="func.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/javaScript/func.js" working-dir="$PROJECT_DIR$/javaScript">
+      <method v="2" />
+    </configuration>
+    <configuration name="reactjs.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/React/reactjs.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.Block.js" />
+        <item itemvalue="Node.js.func.js" />
+        <item itemvalue="Node.js.cykly.js" />
+        <item itemvalue="Node.js.reactjs.js" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23726.96" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2d466e35-c006-4221-9a4c-e44b8faf7282" name="Changes" comment="" />
+      <created>1693222456829</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1693222456829</updated>
+      <workItem from="1693222458685" duration="2160000" />
+      <workItem from="1694499330692" duration="5505000" />
+      <workItem from="1694587016277" duration="3000" />
+      <workItem from="1694699722079" duration="5957000" />
+      <workItem from="1695108681719" duration="2010000" />
+      <workItem from="1695111036476" duration="1236000" />
+      <workItem from="1695390001435" duration="1910000" />
+      <workItem from="1695478385556" duration="9447000" />
+      <workItem from="1695709007123" duration="4253000" />
+      <workItem from="1695713803368" duration="1765000" />
+      <workItem from="1696315652038" duration="2510000" />
+      <workItem from="1696488397298" duration="2589000" />
+      <workItem from="1696491064766" duration="7210000" />
+      <workItem from="1696680524218" duration="5208000" />
+      <workItem from="1696686275135" duration="597000" />
+      <workItem from="1697119483486" duration="2758000" />
+      <workItem from="1697724497103" duration="4000" />
+      <workItem from="1697724647494" duration="3722000" />
+      <workItem from="1698737590988" duration="1781000" />
+      <workItem from="1698741281534" duration="1701000" />
+      <workItem from="1698936409563" duration="6256000" />
+      <workItem from="1699341567509" duration="2672000" />
+      <workItem from="1699344292395" duration="4000" />
+      <workItem from="1699541471670" duration="5069000" />
+      <workItem from="1699946840699" duration="10000" />
+      <workItem from="1699948384344" duration="157000" />
+      <workItem from="1700145823772" duration="258000" />
+      <workItem from="1700146087890" duration="184000" />
+      <workItem from="1700146513638" duration="4943000" />
+      <workItem from="1700476024371" duration="1269000" />
+      <workItem from="1700553075968" duration="146000" />
+      <workItem from="1700751682183" duration="1009000" />
+      <workItem from="1701250526406" duration="2956000" />
+      <workItem from="1701355501157" duration="2000" />
+      <workItem from="1708682872935" duration="2384000" />
+      <workItem from="1709018658031" duration="6000" />
+      <workItem from="1709828370828" duration="3160000" />
+      <workItem from="1710228672750" duration="31000" />
+      <workItem from="1710428672557" duration="3532000" />
+      <workItem from="1711353815642" duration="6000" />
+      <workItem from="1711354324612" duration="4180000" />
+      <workItem from="1712242575250" duration="3715000" />
+      <workItem from="1713451780724" duration="6000" />
+      <workItem from="1714657852444" duration="1141000" />
+      <workItem from="1714659327509" duration="2278000" />
+      <workItem from="1718744884360" duration="647000" />
+      <workItem from="1724175572637" duration="1908000" />
+      <workItem from="1738876197542" duration="3011000" />
+      <workItem from="1758270033008" duration="607000" />
+    </task>
+    <task id="LOCAL-00001" summary="iuh">
+      <option name="closed" value="true" />
+      <created>1712305032371</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712305032371</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="iuh" />
+    <option name="LAST_COMMIT_MESSAGE" value="iuh" />
+  </component>
+</project>
