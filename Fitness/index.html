@@ -12,14 +12,23 @@
 
     /* Top bar */
     .topbar { position: sticky; top: 0; z-index: 2; backdrop-filter: blur(8px); background: rgba(12,14,17,0.7); border-bottom: 1px solid #222; }
-    .topbar-inner { display: flex; align-items: center; gap: .5rem; padding: .65rem 0; }
-    .brand { font-size: .95rem; font-weight: 600; margin-right: .5rem; letter-spacing: .02em; color: #fff; }
-    nav { display: inline-flex; gap: .25rem; flex-wrap: wrap; }
-    .tab { appearance: none; border: 1px solid #2a2f3a; background: #0f1217; color: #cfd6e4; padding: .4rem .65rem; border-radius: 8px; cursor: pointer; font: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; }
+    .topbar-inner { display: flex; align-items: center; gap: .5rem; padding: .65rem 0; flex-wrap: wrap; }
+    .brand { font-size: .95rem; font-weight: 600; letter-spacing: .02em; color: #fff; margin-right: .5rem; align-self: center; }
+    nav { display: inline-flex; gap: .25rem; flex-wrap: wrap; flex: 1; align-items: center; }
+    .tab { appearance: none; border: 1px solid #2a2f3a; background: #0f1217; color: #cfd6e4; padding: .4rem .65rem; border-radius: 8px; cursor: pointer; font: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; height: fit-content; }
     .tab:hover { background: #141821; }
     .tab.active { background: #1b2230; border-color: #3b4658; color: #fff; }
-    .spacer { flex: 1; }
+    .tab.github { background: linear-gradient(135deg, #059669 0%, #047857 100%); border-color: #059669; color: #fff; margin-left: auto; box-shadow: 0 0 20px rgba(5, 150, 105, 0.4); }
+    .tab.github:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); box-shadow: 0 0 25px rgba(5, 150, 105, 0.6); }
+    .tab.testflight { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-color: #3b82f6; color: #fff; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+    .tab.testflight:hover { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); box-shadow: 0 0 25px rgba(59, 130, 246, 0.6); }
+    .spacer { display: none; }
     .muted { color: #a8a8a8; }
+
+    @media (min-width: 640px) {
+      .brand { width: auto; margin-right: .5rem; }
+      .tab { font-size: .9rem; }
+    }
 
     /* Markdown content */
     #readme { line-height: 1.6; padding-top: 1rem; }
@@ -49,6 +58,8 @@
           <a href="?doc=USER_GUID" class="tab" data-doc="USER_GUID">USER_GUID</a>
         </nav>
         <div class="spacer"></div>
+        <a href="https://github.com/Rektoooooo/Gymly" target="_blank" class="tab github">GitHub</a>
+        <a href="https://testflight.apple.com/join/tCKZRzK9" target="_blank" class="tab testflight">TestFlight</a>
       </div>
     </div>
 
