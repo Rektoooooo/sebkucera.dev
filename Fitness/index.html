@@ -23,10 +23,15 @@
     .tab.testflight { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-color: #3b82f6; color: #fff; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
     .tab.testflight:hover { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); box-shadow: 0 0 25px rgba(59, 130, 246, 0.6); }
     .spacer { display: none; }
+    .button-group { display: flex; gap: .5rem; }
     .muted { color: #a8a8a8; }
 
     @media (max-width: 639px) {
-      .tab.github, .tab.testflight { width: 100%; justify-content: center; }
+      .topbar-inner { flex-direction: column; align-items: stretch; gap: .75rem; }
+      .brand { width: 100%; text-align: center; margin-right: 0; }
+      nav { width: 100%; justify-content: center; }
+      .button-group { width: 100%; }
+      .tab.github, .tab.testflight { flex: 1; justify-content: center; margin-left: 0; }
     }
 
     @media (min-width: 640px) {
@@ -62,8 +67,10 @@
           <a href="?doc=USER_GUID" class="tab" data-doc="USER_GUID">USER_GUID</a>
         </nav>
         <div class="spacer"></div>
-        <a href="https://github.com/Rektoooooo/Gymly" target="_blank" class="tab github">GitHub</a>
-        <a href="https://testflight.apple.com/join/tCKZRzK9" target="_blank" class="tab testflight">TestFlight</a>
+        <div class="button-group">
+          <a href="https://github.com/Rektoooooo/Gymly" target="_blank" class="tab github">GitHub</a>
+          <a href="https://testflight.apple.com/join/tCKZRzK9" target="_blank" class="tab testflight">TestFlight</a>
+        </div>
       </div>
     </div>
 
