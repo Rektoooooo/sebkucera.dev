@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d466e35-c006-4221-9a4c-e44b8faf7282" name="Changes" comment="iuh">
-      <change afterPath="$PROJECT_DIR$/Fitness/ARCHITECTURE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Fitness/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Fitness/USER_GUIDE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Fitness/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fitness/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Fitness/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,7 +170,8 @@
       <workItem from="1718744884360" duration="647000" />
       <workItem from="1724175572637" duration="1908000" />
       <workItem from="1738876197542" duration="3011000" />
-      <workItem from="1758270033008" duration="607000" />
+      <workItem from="1758270033008" duration="852000" />
+      <workItem from="1759429035606" duration="1399000" />
     </task>
     <task id="LOCAL-00001" summary="iuh">
       <option name="closed" value="true" />
