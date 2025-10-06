@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="./dist/output.css"/>
+    <link rel="icon" href="https://unicornuniversity.net/unicorn_university_logo">
+    <title>Home Assigment 2</title>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen flex items-center justify-center p-8">
+
+<div class="max-w-6xl w-full">
+    <h1 class="text-5xl font-bold text-center text-white mb-12">Number Converter</h1>
+
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- Decimal to Binary -->
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+            <div class="flex items-center justify-center mb-6">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-3">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                    </svg>
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold text-white text-center mb-6">Decimal → Binary</h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Decimal Number</label>
+                    <input
+                        id="decimalInput"
+                        type="text"
+                        placeholder="Enter decimal number"
+                        oninput="convertDecimalToBinary()"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Binary Result</label>
+                    <div class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-green-400 font-mono text-lg min-h-[48px] flex items-center">
+                        <span id="binaryResult">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Binary to Decimal -->
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+            <div class="flex items-center justify-center mb-6">
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-3">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                    </svg>
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold text-white text-center mb-6">Binary → Decimal</h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Binary Number</label>
+                    <input
+                        id="binaryInput"
+                        type="text"
+                        placeholder="Enter binary number"
+                        oninput="convertBinaryToDecimal()"
+                        class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Decimal Result</label>
+                    <div class="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-green-400 font-mono text-lg min-h-[48px] flex items-center">
+                        <span id="decimalResult">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
