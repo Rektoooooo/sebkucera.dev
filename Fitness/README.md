@@ -2,6 +2,15 @@
 
 **Gymly** is a comprehensive iOS fitness tracking app built with SwiftUI that provides a complete workout logging and planning experience with HealthKit integration and advanced workout analytics.
 
+## 📸 Screenshots
+
+<div align="center">
+  <img src="images/TodayWorkout.png" width="200" alt="Today's Workout">
+  <img src="images/Calendar.png" width="200" alt="Workout Calendar">
+  <img src="images/MusleGraph.png" width="200" alt="Muscle Progress Graph">
+  <img src="images/AISummary.png" width="200" alt="AI Workout Summary">
+</div>
+
 ## 🌟 Features
 
 ### Core Functionality
@@ -11,6 +20,8 @@
 - **Progress Analytics** – Advanced muscle group tracking with radar charts and progress visualization
 - **Unit Conversion** – Seamless switching between kg and lbs weight units
 
+  <img src="images/TodayWorkout.png" width="300" alt="Today's Workout">
+
 ### Advanced Features
 - **HealthKit Integration** – Sync weight, BMI, height, and workout data with Apple Health
 - **Split Management** – Import/export workout splits with `.gymlysplit` format
@@ -19,11 +30,15 @@
 - **Workout Timer** – Track total workout time with automatic timing
 - **BMI Calculator** – Built-in BMI tracking with visual gauge display
 
+  <img src="images/BMI.png" width="300" alt="BMI">
+
 ### User Experience
 - **Dark Mode Support** – Optimized for both light and dark themes
 - **Apple Sign In** – Secure authentication with Apple ID
 - **Intuitive UI** – Clean, modern interface built with SwiftUI
 - **Offline First** – Full functionality without internet connection
+
+  <img src="images/Settings.png" width="300" alt="Settings">
 
 ## 🏗️ Architecture
 
@@ -92,7 +107,7 @@
 ## 🚀 Installation & Setup
 
 ### Prerequisites
-- **iOS 17.0+**
+- **iOS 26.0+**
 - **Xcode 15.0+**
 - **Swift 5.9+**
 
@@ -146,12 +161,19 @@ The app integrates with HealthKit for:
 - Weight progression graphs
 - BMI monitoring with visual indicators
 
+<div align="center">
+  <img src="images/MusleGraph.png" width="300" alt="Muscle Group Analytics">
+  <img src="images/MyWeightGraph.png" width="300" alt="Weight Tracking Graph">
+</div>
+
 ### Calendar Integration
 - Visual workout history
 - Date-based workout retrieval
 - Progress tracking over time
 - Workout completion indicators
 
+  <img src="images/Calendar.png" width="300" alt="Calendar">
+  
 ## 🧪 Testing
 
 ### TestFlight Access
