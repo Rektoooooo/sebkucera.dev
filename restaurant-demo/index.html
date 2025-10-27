@@ -108,6 +108,66 @@
             background: linear-gradient(to bottom, rgba(217, 119, 6, 0.1) 0%, transparent 100%) !important;
         }
 
+        /* Utility controls - force light backgrounds on all screens */
+        nav .bg-gray-100 {
+            background-color: #ffffff !important;
+            border-color: #e5e7eb !important;
+        }
+        .dark nav .bg-gray-100 {
+            background-color: #1f2937 !important;
+            border-color: #374151 !important;
+        }
+
+        nav .bg-white {
+            background-color: #f3f4f6 !important;
+        }
+        .dark nav .bg-white {
+            background-color: #374151 !important;
+        }
+
+        /* Language buttons - ALL screen sizes */
+        /* Default: dark text in light mode */
+        nav #langCs,
+        nav #langEn {
+            color: #111827 !important; /* very dark gray/black */
+        }
+
+        /* Default: light text in dark mode */
+        .dark nav #langCs,
+        .dark nav #langEn {
+            color: #f3f4f6 !important; /* light gray */
+        }
+
+        /* Active button: amber background with white text */
+        nav #langCs.bg-amber-600,
+        nav #langEn.bg-amber-600 {
+            background-color: #d97706 !important;
+            color: #ffffff !important;
+        }
+
+        .dark nav #langCs.bg-amber-600,
+        .dark nav #langEn.bg-amber-600 {
+            background-color: #d97706 !important;
+            color: #ffffff !important;
+        }
+
+        /* Inactive buttons: transparent background */
+        nav #langCs:not(.bg-amber-600),
+        nav #langEn:not(.bg-amber-600) {
+            background-color: transparent !important;
+        }
+
+        /* Hover state for inactive buttons */
+        nav #langCs:not(.bg-amber-600):hover,
+        nav #langEn:not(.bg-amber-600):hover {
+            background-color: #f3f4f6 !important;
+        }
+
+        .dark nav #langCs:not(.bg-amber-600):hover,
+        .dark nav #langEn:not(.bg-amber-600):hover {
+            background-color: #4b5563 !important;
+        }
+
         /* Mobile Menu */
         .mobile-menu {
             position: fixed;
@@ -222,10 +282,17 @@
                 gap: 0.375rem !important;
             }
 
-            /* Smaller utility controls on mobile */
-            nav .flex.items-center.gap-2.bg-gray-100 {
+            /* Smaller utility controls on mobile - force light background */
+            nav .flex.items-center.gap-2 {
                 padding: 0.125rem !important;
                 gap: 0.125rem !important;
+                background-color: #ffffff !important; /* white in light mode */
+                border: 1px solid #e5e7eb !important;
+                border-radius: 9999px !important;
+            }
+            .dark nav .flex.items-center.gap-2 {
+                background-color: #1f2937 !important; /* dark gray in dark mode */
+                border-color: #374151 !important;
             }
 
             /* Theme toggle button */
@@ -238,20 +305,36 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
+                background-color: transparent !important;
+                border-radius: 9999px !important;
             }
 
             nav #themeToggle i {
                 font-size: 0.75rem !important;
                 pointer-events: none; /* Ensure clicks go through to button */
+                color: #d97706 !important; /* amber color for icon */
             }
 
-            /* Language toggle container */
-            nav .flex.items-center.gap-2.bg-gray-100 .flex.gap-0\\.5 {
+            /* Theme toggle hover states */
+            nav #themeToggle:hover {
+                background-color: #f3f4f6 !important; /* light gray hover */
+            }
+            .dark nav #themeToggle:hover {
+                background-color: #374151 !important;
+            }
+
+            /* Language toggle inner container - force light */
+            nav .flex.gap-0\\.5 {
                 padding: 0.125rem !important;
                 gap: 0.125rem !important;
+                background-color: #f3f4f6 !important; /* light gray */
+                border-radius: 9999px !important;
+            }
+            .dark nav .flex.gap-0\\.5 {
+                background-color: #374151 !important; /* dark gray in dark mode */
             }
 
-            /* Language toggle buttons */
+            /* Language toggle buttons - base styles */
             nav #langCs,
             nav #langEn {
                 padding: 0.25rem 0.5rem !important;
@@ -259,11 +342,55 @@
                 min-height: 1.75rem !important;
                 min-width: auto !important;
                 line-height: 1 !important;
+                border-radius: 9999px !important;
             }
 
-            /* Divider */
-            nav .flex.items-center.gap-2.bg-gray-100 .w-px {
+            /* Default colors for all language buttons in light mode */
+            nav #langCs,
+            nav #langEn {
+                color: #111827 !important; /* very dark gray/black */
+                background-color: transparent !important;
+            }
+
+            /* Default colors for all language buttons in dark mode */
+            .dark nav #langCs,
+            .dark nav #langEn {
+                color: #f3f4f6 !important; /* light gray */
+                background-color: transparent !important;
+            }
+
+            /* Active language button (amber) - overrides defaults */
+            nav #langCs.bg-amber-600,
+            nav #langEn.bg-amber-600 {
+                background-color: #d97706 !important;
+                color: white !important;
+            }
+
+            /* Keep active button style in dark mode */
+            .dark nav #langCs.bg-amber-600,
+            .dark nav #langEn.bg-amber-600 {
+                background-color: #d97706 !important;
+                color: white !important;
+            }
+
+            /* Hover states for inactive language buttons */
+            nav #langEn:not(.bg-amber-600):hover,
+            nav #langCs:not(.bg-amber-600):hover {
+                background-color: #e5e7eb !important; /* light gray hover */
+            }
+            .dark nav #langEn:not(.bg-amber-600):hover,
+            .dark nav #langCs:not(.bg-amber-600):hover {
+                background-color: #4b5563 !important; /* medium gray hover in dark mode */
+            }
+
+            /* Divider between language and theme toggle */
+            nav .w-px {
                 height: 1rem !important;
+                background-color: #d1d5db !important; /* light gray */
+                width: 1px !important;
+            }
+            .dark nav .w-px {
+                background-color: #4b5563 !important; /* medium gray in dark mode */
             }
 
             /* Navbar container padding reduction */

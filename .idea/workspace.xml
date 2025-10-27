@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d466e35-c006-4221-9a4c-e44b8faf7282" name="Changes" comment="iuh">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/dist/output.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restaurant-demo/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/restaurant-demo/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -188,7 +186,7 @@
       <workItem from="1760013324334" duration="2658000" />
       <workItem from="1760622881321" duration="50000" />
       <workItem from="1761583001410" duration="4802000" />
-      <workItem from="1761595906213" duration="1558000" />
+      <workItem from="1761595906213" duration="2441000" />
     </task>
     <task id="LOCAL-00001" summary="iuh">
       <option name="closed" value="true" />
