@@ -450,6 +450,13 @@
                 justify-content: center !important;
             }
 
+            /* Fix background image on mobile - iOS doesn't support bg-fixed */
+            #home > div:first-child {
+                background-attachment: scroll !important;
+                background-size: cover !important;
+                background-position: center center !important;
+            }
+
             /* Hero content wrapper - add even more top spacing */
             #home > .relative.z-20 {
                 margin-top: 3rem !important;
