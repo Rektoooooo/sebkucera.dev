@@ -2,7 +2,7 @@
 <html lang="cs" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Bella Cucina - Authentická Italská Restaurace</title>
     <link rel="stylesheet" href="../dist/output.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -125,36 +125,40 @@
             background-color: #374151 !important;
         }
 
-        /* Language buttons - ALL screen sizes */
-        /* Default: dark text in light mode */
-        nav #langCs,
-        nav #langEn {
+        /* Language buttons - ALL screen sizes - HIGHEST PRIORITY */
+        /* Inactive buttons in light mode: very dark text */
+        nav button#langCs.text-gray-700,
+        nav button#langEn.text-gray-700,
+        nav #langCs:not(.bg-amber-600),
+        nav #langEn:not(.bg-amber-600) {
             color: #111827 !important; /* very dark gray/black */
+            background-color: transparent !important;
         }
 
-        /* Default: light text in dark mode */
-        .dark nav #langCs,
-        .dark nav #langEn {
+        /* Inactive buttons in dark mode: light text */
+        .dark nav button#langCs,
+        .dark nav button#langEn,
+        .dark nav #langCs:not(.bg-amber-600),
+        .dark nav #langEn:not(.bg-amber-600) {
             color: #f3f4f6 !important; /* light gray */
+            background-color: transparent !important;
         }
 
-        /* Active button: amber background with white text */
+        /* Active button: amber background with white text - OVERRIDES ALL */
+        nav button#langCs.bg-amber-600,
+        nav button#langEn.bg-amber-600,
         nav #langCs.bg-amber-600,
         nav #langEn.bg-amber-600 {
             background-color: #d97706 !important;
             color: #ffffff !important;
         }
 
+        .dark nav button#langCs.bg-amber-600,
+        .dark nav button#langEn.bg-amber-600,
         .dark nav #langCs.bg-amber-600,
         .dark nav #langEn.bg-amber-600 {
             background-color: #d97706 !important;
             color: #ffffff !important;
-        }
-
-        /* Inactive buttons: transparent background */
-        nav #langCs:not(.bg-amber-600),
-        nav #langEn:not(.bg-amber-600) {
-            background-color: transparent !important;
         }
 
         /* Hover state for inactive buttons */
@@ -436,10 +440,24 @@
                 padding-right: 1rem !important;
             }
 
-            /* Hero section adjustments - account for navbar */
+            /* Hero section adjustments - account for navbar + safe area */
             #home {
-                padding-top: 5rem;
+                padding-top: 6rem !important;
                 padding-bottom: 2rem;
+                min-height: 100vh !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            /* Hero content wrapper - add more top spacing */
+            #home > .relative.z-20 {
+                margin-top: 2rem !important;
+            }
+
+            /* Established badge - ensure visibility */
+            #home .mb-6.inline-block {
+                margin-top: 1rem !important;
             }
 
             #home .text-xl,
@@ -457,12 +475,17 @@
                 height: 200px;
             }
 
-            /* Stats cards on hero */
-            .flex.flex-wrap.justify-center.gap-8 {
+            /* Stats cards on hero - add proper spacing from edges */
+            #home .flex.flex-wrap.justify-center.gap-8 {
                 gap: 0.75rem !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                margin-bottom: 2rem !important;
             }
-            .flex.flex-wrap.justify-center.gap-8 > div {
+            #home .flex.flex-wrap.justify-center.gap-8 > div {
                 padding: 0.75rem 1rem !important;
+                min-width: calc(33.333% - 0.75rem) !important;
+                flex: 1 1 auto !important;
             }
 
             /* Features section icons */
