@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="cs" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bella Cucina - Authentická Italská Restaurace</title>
+    <link rel="stylesheet" href="../dist/output.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/x-icon" href="https://static.vecteezy.com/system/resources/previews/006/395/400/non_2x/italian-food-or-italian-restaurant-logo-template-with-italian-flag-shape-and-tableware-free-vector.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.75) 0%, rgba(40, 30, 25, 0.7) 50%, rgba(60, 40, 30, 0.65) 100%);
+        }
+
+        /* Dark Mode Styles */
+        .dark {
+            background-color: #1a1a1a;
+            color: #e5e5e5;
+        }
+        .dark .bg-stone-50 { background-color: #1a1a1a !important; }
+        .dark .bg-white { background-color: #262626 !important; }
+        .dark .bg-stone-100 { background-color: #2a2a2a !important; }
+        .dark .text-gray-900 { color: #f5f5f5 !important; }
+        .dark .text-gray-700 { color: #d4d4d4 !important; }
+        .dark .text-gray-600 { color: #a3a3a3 !important; }
+        .dark .text-gray-500 { color: #737373 !important; }
+        .dark .text-gray-400 { color: #a3a3a3 !important; }
+        .dark nav { background-color: rgba(38, 38, 38, 0.95) !important; }
+        .dark footer { background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%) !important; }
+        .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important; }
+        .dark .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important; }
+        .dark .border-gray-200 { border-color: #404040 !important; }
+        .dark .border-gray-800 { border-color: #525252 !important; }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #cbd5e1;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .toggle-switch.active {
+            background-color: #d97706;
+        }
+        .toggle-switch-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toggle-switch.active .toggle-switch-slider {
+            transform: translateX(30px);
+        }
+    </style>
+</head>
+<body class="bg-stone-50 antialiased transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-md shadow-lg z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center shadow-lg">
+                        <i class="bi bi-cup-hot-fill text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-bold text-gray-900 tracking-tight">Bella Cucina</span>
+                        <p class="text-xs text-amber-600 -mt-1">Authentic Italian</p>
+                    </div>
+                </div>
+                <div class="hidden lg:flex space-x-8 items-center">
+                    <a href="#home" class="text-gray-700 hover:text-amber-600 font-medium transition-colors duration-200" data-lang-en="Home" data-lang-cs="Domů">Domů</a>
+                    <a href="#about" class="text-gray-700 hover:text-amber-600 font-medium transition-colors duration-200" data-lang-en="About" data-lang-cs="O nás">O nás</a>
+                    <a href="#specials" class="text-gray-700 hover:text-amber-600 font-medium transition-colors duration-200" data-lang-en="Specials" data-lang-cs="Speciality">Speciality</a>
+                    <a href="#menu" class="text-gray-700 hover:text-amber-600 font-medium transition-colors duration-200" data-lang-en="Menu" data-lang-cs="Menu">Menu</a>
+                    <a href="#reviews" class="text-gray-700 hover:text-amber-600 font-medium transition-colors duration-200" data-lang-en="Reviews" data-lang-cs="Recenze">Recenze</a>
+                    <a href="#contact" class="text-gray-700 hover:text-amber-600 font-medium transition-colors duration-200" data-lang-en="Contact" data-lang-cs="Kontakt">Kontakt</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="tel:5551234567" class="hidden md:flex items-center gap-2 text-amber-600 font-semibold">
+                        <i class="bi bi-telephone-fill"></i>
+                        (555) 123-4567
+                    </a>
+                    <a href="#contact" class="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-2.5 rounded-full hover:shadow-lg hover:scale-105 transition-all duration-200 font-medium" data-lang-en="Reserve Table" data-lang-cs="Rezervovat stůl">Rezervovat stůl</a>
+                    <!-- Dark Mode Toggle -->
+                    <div class="toggle-switch" id="themeToggle" title="Přepnout motiv">
+                        <div class="toggle-switch-slider">
+                            <i class="bi bi-sun-fill text-amber-600 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <!-- Language Toggle -->
+                    <div class="flex gap-1 bg-gray-200 dark:bg-gray-700 p-1 rounded-full">
+                        <button id="langCs" class="px-3 py-1 rounded-full text-sm font-semibold transition-all bg-amber-600 text-white">CZ</button>
+                        <button id="langEn" class="px-3 py-1 rounded-full text-sm font-semibold transition-all text-gray-700 dark:text-gray-300">EN</button>
+                    </div>
+                </div>
+                <button class="lg:hidden text-gray-700 text-2xl">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center bg-fixed z-0" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2400');"></div>
+        <div class="hero-overlay absolute inset-0 z-10"></div>
+
+        <div class="relative z-20 text-center text-white px-4 max-w-5xl mx-auto">
+            <div class="mb-6 inline-block">
+                <span class="bg-amber-600/30 backdrop-blur-sm px-6 py-2 rounded-full text-sm font-medium border border-amber-400/50" data-lang-en="Established 1998" data-lang-cs="Založeno 1998">
+                    Založeno 1998
+                </span>
+            </div>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
+                <span data-lang-en="Welcome to" data-lang-cs="Vítejte v">Vítejte v</span><br/>
+                <span class="text-amber-400">Bella Cucina</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto leading-relaxed text-gray-100" data-lang-en="Experience authentic Italian cuisine crafted with passion, tradition, and the finest ingredients imported directly from Italy" data-lang-cs="Zažijte autentickou italskou kuchyni připravenou s vášní, tradicí a nejlepšími surovinami dováženými přímo z Itálie">
+                Zažijte autentickou italskou kuchyni připravenou s vášní, tradicí a nejlepšími surovinami dováženými přímo z Itálie
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#menu" class="group bg-white text-amber-900 px-10 py-4 rounded-full hover:bg-amber-50 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl hover:scale-105 flex items-center gap-2">
+                    <span data-lang-en="View Menu" data-lang-cs="Zobrazit menu">Zobrazit menu</span>
+                    <i class="bi bi-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="#contact" class="bg-transparent border-2 border-white text-white px-10 py-4 rounded-full hover:bg-white hover:text-amber-900 transition-all duration-300 font-semibold text-lg shadow-xl hover:shadow-2xl hover:scale-105" data-lang-en="Reserve Now" data-lang-cs="Rezervovat nyní">
+                    Rezervovat nyní
+                </a>
+            </div>
+
+            <!-- Floating Stats -->
+            <div class="mt-16 flex flex-wrap justify-center gap-8">
+                <div class="bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/20">
+                    <div class="text-3xl font-bold text-amber-400">4.9</div>
+                    <div class="text-sm text-gray-200" data-lang-en="Google Rating" data-lang-cs="Google hodnocení">Google hodnocení</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/20">
+                    <div class="text-3xl font-bold text-amber-400">500+</div>
+                    <div class="text-sm text-gray-200" data-lang-en="5-Star Reviews" data-lang-cs="Hodnocení 5 hvězd">Hodnocení 5 hvězd</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/20">
+                    <div class="text-3xl font-bold text-amber-400">25+</div>
+                    <div class="text-sm text-gray-200" data-lang-en="Years Experience" data-lang-cs="Let zkušeností">Let zkušeností</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+            <i class="bi bi-chevron-down text-white text-3xl"></i>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-amber-50/50 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl group-hover:shadow-2xl transition-shadow">
+                        <i class="bi bi-award-fill text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2" data-lang-en="Award Winning" data-lang-cs="Oceněná restaurace">Oceněná restaurace</h3>
+                    <p class="text-gray-600" data-lang-en="Recognized for excellence in Italian cuisine" data-lang-cs="Uznávaná za vynikající italskou kuchyni">Uznávaná za vynikající italskou kuchyni</p>
+                </div>
+                <div class="text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl group-hover:shadow-2xl transition-shadow">
+                        <i class="bi bi-egg-fried text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2" data-lang-en="Fresh Ingredients" data-lang-cs="Čerstvé suroviny">Čerstvé suroviny</h3>
+                    <p class="text-gray-600" data-lang-en="Daily sourced from local farmers & Italy" data-lang-cs="Denně dováženo od místních farmářů a z Itálie">Denně dováženo od místních farmářů a z Itálie</p>
+                </div>
+                <div class="text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl group-hover:shadow-2xl transition-shadow">
+                        <i class="bi bi-people-fill text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2" data-lang-en="Expert Chefs" data-lang-cs="Zkušení kuchaři">Zkušení kuchaři</h3>
+                    <p class="text-gray-600" data-lang-en="Trained in traditional Italian techniques" data-lang-cs="Vyškoleni v tradičních italských technikách">Vyškoleni v tradičních italských technikách</p>
+                </div>
+                <div class="text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl group-hover:shadow-2xl transition-shadow">
+                        <i class="bi bi-heart-fill text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2" data-lang-en="Made with Love" data-lang-cs="Připraveno s láskou">Připraveno s láskou</h3>
+                    <p class="text-gray-600" data-lang-en="Family recipes passed through generations" data-lang-cs="Rodinné recepty předávané generacemi">Rodinné recepty předávané generacemi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1">
+                    <span class="text-amber-600 font-semibold text-sm uppercase tracking-wider" data-lang-en="Our Story" data-lang-cs="Náš příběh">Náš příběh</span>
+                    <h2 class="text-5xl font-bold text-gray-900 mb-6 mt-3"><span data-lang-en="Tradition Meets" data-lang-cs="Tradice se setkává s">Tradice se setkává s</span><br/><span data-lang-en="Innovation" data-lang-cs="inovací">inovací</span></h2>
+                    <p class="text-gray-600 text-lg mb-6 leading-relaxed" data-lang-en="For over 25 years, Bella Cucina has been bringing the authentic flavors of Italy to our community. Our journey began with a simple dream: to share the rich culinary heritage of our homeland with food lovers around the world." data-lang-cs="Již více než 25 let přináší Bella Cucina autentické chutě Itálie naší komunitě. Naše cesta začala jednoduchým snem: sdílet bohaté kulinářské dědictví naší vlasti s milovníky jídla po celém světě.">
+                        Již více než 25 let přináší Bella Cucina autentické chutě Itálie naší komunitě. Naše cesta začala jednoduchým snem: sdílet bohaté kulinářské dědictví naší vlasti s milovníky jídla po celém světě.
+                    </p>
+                    <p class="text-gray-600 text-lg mb-6 leading-relaxed" data-lang-en="Every dish tells a story - from our handmade pasta crafted using century-old techniques to our wood-fired pizzas that capture the essence of Naples. Our chefs blend time-honored traditions with creative innovation to deliver an unforgettable dining experience." data-lang-cs="Každé jídlo vypráví příběh - od našich ručně vyráběných těstovin připravených pomocí staletých technik až po naše pizzy pečené na dřevě, které zachycují podstatu Neapole. Naši kuchaři kombinují ověřené tradice s kreativní inovací, aby vám poskytli nezapomenutelný kulinářský zážitek.">
+                        Každé jídlo vypráví příběh - od našich ručně vyráběných těstovin připravených pomocí staletých technik až po naše pizzy pečené na dřevě, které zachycují podstatu Neapole. Naši kuchaři kombinují ověřené tradice s kreativní inovací, aby vám poskytli nezapomenutelný kulinářský zážitek.
+                    </p>
+                    <div class="grid grid-cols-3 gap-6 mt-10 p-6 bg-white rounded-2xl shadow-lg">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-amber-600 mb-1">25+</div>
+                            <div class="text-gray-600 text-sm" data-lang-en="Years" data-lang-cs="Let">Let zkušeností</div>
+                        </div>
+                        <div class="text-center border-x border-gray-200">
+                            <div class="text-4xl font-bold text-amber-600 mb-1">50+</div>
+                            <div class="text-gray-600 text-sm" data-lang-en="Dishes" data-lang-cs="Pokrmů">Pokrmů</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-amber-600 mb-1">15K+</div>
+                            <div class="text-gray-600 text-sm" data-lang-en="Happy Guests" data-lang-cs="Spokojených hostů">Spokojených hostů</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 relative">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2074"
+                             alt="Restaurant interior"
+                             class="w-full h-[600px] object-cover">
+                    </div>
+                    <div class="absolute -bottom-8 -left-8 bg-gradient-to-br from-amber-600 to-amber-800 text-white p-8 rounded-2xl shadow-2xl max-w-[250px]">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="bi bi-star-fill text-yellow-300"></i>
+                            <i class="bi bi-star-fill text-yellow-300"></i>
+                            <i class="bi bi-star-fill text-yellow-300"></i>
+                            <i class="bi bi-star-fill text-yellow-300"></i>
+                            <i class="bi bi-star-fill text-yellow-300"></i>
+                        </div>
+                        <div class="font-bold text-xl" data-lang-en="Award Winning" data-lang-cs="Oceněná">Oceněná</div>
+                        <div class="text-amber-100 text-sm" data-lang-en="Best Italian Restaurant 2023" data-lang-cs="Nejlepší italská restaurace 2023">Nejlepší italská restaurace 2023</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chef's Special Section -->
+    <section id="specials" class="py-24 bg-gradient-to-br from-amber-900 to-amber-800 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-30" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2070'); background-size: cover; background-position: center;"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-amber-300 font-semibold text-sm uppercase tracking-wider" data-lang-en="This Week" data-lang-cs="Tento týden">Tento týden</span>
+                <h2 class="text-5xl font-bold mb-4 mt-3" data-lang-en="Chef's Special" data-lang-cs="Šéfkuchařova specialita">Šéfkuchařova specialita</h2>
+                <p class="text-xl text-amber-100 max-w-2xl mx-auto" data-lang-en="Handpicked dishes that showcase the best of our culinary expertise" data-lang-cs="Vybraná jídla, která předvádějí to nejlepší z naší kulinářské odbornosti">Vybraná jídla, která předvádějí to nejlepší z naší kulinářské odbornosti</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Special 1 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:scale-105 transition-transform duration-300 shadow-2xl">
+                    <div class="relative h-64">
+                        <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=800" alt="Truffle Pasta" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-amber-500 text-white px-4 py-2 rounded-full font-bold shadow-lg">
+                            $32
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-semibold" data-lang-en="NEW" data-lang-cs="NOVINKA">NOVINKA</span>
+                            <span class="text-amber-300 text-sm" data-lang-en="Limited Time" data-lang-cs="Časově omezené">Časově omezené</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2" data-lang-en="Truffle Tagliatelle" data-lang-cs="Lanýžové Tagliatelle">Lanýžové Tagliatelle</h3>
+                        <p class="text-amber-100 mb-4" data-lang-en="Handmade pasta with black truffle, parmigiano, and butter sauce" data-lang-cs="Ručně vyráběné těstoviny s černým lanýžem, parmigiano a máslovou omáčkou">Ručně vyráběné těstoviny s černým lanýžem, parmigiano a máslovou omáčkou</p>
+                        <div class="flex items-center gap-2 text-amber-300">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span class="text-sm ml-2">(48 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special 2 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:scale-105 transition-transform duration-300 shadow-2xl">
+                    <div class="relative h-64">
+                        <img src="https://images.unsplash.com/photo-1598511726623-d2e9996892f0?q=80&w=800" alt="Seafood Risotto" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-amber-500 text-white px-4 py-2 rounded-full font-bold shadow-lg">
+                            $36
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold" data-lang-en="POPULAR" data-lang-cs="OBLÍBENÉ">OBLÍBENÉ</span>
+                            <span class="text-amber-300 text-sm" data-lang-en="Chef Recommended" data-lang-cs="Doporučeno šéfkuchařem">Doporučeno šéfkuchařem</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2" data-lang-en="Seafood Risotto" data-lang-cs="Mořské plody Risotto">Mořské plody Risotto</h3>
+                        <p class="text-amber-100 mb-4" data-lang-en="Creamy risotto with lobster, shrimp, scallops, and saffron" data-lang-cs="Krémové risotto s humrem, krevetami, hřebenatkami a šafránem">Krémové risotto s humrem, krevetami, hřebenatkami a šafránem</p>
+                        <div class="flex items-center gap-2 text-amber-300">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span class="text-sm ml-2">(127 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special 3 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:scale-105 transition-transform duration-300 shadow-2xl">
+                    <div class="relative h-64">
+                        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800" alt="Prosciutto Pizza" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-amber-500 text-white px-4 py-2 rounded-full font-bold shadow-lg">
+                            $28
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold" data-lang-en="SEASONAL" data-lang-cs="SEZÓNNÍ">SEZÓNNÍ</span>
+                            <span class="text-amber-300 text-sm" data-lang-en="Traditional" data-lang-cs="Tradiční">Tradiční</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2" data-lang-en="Prosciutto e Rucola" data-lang-cs="Prosciutto e Rucola">Prosciutto e Rucola</h3>
+                        <p class="text-amber-100 mb-4" data-lang-en="Wood-fired pizza with prosciutto, arugula, and parmesan shavings" data-lang-cs="Pizza pečená na dřevě s prosciuttem, rukolou a hoblinami parmezánu">Pizza pečená na dřevě s prosciuttem, rukolou a hoblinami parmezánu</p>
+                        <div class="flex items-center gap-2 text-amber-300">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span class="text-sm ml-2">(93 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-amber-600 font-semibold text-sm uppercase tracking-wider" data-lang-en="Discover" data-lang-cs="Objevte">Objevte</span>
+                <h2 class="text-5xl font-bold text-gray-900 mb-4 mt-3" data-lang-en="Our Menu" data-lang-cs="Naše menu">Naše menu</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-lang-en="Authentic Italian dishes prepared fresh daily with premium ingredients" data-lang-cs="Autentická italská jídla připravená denně čerstvě s prémiovými surovinami">Autentická italská jídla připravená denně čerstvě s prémiovými surovinami</p>
+            </div>
+
+            <!-- Appetizers -->
+            <div class="mb-20">
+                <div class="flex items-center gap-4 mb-8">
+                    <h3 class="text-4xl font-bold text-gray-900">Antipasta</h3>
+                    <div class="flex-1 h-1 bg-gradient-to-r from-amber-600 to-transparent rounded"></div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://images.unsplash.com/photo-1506280754576-f6fa8a873550?q=80&w=200" alt="Bruschetta" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Bruschetta Classica</h4>
+                                <span class="text-xl font-bold text-amber-600">$12</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Toasted bread with fresh tomatoes, basil, garlic, and EVOO" data-lang-cs="Opékaný chléb s čerstvými rajčaty, bazalkou, česnekem a olivovým olejem">Opékaný chléb s čerstvými rajčaty, bazalkou, česnekem a olivovým olejem</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?q=80&w=200" alt="Caprese" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Caprese Salad</h4>
+                                <span class="text-xl font-bold text-amber-600">$14</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Fresh mozzarella, ripe tomatoes, basil, and balsamic glaze" data-lang-cs="Čerstvá mozzarella, zralá rajčata, bazalka a balsamický ocet">Čerstvá mozzarella, zralá rajčata, bazalka a balsamický ocet</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://images.unsplash.com/photo-1608039829572-78524f79c4c7?q=80&w=200" alt="Arancini" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Arancini</h4>
+                                <span class="text-xl font-bold text-amber-600">$13</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Crispy fried risotto balls with mozzarella and marinara" data-lang-cs="Křupavé smažené rýžové kuličky s mozzarellou a marinara">Křupavé smažené rýžové kuličky s mozzarellou a marinara</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://images.unsplash.com/photo-1604909052743-94e838986d24?q=80&w=200" alt="Calamari" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Calamari Fritti</h4>
+                                <span class="text-xl font-bold text-amber-600">$15</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Lightly fried calamari with lemon aioli and marinara" data-lang-cs="Lehce smažené kalamáry s citronovou aioli a marinara">Lehce smažené kalamáry s citronovou aioli a marinara</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Courses -->
+            <div class="mb-20">
+                <div class="flex items-center gap-4 mb-8">
+                    <h3 class="text-4xl font-bold text-gray-900" data-lang-en="Main course" data-lang-cs="Hlavní Chod">Hlavní Chod</h3>
+                    <div class="flex-1 h-1 bg-gradient-to-r from-amber-600 to-transparent rounded"></div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://images.unsplash.com/photo-1645112411341-6c4fd023714a?q=80&w=200" alt="Carbonara" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Spaghetti Carbonara</h4>
+                                <span class="text-xl font-bold text-amber-600">$22</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Classic Roman pasta with pancetta, eggs, and pecorino" data-lang-cs="Klasické římské těstoviny s pancettou, vejci a pecorinem">Klasické římské těstoviny s pancettou, vejci a pecorinem</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://images.unsplash.com/photo-1619895092538-128341789043?q=80&w=200" alt="Lasagna" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Lasagna al Forno</h4>
+                                <span class="text-xl font-bold text-amber-600">$24</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Layers of pasta, meat ragù, béchamel, and parmigiano" data-lang-cs="Vrstvy těstovin, masové ragù, bešamel a parmigiano">Vrstvy těstovin, masové ragù, bešamel a parmigiano</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://www.sacla.co.uk/cdn/shop/articles/SACLA_OSSOBUCO_SHANK.jpg?v=1726839071?q=80&w=200" alt="Osso Buco" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Osso Buco alla Milanese</h4>
+                                <span class="text-xl font-bold text-amber-600">$38</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Braised veal shanks in white wine, served with risotto" data-lang-cs="Dušené telecí koleno na bílém víně, podávané s risottem">Dušené telecí koleno na bílém víně, podávané s risottem</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://www.tasteofhome.com/wp-content/uploads/2024/03/Margherita-Pizza-_EXPS_TOHVP24_275515_MF_02_28_1.jpg?q=80&w=200" alt="Pizza" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Margherita Pizza</h4>
+                                <span class="text-xl font-bold text-amber-600">$18</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Wood-fired with San Marzano tomatoes and mozzarella" data-lang-cs="Pečená na dřevě se San Marzano rajčaty a mozzarellou">Pečená na dřevě se San Marzano rajčaty a mozzarellou</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=200" alt="Fish" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Branzino al Limone</h4>
+                                <span class="text-xl font-bold text-amber-600">$32</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Pan-seared sea bass with lemon, capers, and vegetables" data-lang-cs="Opečený mořský vlk s citronem, kapary a zeleninou">Opečený mořský vlk s citronem, kapary a zeleninou</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/2422ed47-8112-4022-acfb-b28d2e3aa4ca/Derivates/b8ca57a5-e478-4473-b47b-ccd627feff93.jpg?q=80&w=200" alt="Ravioli" class="w-24 h-24 object-cover rounded-xl shadow-md">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-bold text-gray-900">Ravioli di Ricotta</h4>
+                                <span class="text-xl font-bold text-amber-600">$26</span>
+                            </div>
+                            <p class="text-gray-600 mb-2" data-lang-en="Homemade ravioli with ricotta and spinach in sage butter" data-lang-cs="Domácí ravioli s ricottou a špenátem v šalvějovém másle">Domácí ravioli s ricottou a špenátem v šalvějovém másle</p>
+                            <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desserts -->
+            <div>
+                <div class="flex items-center gap-4 mb-8">
+                    <h3 class="text-4xl font-bold text-gray-900" data-lang-en="Dessert" data-lang-cs="Dezert">Dezert</h3>
+                    <div class="flex-1 h-1 bg-gradient-to-r from-amber-600 to-transparent rounded"></div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://images.unsplash.com/photo-1542124948-dc391252a940?q=80&w=400" alt="Tiramisu" class="w-full h-48 object-cover rounded-xl shadow-md mb-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold text-gray-900">Tiramisu</h4>
+                            <span class="text-xl font-bold text-amber-600">$10</span>
+                        </div>
+                        <p class="text-gray-600 mb-2" data-lang-en="Espresso-soaked ladyfingers with mascarpone cream" data-lang-cs="Piškoty namočené v espressu s mascarpone krémem">Piškoty namočené v espressu s mascarpone krémem</p>
+                        <div class="flex items-center gap-1 text-amber-500 text-sm">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                    </div>
+                    <div class="bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://www.allrecipes.com/thmb/NlP50cO2BjJdN4uGvl5JhW0Rx2A=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/AR-72567-Panna-cotta-ddmfs-4x3-14ae724a2a8e4ca3a79c5e27b2b61994.jpg?q=80&w=400" alt="Panna Cotta" class="w-full h-48 object-cover rounded-xl shadow-md mb-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold text-gray-900">Panna Cotta</h4>
+                            <span class="text-xl font-bold text-amber-600">$9</span>
+                        </div>
+                        <p class="text-gray-600 mb-2" data-lang-en="Silky vanilla cream with mixed berry compote" data-lang-cs="Hedvábný vanilkový krém s kompotem z lesních plodů">Hedvábný vanilkový krém s kompotem z lesních plodů</p>
+                        <div class="flex items-center gap-1 text-amber-500 text-sm">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                        </div>
+                    </div>
+                    <div class="bg-stone-50 p-6 rounded-2xl hover:shadow-lg transition-shadow">
+                        <img src="https://www.cucchiaio.it/content/dam/cucchiaio/it/ricette/2015/11/cannoli-siciliani/Cannoli%20siciliani-1.jpg?q=80&w=400" alt="Cannoli" class="w-full h-48 object-cover rounded-xl shadow-md mb-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-bold text-gray-900">Cannoli Siciliani</h4>
+                            <span class="text-xl font-bold text-amber-600">$11</span>
+                        </div>
+                        <p class="text-gray-600 mb-2" data-lang-en="Crispy shells with sweet ricotta and chocolate chips" data-lang-cs="Křupavé trubičky se sladkou ricottou a čokoládou">Křupavé trubičky se sladkou ricottou a čokoládou</p>
+                        <div class="flex items-center gap-1 text-amber-500 text-sm">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Reviews Section -->
+    <section id="reviews" class="py-24 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-amber-600 font-semibold text-sm uppercase tracking-wider" data-lang-en="Testimonials" data-lang-cs="Reference">Reference</span>
+                <h2 class="text-5xl font-bold text-gray-900 mb-4 mt-3" data-lang-en="What Our Guests Say" data-lang-cs="Co říkají naši hosté">Co říkají naši hosté</h2>
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-8">
+                    <div class="flex items-center gap-1 text-amber-500 text-2xl">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-900">4.9</span>
+                    <span class="text-gray-600" data-lang-en="out of 5" data-lang-cs="z 5">z 5</span>
+                </div>
+                <p class="text-gray-600" data-lang-en="Based on 500+ Google reviews" data-lang-cs="Na základě více než 500 Google recenzí">Na základě více než 500 Google recenzí</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <!-- Review 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-1 text-amber-500 mb-4">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 leading-relaxed italic" data-lang-en="Absolutely phenomenal! The pasta was handmade and you could taste the quality in every bite. The service was impeccable and the ambiance transported us straight to Italy. We'll definitely be returning soon!" data-lang-cs="Naprosto fenomenální! Těstoviny byly ručně vyráběné a dalo se cítit kvalita v každém soustu. Obsluha byla bezvadná a atmosféra nás přenesla přímo do Itálie. Určitě se brzy vrátíme!">
+                        "Naprosto fenomenální! Těstoviny byly ručně vyráběné a dalo se cítit kvalita v každém soustu. Obsluha byla bezvadná a atmosféra nás přenesla přímo do Itálie. Určitě se brzy vrátíme!"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=1" alt="Sarah" class="w-12 h-12 rounded-full shadow-md">
+                        <div>
+                            <div class="font-bold text-gray-900">Sarah Mitchell</div>
+                            <div class="text-sm text-gray-500 flex items-center gap-1">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-3">
+                                <span data-lang-en="2 weeks ago" data-lang-cs="před 2 týdny">před 2 týdny</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-1 text-amber-500 mb-4">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 leading-relaxed italic" data-lang-en="Best Italian restaurant in town, hands down! The osso buco was tender and flavorful, and the tiramisu was heavenly. The chef even came out to chat with us. Truly authentic Italian experience!" data-lang-cs="Nejlepší italská restaurace ve městě, bez debat! Osso buco bylo křehké a plné chutí, a tiramisu bylo nebeské. Šéfkuchař si s námi dokonce přišel popovídat. Opravdu autentický italský zážitek!">
+                        "Nejlepší italská restaurace ve městě, bez debat! Osso buco bylo křehké a plné chutí, a tiramisu bylo nebeské. Šéfkuchař si s námi dokonce přišel popovídat. Opravdu autentický italský zážitek!"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=13" alt="Michael" class="w-12 h-12 rounded-full shadow-md">
+                        <div>
+                            <div class="font-bold text-gray-900">Michael Chen</div>
+                            <div class="text-sm text-gray-500 flex items-center gap-1">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-3">
+                                <span data-lang-en="1 month ago" data-lang-cs="před 1 měsícem">před 1 měsícem</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-1 text-amber-500 mb-4">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 leading-relaxed italic" data-lang-en="Celebrated our anniversary here and it was perfect! The staff made us feel so special, and the food was incredible. The carbonara was the best I've ever had outside of Rome. Highly recommend!" data-lang-cs="Slavili jsme zde naše výročí a bylo to dokonalé! Personál nás nechal cítit se velmi výjimečně a jídlo bylo neuvěřitelné. Carbonara byla ta nejlepší, jakou jsem kdy měla mimo Řím. Vřele doporučuji!">
+                        "Slavili jsme zde naše výročí a bylo to dokonalé! Personál nás nechal cítit se velmi výjimečně a jídlo bylo neuvěřitelné. Carbonara byla ta nejlepší, jakou jsem kdy měla mimo Řím. Vřele doporučuji!"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Emily" class="w-12 h-12 rounded-full shadow-md">
+                        <div>
+                            <div class="font-bold text-gray-900">Emily Rodriguez</div>
+                            <div class="text-sm text-gray-500 flex items-center gap-1">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-3">
+                                <span data-lang-en="3 weeks ago" data-lang-cs="před 3 týdny">před 3 týdny</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 4 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-1 text-amber-500 mb-4">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 leading-relaxed italic" data-lang-en="From the moment we walked in, we were greeted with warmth. The wood-fired pizza reminded me of my trip to Naples. Fresh ingredients, perfect crust. This place is a hidden gem!" data-lang-cs="Od okamžiku, kdy jsme vstoupili, jsme byli přivítáni s teplem. Pizza pečená na dřevě mi připomněla můj výlet do Neapole. Čerstvé suroviny, dokonalé těsto. Toto místo je skrytý klenot!">
+                        "Od okamžiku, kdy jsme vstoupili, jsme byli přivítáni s teplem. Pizza pečená na dřevě mi připomněla můj výlet do Neapole. Čerstvé suroviny, dokonalé těsto. Toto místo je skrytý klenot!"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=8" alt="David" class="w-12 h-12 rounded-full shadow-md">
+                        <div>
+                            <div class="font-bold text-gray-900">David Thompson</div>
+                            <div class="text-sm text-gray-500 flex items-center gap-1">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-3">
+                                <span data-lang-en="1 week ago" data-lang-cs="před 1 týdnem">před 1 týdnem</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 5 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-1 text-amber-500 mb-4">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 leading-relaxed italic" data-lang-en="Outstanding! The truffle pasta was divine, and the wine selection was impressive. Perfect date night spot with romantic lighting and excellent service. Can't wait to come back!" data-lang-cs="Vynikající! Lanýžové těstoviny byly božské a výběr vína byl působivý. Perfektní místo na romantický večer s romantickým osvětlením a vynikající obsluhou. Už se nemůžu dočkat, až se vrátím!">
+                        "Vynikající! Lanýžové těstoviny byly božské a výběr vína byl působivý. Perfektní místo na romantický večer s romantickým osvětlením a vynikající obsluhou. Už se nemůžu dočkat, až se vrátím!"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=10" alt="Jessica" class="w-12 h-12 rounded-full shadow-md">
+                        <div>
+                            <div class="font-bold text-gray-900">Jessica Williams</div>
+                            <div class="text-sm text-gray-500 flex items-center gap-1">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-3">
+                                <span data-lang-en="4 days ago" data-lang-cs="před 4 dny">před 4 dny</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 6 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-1 text-amber-500 mb-4">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
+                    </div>
+                    <p class="text-gray-700 mb-6 leading-relaxed italic" data-lang-en="Family-run with so much heart! The lasagna tasted like my Italian grandmother's recipe. Great portions, reasonable prices, and the staff treats you like family. Will become a regular!" data-lang-cs="Rodinný podnik s tolika srdcem! Lasagne chutnaly jako recept mé italské babičky. Skvělé porce, rozumné ceny a personál se k vám chová jako k rodině. Stanu se stálým hostem!">
+                        "Rodinný podnik s tolika srdcem! Lasagne chutnaly jako recept mé italské babičky. Skvělé porce, rozumné ceny a personál se k vám chová jako k rodině. Stanu se stálým hostem!"
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="Robert" class="w-12 h-12 rounded-full shadow-md">
+                        <div>
+                            <div class="font-bold text-gray-900">Robert Anderson</div>
+                            <div class="text-sm text-gray-500 flex items-center gap-1">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-3">
+                                <span data-lang-en="2 months ago" data-lang-cs="před 2 měsíci">před 2 měsíci</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center">
+                <a href="https://www.google.com/search?q=bella+cucina+reviews" target="_blank" class="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full hover:shadow-xl transition-all duration-300 font-semibold border-2 border-gray-200">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-5">
+                    <span data-lang-en="Read All Reviews on Google" data-lang-cs="Přečíst všechny recenze na Google">Přečíst všechny recenze na Google</span>
+                    <i class="bi bi-box-arrow-up-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-amber-600 font-semibold text-sm uppercase tracking-wider" data-lang-en="Gallery" data-lang-cs="Galerie">Galerie</span>
+                <h2 class="text-5xl font-bold text-gray-900 mb-4 mt-3" data-lang-en="A Feast for the Eyes" data-lang-cs="Hostina pro oči">Hostina pro oči</h2>
+                <p class="text-xl text-gray-600" data-lang-en="Experience the beauty of our cuisine and ambiance" data-lang-cs="Zažijte krásu naší kuchyně a atmosféry">Zažijte krásu naší kuchyně a atmosféry</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=800" alt="Pasta dish" class="w-full h-72 object-cover">
+                </div>
+                <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800" alt="Pizza" class="w-full h-72 object-cover">
+                </div>
+                <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=800" alt="Tiramisu" class="w-full h-72 object-cover">
+                </div>
+                <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=800" alt="Wine" class="w-full h-72 object-cover">
+                </div>
+                <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 md:col-span-2">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200" alt="Restaurant interior" class="w-full h-72 object-cover">
+                </div>
+                <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1595295333158-4742f28fbd85?q=80&w=800" alt="Salad" class="w-full h-72 object-cover">
+                </div>
+                <div class="overflow-hidden rounded-2xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800" alt="Chef cooking" class="w-full h-72 object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-gradient-to-br from-stone-100 to-amber-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-amber-600 font-semibold text-sm uppercase tracking-wider" data-lang-en="Get in Touch" data-lang-cs="Kontaktujte nás">Kontaktujte nás</span>
+                <h2 class="text-5xl font-bold text-gray-900 mb-4 mt-3" data-lang-en="Visit Us Today" data-lang-cs="Navštivte nás dnes">Navštivte nás dnes</h2>
+                <p class="text-xl text-gray-600" data-lang-en="We'd love to serve you an unforgettable meal" data-lang-cs="Rádi vám připravíme nezapomenutelné jídlo">Rádi vám připravíme nezapomenutelné jídlo</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 mb-16">
+                <!-- Location -->
+                <div class="bg-white p-10 rounded-2xl shadow-xl text-center hover:scale-105 transition-transform">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <i class="bi bi-geo-alt-fill text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4" data-lang-en="Location" data-lang-cs="Poloha">Poloha</h3>
+                    <p class="text-gray-600 text-lg">123 Italian Street</p>
+                    <p class="text-gray-600 text-lg">Downtown District</p>
+                    <p class="text-gray-600 text-lg mb-4">City, ST 12345</p>
+                    <a href="https://maps.google.com" target="_blank" class="text-amber-600 font-semibold hover:text-amber-700 inline-flex items-center gap-2">
+                        <span data-lang-en="Get Directions" data-lang-cs="Získat směr">Získat směr</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Hours -->
+                <div class="bg-white p-10 rounded-2xl shadow-xl text-center hover:scale-105 transition-transform">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <i class="bi bi-clock-fill text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4" data-lang-en="Opening Hours" data-lang-cs="Otevírací doba">Otevírací doba</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-gray-600 max-w-xs mx-auto">
+                            <span data-lang-en="Monday - Friday" data-lang-cs="Pondělí - Pátek">Pondělí - Pátek</span>
+                            <span class="font-semibold">11:00 - 22:00</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600 max-w-xs mx-auto">
+                            <span data-lang-en="Saturday" data-lang-cs="Sobota">Sobota</span>
+                            <span class="font-semibold">10:00 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600 max-w-xs mx-auto">
+                            <span data-lang-en="Sunday" data-lang-cs="Neděle">Neděle</span>
+                            <span class="font-semibold">10:00 - 22:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="bg-white p-10 rounded-2xl shadow-xl text-center hover:scale-105 transition-transform">
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <i class="bi bi-telephone-fill text-white text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4" data-lang-en="Contact" data-lang-cs="Kontakt">Kontakt</h3>
+                    <p class="text-gray-600 mb-2" data-lang-en="Phone" data-lang-cs="Telefon">Telefon</p>
+                    <a href="tel:5551234567" class="text-amber-600 font-semibold text-xl hover:text-amber-700">(555) 123-4567</a>
+                    <p class="text-gray-600 mt-6 mb-2" data-lang-en="Email" data-lang-cs="Email">Email</p>
+                    <a href="mailto:info@bellacucina.com" class="text-amber-600 font-semibold hover:text-amber-700">info@bellacucina.com</a>
+                </div>
+            </div>
+
+            <!-- Reservation Form -->
+            <div class="bg-white p-12 rounded-3xl shadow-2xl max-w-4xl mx-auto">
+                <div class="text-center mb-10">
+                    <h3 class="text-4xl font-bold text-gray-900 mb-3" data-lang-en="Make a Reservation" data-lang-cs="Vytvořit rezervaci">Vytvořit rezervaci</h3>
+                    <p class="text-gray-600 text-lg" data-lang-en="Reserve your table and we'll prepare something special for you" data-lang-cs="Rezervujte si stůl a my pro vás připravíme něco výjimečného">Rezervujte si stůl a my pro vás připravíme něco výjimečného</p>
+                </div>
+                <form class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-3 text-sm uppercase tracking-wide" data-lang-en="Full Name *" data-lang-cs="Celé jméno *">Celé jméno *</label>
+                        <input type="text" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 outline-none transition-all" placeholder="Jan Novák">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-3 text-sm uppercase tracking-wide">Email *</label>
+                        <input type="email" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 outline-none transition-all" placeholder="jan@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-3 text-sm uppercase tracking-wide" data-lang-en="Phone *" data-lang-cs="Telefon *">Telefon *</label>
+                        <input type="tel" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 outline-none transition-all" placeholder="+420 123 456 789">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-3 text-sm uppercase tracking-wide" data-lang-en="Date *" data-lang-cs="Datum *">Datum *</label>
+                        <input type="date" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-3 text-sm uppercase tracking-wide" data-lang-en="Time *" data-lang-cs="Čas *">Čas *</label>
+                        <select required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 outline-none transition-all">
+                            <option value="" data-lang-en="Select time..." data-lang-cs="Vyberte čas...">Vyberte čas...</option>
+                            <option>17:00</option>
+                            <option>17:30</option>
+                            <option>18:00</option>
+                            <option>18:30</option>
+                            <option>19:00</option>
+                            <option>19:30</option>
+                            <option>20:00</option>
+                            <option>20:30</option>
+                            <option>21:00</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-3 text-sm uppercase tracking-wide" data-lang-en="Guests *" data-lang-cs="Počet hostů *">Počet hostů *</label>
+                        <select required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 outline-none transition-all">
+                            <option value="" data-lang-en="Select guests..." data-lang-cs="Vyberte počet hostů...">Vyberte počet hostů...</option>
+                            <option data-lang-en="1 Person" data-lang-cs="1 osoba">1 osoba</option>
+                            <option data-lang-en="2 People" data-lang-cs="2 osoby">2 osoby</option>
+                            <option data-lang-en="3 People" data-lang-cs="3 osoby">3 osoby</option>
+                            <option data-lang-en="4 People" data-lang-cs="4 osoby">4 osoby</option>
+                            <option data-lang-en="5 People" data-lang-cs="5 osob">5 osob</option>
+                            <option data-lang-en="6+ People" data-lang-cs="6+ osob">6+ osob</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-700 font-semibold mb-3 text-sm uppercase tracking-wide" data-lang-en="Special Requests (Optional)" data-lang-cs="Speciální požadavky (volitelné)">Speciální požadavky (volitelné)</label>
+                        <textarea class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 outline-none transition-all resize-none" rows="4" placeholder="" data-lang-en="Dietary restrictions, allergies, special occasions, preferred seating..." data-lang-cs="Dietní omezení, alergie, zvláštní příležitosti, preferované místo..."></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-10 py-5 rounded-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 font-bold text-lg flex items-center justify-center gap-3">
+                            <i class="bi bi-calendar-check-fill text-2xl"></i>
+                            <span data-lang-en="Confirm Reservation" data-lang-cs="Potvrdit rezervaci">Potvrdit rezervaci</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-br from-gray-900 to-gray-800 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center shadow-lg">
+                            <i class="bi bi-cup-hot-fill text-2xl text-white"></i>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-bold tracking-tight">Bella Cucina</span>
+                            <p class="text-xs text-amber-400 -mt-1">Authentic Italian</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-6" data-lang-en="Bringing authentic Italian flavors to your table since 1998. Family recipes, fresh ingredients, unforgettable experiences." data-lang-cs="Přinášíme autentické italské chutě na váš stůl od roku 1998. Rodinné recepty, čerstvé suroviny, nezapomenutelné zážitky.">
+                        Přinášíme autentické italské chutě na váš stůl od roku 1998. Rodinné recepty, čerstvé suroviny, nezapomenutelné zážitky.
+                    </p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-11 h-11 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-amber-600 transition-all hover:scale-110 shadow-lg">
+                            <i class="bi bi-facebook text-lg"></i>
+                        </a>
+                        <a href="#" class="w-11 h-11 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-amber-600 transition-all hover:scale-110 shadow-lg">
+                            <i class="bi bi-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="w-11 h-11 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-amber-600 transition-all hover:scale-110 shadow-lg">
+                            <i class="bi bi-twitter text-lg"></i>
+                        </a>
+                        <a href="#" class="w-11 h-11 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-amber-600 transition-all hover:scale-110 shadow-lg">
+                            <i class="bi bi-tiktok text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-xl font-bold mb-6 text-amber-400" data-lang-en="Quick Links" data-lang-cs="Rychlé odkazy">Rychlé odkazy</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 hover:text-amber-400 transition-colors flex items-center gap-2"><i class="bi bi-chevron-right text-xs"></i> <span data-lang-en="Home" data-lang-cs="Domů">Domů</span></a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-amber-400 transition-colors flex items-center gap-2"><i class="bi bi-chevron-right text-xs"></i> <span data-lang-en="About Us" data-lang-cs="O nás">O nás</span></a></li>
+                        <li><a href="#menu" class="text-gray-400 hover:text-amber-400 transition-colors flex items-center gap-2"><i class="bi bi-chevron-right text-xs"></i> Menu</a></li>
+                        <li><a href="#reviews" class="text-gray-400 hover:text-amber-400 transition-colors flex items-center gap-2"><i class="bi bi-chevron-right text-xs"></i> <span data-lang-en="Reviews" data-lang-cs="Recenze">Recenze</span></a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-amber-400 transition-colors flex items-center gap-2"><i class="bi bi-chevron-right text-xs"></i> <span data-lang-en="Contact" data-lang-cs="Kontakt">Kontakt</span></a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xl font-bold mb-6 text-amber-400" data-lang-en="Contact Info" data-lang-cs="Kontaktní informace">Kontaktní informace</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start gap-3">
+                            <i class="bi bi-geo-alt-fill text-amber-500 mt-1"></i>
+                            <span>123 Italian Street<br/>Downtown District<br/>City, ST 12345</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="bi bi-telephone-fill text-amber-500"></i>
+                            <a href="tel:5551234567" class="hover:text-amber-400 transition-colors">(555) 123-4567</a>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="bi bi-envelope-fill text-amber-500"></i>
+                            <a href="mailto:info@bellacucina.com" class="hover:text-amber-400 transition-colors">info@bellacucina.com</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-xl font-bold mb-6 text-amber-400" data-lang-en="Newsletter" data-lang-cs="Newsletter">Newsletter</h4>
+                    <p class="text-gray-400 mb-4" data-lang-en="Subscribe to receive special offers and updates!" data-lang-cs="Přihlaste se k odběru speciálních nabídek a aktualit!">Přihlaste se k odběru speciálních nabídek a aktualit!</p>
+                    <form class="space-y-3">
+                        <input type="email" placeholder="Your email" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/50 outline-none transition-all text-white placeholder-gray-500">
+                        <button type="submit" class="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:shadow-lg hover:scale-105 transition-all font-semibold" data-lang-en="Subscribe" data-lang-cs="Přihlásit se">
+                            Přihlásit se
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-gray-400 text-center">&copy; 2024 Bella Cucina. <span data-lang-en="All rights reserved" data-lang-cs="Všechna práva vyhrazena">Všechna práva vyhrazena</span>.</p>
+                    <p class="text-gray-500 text-sm"><span data-lang-en="Designed by" data-lang-cs="Navrženo">Navrženo</span> <span class="text-amber-500 font-semibold">Sebastián Kučera</span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Language and Theme Management
+        const translations = {
+            cs: {
+                // Navigation
+                'Home': 'Domů',
+                'About': 'O nás',
+                'Specials': 'Speciality',
+                'Menu': 'Menu',
+                'Reviews': 'Recenze',
+                'Contact': 'Kontakt',
+                'Reserve Table': 'Rezervovat stůl',
+
+                // Hero
+                'Welcome to': 'Vítejte v',
+                'Bella Cucina': 'Bella Cucina',
+                'Experience authentic Italian cuisine crafted with passion, tradition, and the finest ingredients imported directly from Italy': 'Zažijte autentickou italskou kuchyni připravenou s vášní, tradicí a nejlepšími surovinami dováženými přímo z Itálie',
+                'View Menu': 'Zobrazit menu',
+                'Reserve Now': 'Rezervovat nyní',
+                'Google Rating': 'Google hodnocení',
+                '5-Star Reviews': 'Hodnocení 5 hvězd',
+                'Years Experience': 'Let zkušeností',
+
+                // About
+                'Our Story': 'Náš příběh',
+                'Tradition Meets': 'Tradice se setkává s',
+                'Innovation': 'Inovací',
+                'Years': 'Let',
+                'Dishes': 'Pokrmů',
+                'Happy Guests': 'Spokojených hostů',
+
+                // Features
+                'Award Winning': 'Oceněná',
+                'Fresh Ingredients': 'Čerstvé suroviny',
+                'Expert Chefs': 'Zkušení kuchaři',
+                'Made with Love': 'Připraveno s láskou',
+
+                // Reviews
+                'What Our Guests Say': 'Co říkají naši hosté',
+                'Based on 500+ Google reviews': 'Na základě více než 500 Google recenzí',
+                'Read All Reviews on Google': 'Přečíst všechny recenze na Google',
+
+                // Contact
+                'Visit Us Today': 'Navštivte nás dnes',
+                'Location': 'Lokace',
+                'Opening Hours': 'Otevírací doba',
+                'Phone': 'Telefon',
+                'Email': 'Email',
+                'Make a Reservation': 'Vytvořit rezervaci',
+                'Full Name': 'Celé jméno',
+                'Date': 'Datum',
+                'Time': 'Čas',
+                'Guests': 'Počet hostů',
+                'Special Requests': 'Speciální požadavky',
+                'Confirm Reservation': 'Potvrdit rezervaci',
+
+                // Footer
+                'Quick Links': 'Rychlé odkazy',
+                'Contact Info': 'Kontaktní informace',
+                'Newsletter': 'Newsletter',
+                'Subscribe': 'Přihlásit se',
+                'Follow Us': 'Sledujte nás',
+                'All rights reserved': 'Všechna práva vyhrazena',
+                'Designed by': 'Navrženo'
+            },
+            en: {
+                // Keep original English
+            }
+        };
+
+        // Initialize
+        let currentLang = localStorage.getItem('lang') || 'cs';
+        let currentTheme = localStorage.getItem('theme') || 'light';
+
+        // Apply saved theme on load
+        if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.querySelector('#themeToggle').classList.add('active');
+            document.querySelector('#themeToggle .bi-sun-fill').classList.remove('bi-sun-fill');
+            document.querySelector('#themeToggle i').classList.add('bi-moon-fill');
+        }
+
+        // Apply saved language on load
+        if (currentLang === 'en') {
+            switchLanguage('en');
+        }
+
+        // Theme Toggle
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+
+            if (isDark) {
+                html.classList.remove('dark');
+                this.classList.remove('active');
+                this.querySelector('i').classList.remove('bi-moon-fill');
+                this.querySelector('i').classList.add('bi-sun-fill');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                this.classList.add('active');
+                this.querySelector('i').classList.remove('bi-sun-fill');
+                this.querySelector('i').classList.add('bi-moon-fill');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Language Toggle
+        document.getElementById('langCs').addEventListener('click', function() {
+            switchLanguage('cs');
+        });
+
+        document.getElementById('langEn').addEventListener('click', function() {
+            switchLanguage('en');
+        });
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+
+            // Update button styles
+            if (lang === 'cs') {
+                document.getElementById('langCs').classList.add('bg-amber-600', 'text-white');
+                document.getElementById('langCs').classList.remove('text-gray-700', 'dark:text-gray-300');
+                document.getElementById('langEn').classList.remove('bg-amber-600', 'text-white');
+                document.getElementById('langEn').classList.add('text-gray-700', 'dark:text-gray-300');
+            } else {
+                document.getElementById('langEn').classList.add('bg-amber-600', 'text-white');
+                document.getElementById('langEn').classList.remove('text-gray-700', 'dark:text-gray-300');
+                document.getElementById('langCs').classList.remove('bg-amber-600', 'text-white');
+                document.getElementById('langCs').classList.add('text-gray-700', 'dark:text-gray-300');
+            }
+
+            // Update all elements with data-lang attributes
+            document.querySelectorAll('[data-lang-en]').forEach(element => {
+                const csText = element.getAttribute('data-lang-cs');
+                const enText = element.getAttribute('data-lang-en');
+
+                if (element.tagName === 'OPTION') {
+                    // Handle select options
+                    element.textContent = lang === 'cs' ? csText : enText;
+                } else if (element.tagName === 'TEXTAREA') {
+                    // Handle textarea placeholders
+                    element.placeholder = lang === 'cs' ? csText : enText;
+                } else if (element.tagName === 'INPUT') {
+                    // Handle input placeholders
+                    element.placeholder = lang === 'cs' ? csText : enText;
+                } else {
+                    // Handle regular text content
+                    element.textContent = lang === 'cs' ? csText : enText;
+                }
+            });
+
+            // Update HTML lang attribute
+            document.documentElement.setAttribute('lang', lang === 'cs' ? 'cs' : 'en');
+
+            // Update title
+            if (lang === 'cs') {
+                document.title = 'Bella Cucina - Authentická Italská Restaurace';
+            } else {
+                document.title = 'Bella Cucina - Authentic Italian Restaurant';
+            }
+        }
+    </script>
+
+</body>
+</html>

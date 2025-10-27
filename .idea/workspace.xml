@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2d466e35-c006-4221-9a4c-e44b8faf7282" name="Changes" comment="iuh">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/barber/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/barber/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/dist/output.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,6 +187,7 @@
       <workItem from="1759780409473" duration="3101000" />
       <workItem from="1760013324334" duration="2658000" />
       <workItem from="1760622881321" duration="50000" />
+      <workItem from="1761583001410" duration="4802000" />
     </task>
     <task id="LOCAL-00001" summary="iuh">
       <option name="closed" value="true" />
