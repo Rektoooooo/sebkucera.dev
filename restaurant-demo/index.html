@@ -442,22 +442,25 @@
 
             /* Hero section adjustments - account for navbar + safe area */
             #home {
-                padding-top: 6rem !important;
-                padding-bottom: 2rem;
+                padding-top: 8rem !important;
+                padding-bottom: 5rem !important;
                 min-height: 100vh !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
             }
 
-            /* Hero content wrapper - add more top spacing */
+            /* Hero content wrapper - add even more top spacing */
             #home > .relative.z-20 {
-                margin-top: 2rem !important;
+                margin-top: 3rem !important;
+                padding-top: 2rem !important;
+                padding-bottom: 3rem !important;
             }
 
-            /* Established badge - ensure visibility */
+            /* Established badge - ensure visibility with more margin */
             #home .mb-6.inline-block {
-                margin-top: 1rem !important;
+                margin-top: 2rem !important;
+                margin-bottom: 1.5rem !important;
             }
 
             #home .text-xl,
@@ -475,17 +478,35 @@
                 height: 200px;
             }
 
-            /* Stats cards on hero - add proper spacing from edges */
-            #home .flex.flex-wrap.justify-center.gap-8 {
-                gap: 0.75rem !important;
+            /* Stats cards on hero - fix overlapping */
+            #home .flex.flex-wrap.justify-center {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                justify-content: space-between !important;
+                gap: 0.5rem !important;
                 padding-left: 1rem !important;
                 padding-right: 1rem !important;
-                margin-bottom: 2rem !important;
+                margin-bottom: 1rem !important;
+                width: 100% !important;
             }
-            #home .flex.flex-wrap.justify-center.gap-8 > div {
-                padding: 0.75rem 1rem !important;
-                min-width: calc(33.333% - 0.75rem) !important;
-                flex: 1 1 auto !important;
+            #home .flex.flex-wrap.justify-center > div {
+                padding: 0.75rem 0.5rem !important;
+                flex: 1 1 0 !important;
+                min-width: 0 !important;
+                max-width: none !important;
+            }
+
+            /* Make text smaller in stats boxes */
+            #home .flex.flex-wrap.justify-center > div .text-4xl {
+                font-size: 1.75rem !important;
+            }
+            #home .flex.flex-wrap.justify-center > div .text-gray-600 {
+                font-size: 0.75rem !important;
+            }
+
+            /* Hide scroll arrow on mobile */
+            #home .animate-bounce {
+                display: none !important;
             }
 
             /* Features section icons */
