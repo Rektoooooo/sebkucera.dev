@@ -141,7 +141,7 @@ export default function DashboardPage() {
               Stop Server
             </Button>
             <Button
-              variant="warning"
+              variant="secondary"
               onClick={() => handleServerAction('restart')}
               loading={actionLoading === 'restart'}
               disabled={!isOnline || actionLoading !== null}
