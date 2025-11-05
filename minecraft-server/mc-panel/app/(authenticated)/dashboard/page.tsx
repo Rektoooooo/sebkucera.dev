@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { api } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -21,25 +21,24 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  const fetchStatus = async () => {
+  const fetchStatus = useCallback(async () => {
     try {
       const data = await api.get<ServerStatus>('/server/status');
       setStatus(data);
 
       // Clear loading state when status changes as expected
-      if (actionLoading === 'start' && data.online) {
-        setActionLoading(null);
-      } else if (actionLoading === 'stop' && !data.online) {
-        setActionLoading(null);
-      } else if (actionLoading === 'restart' && data.online) {
-        setActionLoading(null);
-      }
+      setActionLoading((currentAction) => {
+        if (currentAction === 'start' && data.online) return null;
+        if (currentAction === 'stop' && !data.online) return null;
+        if (currentAction === 'restart' && data.online) return null;
+        return currentAction;
+      });
     } catch (error) {
       console.error('Failed to fetch status:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchStatus();
