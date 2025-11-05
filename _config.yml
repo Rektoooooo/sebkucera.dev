@@ -1,0 +1,5 @@
+# Jekyll configuration
+exclude:
+  - minecraft-server/backend/
+  - minecraft-server/mc-panel/
+  - node_modules/
