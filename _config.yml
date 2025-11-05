@@ -1,0 +1,9 @@
+# Jekyll configuration for GitHub Pages
+exclude:
+  - minecraft-server/backend/
+  - minecraft-server/mc-panel/
+  - node_modules/
+  - package.json
+  - package-lock.json
+  - .gitignore
+  - .git/
