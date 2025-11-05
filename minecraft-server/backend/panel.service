@@ -1,0 +1,15 @@
+[Unit]
+Description=Minecraft Control Panel API
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/srv/panel
+Environment="PATH=/srv/panel/venv/bin"
+ExecStart=/srv/panel/venv/bin/uvicorn app:app --host 127.0.0.1 --port 8081
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
