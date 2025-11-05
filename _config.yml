@@ -7,3 +7,7 @@ exclude:
   - package-lock.json
   - .gitignore
   - .git/
+
+# Include folders that start with underscore
+include:
+  - minecraft-server/_next
