@@ -8,11 +8,12 @@ import { Badge } from '@/components/ui/Badge';
 import { LogViewer } from '@/components/server/LogViewer';
 
 interface ServerStatus {
-  status: 'online' | 'offline';
+  online: boolean;
   players?: {
     online: number;
     max: number;
   };
+  port: number;
 }
 
 export default function DashboardPage() {
@@ -24,6 +25,15 @@ export default function DashboardPage() {
     try {
       const data = await api.get<ServerStatus>('/server/status');
       setStatus(data);
+
+      // Clear loading state when status changes as expected
+      if (actionLoading === 'start' && data.online) {
+        setActionLoading(null);
+      } else if (actionLoading === 'stop' && !data.online) {
+        setActionLoading(null);
+      } else if (actionLoading === 'restart' && data.online) {
+        setActionLoading(null);
+      }
     } catch (error) {
       console.error('Failed to fetch status:', error);
     } finally {
@@ -41,10 +51,10 @@ export default function DashboardPage() {
     setActionLoading(action);
     try {
       await api.post(`/server/${action}`);
-      setTimeout(fetchStatus, 2000);
+      // Don't clear loading state - let it clear when status changes
+      // The status poll will update and buttons will re-enable automatically
     } catch (error: any) {
       alert(`Failed to ${action} server: ${error.message}`);
-    } finally {
       setActionLoading(null);
     }
   };
@@ -57,7 +67,7 @@ export default function DashboardPage() {
     );
   }
 
-  const isOnline = status?.status === 'online';
+  const isOnline = status?.online === true;
 
   return (
     <div className="space-y-6">

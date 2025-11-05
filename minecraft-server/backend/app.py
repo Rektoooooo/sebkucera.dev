@@ -146,7 +146,7 @@ def start_server() -> bool:
 
     try:
         # Start server in screen
-        cmd = f"screen -S {MC_SCREEN} -dm bash -lc 'cd {MC_DIR} && exec java -Xms6G -Xmx8G -jar {MC_JAR} nogui'"
+        cmd = f"/usr/bin/screen -S {MC_SCREEN} -dm bash -lc 'cd {MC_DIR} && exec java -Xms6G -Xmx8G -jar {MC_JAR} nogui'"
         subprocess.run(cmd, shell=True, check=True)
 
         # Wait for port to open (up to 90 seconds)

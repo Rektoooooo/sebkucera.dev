@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d466e35-c006-4221-9a4c-e44b8faf7282" name="Changes" comment="iuh">
-      <change afterPath="$PROJECT_DIR$/icecream-shop/about.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/icecream-shop/hero img.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/icecream-shop/sabatovo logo.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/dist/output.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft-server/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft-server/backend/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft-server/backend/panel.service" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft-server/backend/panel.service" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minecraft-server/backend/venv/pyvenv.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/minecraft-server/backend/venv/pyvenv.cfg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,7 +199,7 @@
       <workItem from="1761583001410" duration="4802000" />
       <workItem from="1761595906213" duration="8253000" />
       <workItem from="1761674352739" duration="11381000" />
-      <workItem from="1762339435146" duration="1949000" />
+      <workItem from="1762339435146" duration="9399000" />
     </task>
     <task id="LOCAL-00001" summary="iuh">
       <option name="closed" value="true" />
