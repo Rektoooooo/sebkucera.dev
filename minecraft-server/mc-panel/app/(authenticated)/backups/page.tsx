@@ -20,6 +20,7 @@ export default function BackupsPage() {
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedBackup, setSelectedBackup] = useState<Backup | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const fetchBackups = async () => {
     try {
@@ -33,6 +34,7 @@ export default function BackupsPage() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     fetchBackups();
   }, []);
 
@@ -84,13 +86,7 @@ export default function BackupsPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  const showLoading = !isMounted || loading;
 
   return (
     <div className="space-y-6">
@@ -103,6 +99,7 @@ export default function BackupsPage() {
           variant="primary"
           onClick={handleCreateBackup}
           loading={actionLoading === 'create'}
+          disabled={!isMounted}
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -116,7 +113,12 @@ export default function BackupsPage() {
         </Button>
       </div>
 
-      <Card>
+      {showLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      ) : (
+        <Card>
         {backups.length === 0 ? (
           <div className="text-center py-12">
             <svg
@@ -181,7 +183,8 @@ export default function BackupsPage() {
             ))}
           </div>
         )}
-      </Card>
+        </Card>
+      )}
 
       <Modal
         isOpen={showRestoreModal}

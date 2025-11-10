@@ -19,6 +19,7 @@ export default function ModsPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMod, setSelectedMod] = useState<Mod | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchMods = async () => {
@@ -33,6 +34,7 @@ export default function ModsPage() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     fetchMods();
   }, []);
 
@@ -87,16 +89,9 @@ export default function ModsPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
   const enabledMods = mods.filter((m) => m.enabled);
   const disabledMods = mods.filter((m) => !m.enabled);
+  const showLoading = !isMounted || loading;
 
   return (
     <div className="space-y-6">
@@ -117,6 +112,7 @@ export default function ModsPage() {
             variant="primary"
             onClick={() => fileInputRef.current?.click()}
             loading={uploading}
+            disabled={!isMounted}
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -131,7 +127,13 @@ export default function ModsPage() {
         </div>
       </div>
 
-      <Card title="Enabled Mods">
+      {showLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      ) : (
+        <>
+          <Card title="Enabled Mods">
         {enabledMods.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-zinc-500">No enabled mods</p>
@@ -223,7 +225,9 @@ export default function ModsPage() {
             ))}
           </div>
         )}
-      </Card>
+          </Card>
+        </>
+      )}
 
       <Modal
         isOpen={showDeleteModal}

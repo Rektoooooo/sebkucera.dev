@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const [status, setStatus] = useState<ServerStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -41,6 +42,7 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    setIsMounted(true);
     fetchStatus();
     const interval = setInterval(fetchStatus, 5000);
     return () => clearInterval(interval);
@@ -58,15 +60,8 @@ export default function DashboardPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
   const isOnline = status?.online === true;
+  const showLoading = !isMounted || loading;
 
   return (
     <div className="space-y-6">
@@ -75,24 +70,30 @@ export default function DashboardPage() {
         <p className="text-zinc-400">Monitor and control your Minecraft server</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card title="Server Status">
-          <div className="space-y-4">
-            <div>
-              <Badge variant={isOnline ? 'success' : 'danger'} className="text-lg px-4 py-2">
-                {isOnline ? '● Online' : '● Offline'}
-              </Badge>
-            </div>
-            {isOnline && status?.players && (
-              <div>
-                <p className="text-zinc-400 text-sm mb-1">Players Online</p>
-                <p className="text-2xl font-bold text-white">
-                  {status.players.online} / {status.players.max}
-                </p>
+      {showLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card title="Server Status">
+              <div className="space-y-4">
+                <div>
+                  <Badge variant={isOnline ? 'success' : 'danger'} className="text-lg px-4 py-2">
+                    {isOnline ? '● Online' : '● Offline'}
+                  </Badge>
+                </div>
+                {isOnline && status?.players && (
+                  <div>
+                    <p className="text-zinc-400 text-sm mb-1">Players Online</p>
+                    <p className="text-2xl font-bold text-white">
+                      {status.players.online} / {status.players.max}
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </Card>
+            </Card>
 
         <Card title="Quick Actions" className="lg:col-span-2">
           <div className="flex flex-wrap gap-3">
@@ -160,9 +161,11 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <Card>
-        <LogViewer />
-      </Card>
+          <Card>
+            <LogViewer />
+          </Card>
+        </>
+      )}
     </div>
   );
 }
