@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - App Store Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: #999;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            margin-bottom: 16px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .project-title {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .project-category {
+            font-size: 13px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .project-description {
+            font-size: 15px;
+            color: #ccc;
+            line-height: 1.4;
+            margin-top: 8px;
+        }
+
+        .get-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(82, 39, 255, 0.9);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .get-button:hover {
+            background: rgba(82, 39, 255, 1);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Projects</h2>
+            <p class="section-subtitle">Apps and experiences built with Swift & SwiftUI</p>
+        </div>
+
+        <div class="projects-grid">
+            <!-- Fitness App -->
+            <a href="https://sebkucera.dev/Fitness" target="_blank" class="project-card">
+                <img src="/images/App icons/LogoGymlyBlack copy.jpg" alt="Fitness App" class="app-icon">
+                <div class="project-info">
+                    <div class="project-category">Health & Fitness</div>
+                    <h3 class="project-title">Fitness App</h3>
+                    <p class="project-description">Track strength progress and optimize your workouts with advanced analytics.</p>
+                    <span class="get-button">VIEW</span>
+                </div>
+            </a>
+
+            <!-- BattleShips -->
+            <a href="https://github.com/Rektoooooo/SwiftUIBattleShips/tree/main/Battleship-SwiftUI" target="_blank" class="project-card">
+                <img src="/images/App icons/Battle ships logo.png" alt="BattleShips" class="app-icon">
+                <div class="project-info">
+                    <div class="project-category">Games</div>
+                    <h3 class="project-title">BattleShips</h3>
+                    <p class="project-description">Classic strategy game with smart AI opponent and modern UI.</p>
+                    <span class="get-button">VIEW</span>
+                </div>
+            </a>
+
+            <!-- Smart ID -->
+            <a href="https://apps.apple.com/us/app/fl-smart-id-thales/id1560687532" target="_blank" class="project-card">
+                <img src="/images/App icons/Smart id logo.png" alt="Smart ID" class="app-icon">
+                <div class="project-info">
+                    <div class="project-category">Utilities</div>
+                    <h3 class="project-title">Smart ID Sample</h3>
+                    <p class="project-description">Sample app showcasing Smart ID SDK integration in SwiftUI.</p>
+                    <span class="get-button">VIEW</span>
+                </div>
+            </a>
+
+            <!-- Pushly -->
+            <a href="https://github.com/Rektoooooo/Pushly" target="_blank" class="project-card">
+                <img src="/images/App icons/Puhsly logo.png" alt="Pushly" class="app-icon">
+                <div class="project-info">
+                    <div class="project-category">Health & Fitness</div>
+                    <h3 class="project-title">Pushly</h3>
+                    <p class="project-description">Friendly nudges to help you stay active throughout your day.</p>
+                    <span class="get-button">VIEW</span>
+                </div>
+            </a>
+
+            <!-- Rick & Morty -->
+            <a href="https://github.com/Rektoooooo/Rick-Morty" target="_blank" class="project-card">
+                <img src="/images/App icons/Rick and morty.jpg" alt="Rick & Morty" class="app-icon">
+                <div class="project-info">
+                    <div class="project-category">Entertainment</div>
+                    <h3 class="project-title">Rick & Morty API</h3>
+                    <p class="project-description">SwiftUI app demonstrating modern API integration patterns.</p>
+                    <span class="get-button">VIEW</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

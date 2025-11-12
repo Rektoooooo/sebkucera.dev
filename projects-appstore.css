@@ -1,0 +1,87 @@
+/* App Store Style Projects Section */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.project-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.project-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.app-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 18px; /* iPhone app icon radius */
+    margin-bottom: 16px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.project-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.project-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #fff;
+}
+
+.project-category {
+    font-size: 13px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.project-description {
+    font-size: 15px;
+    color: #ccc;
+    line-height: 1.4;
+    margin-top: 8px;
+}
+
+.get-button {
+    display: inline-flex;
+    align-items: center;
+    justify-center: center;
+    background: rgba(82, 39, 255, 0.9);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 12px;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+}
+
+.get-button:hover {
+    background: rgba(82, 39, 255, 1);
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
