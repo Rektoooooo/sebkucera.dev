@@ -84,11 +84,11 @@ function App() {
 
               {/* Stats Cards - Ryne.ai Style */}
               <div className="inline-flex flex-col md:flex-row items-center justify-center rounded-2xl bg-black/60 backdrop-blur-xl border-white/10 border-2 w-full md:w-auto" style={{ transform: 'translateZ(0)', willChange: 'transform' }}>
-                <div className="px-6 md:px-10 py-4 text-center w-full md:w-auto border-b md:border-b-0 md:border-r border-white/10 last:border-0">
+                <div className="px-6 md:px-10 py-4 text-center w-full md:w-auto">
                   <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">5+ years</div>
                   <div className="text-xs text-purple-200/50 mt-0.5">Experience</div>
                 </div>
-                <div className="px-6 md:px-10 py-4 text-center w-full md:w-auto border-b md:border-b-0 md:border-r border-white/10 last:border-0">
+                <div className="px-6 md:px-10 py-4 text-center w-full md:w-auto">
                   <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">Swift</div>
                   <div className="text-xs text-purple-200/50 mt-0.5">iOS Dev</div>
                 </div>
