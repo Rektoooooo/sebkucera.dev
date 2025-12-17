@@ -47,7 +47,7 @@ function App() {
       <div className="relative min-h-screen text-white" style={{ position: 'relative', zIndex: 1 }}>
         <div className="space-y-12 pt-32 pb-16 px-4 md:px-6">
           {/* Hero Section */}
-          <section className="mx-auto max-w-6xl px-6 md:px-12 py-32 md:py-40 relative min-h-[85vh] flex items-center justify-center">
+          <section className="mx-auto max-w-6xl px-4 sm:px-6 md:px-12 py-20 sm:py-32 md:py-40 relative min-h-[85vh] flex items-center justify-center">
             <div className="text-center max-w-4xl mx-auto relative z-10">
               {/* Badge */}
               <div className="mb-8">
@@ -58,7 +58,7 @@ function App() {
               </div>
 
               {/* Main Heading */}
-              <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-6 leading-tight">
+              <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold tracking-tight mb-6 leading-tight">
                 Sebastian <span className="bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">Kučera</span>
               </h1>
 
@@ -69,31 +69,31 @@ function App() {
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex items-center justify-center gap-4 mb-16">
-                <a href="#projects" className="group relative inline-flex items-center gap-2 rounded-2xl px-4 py-2 bg-white/5 backdrop-blur-xl border-2 border-white/10 text-white font-semibold transition-all hover:scale-105 hover:bg-white/10 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-500/40 overflow-hidden">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <a href="#projects" className="group relative inline-flex items-center gap-2 rounded-2xl px-6 py-3 bg-white/5 backdrop-blur-xl border-2 border-white/10 text-white font-semibold transition-all hover:scale-105 hover:bg-white/10 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-500/40 overflow-hidden w-full sm:w-auto justify-center">
                   <span className="absolute inset-0 border-2 border-transparent rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></span>
                   <span className="relative">View Projects</span>
                   <svg className="w-4 h-4 relative group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </a>
-                <a href="#contact" className="group relative inline-flex items-center px-4 py-2 rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-xl text-white font-semibold transition-all hover:scale-105 hover:border-purple-400/50 hover:bg-white/10 hover:shadow-lg hover:shadow-purple-500/30">
+                <a href="#contact" className="group relative inline-flex items-center px-6 py-3 rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-xl text-white font-semibold transition-all hover:scale-105 hover:border-purple-400/50 hover:bg-white/10 hover:shadow-lg hover:shadow-purple-500/30 w-full sm:w-auto justify-center">
                   <span className="relative">Contact</span>
                 </a>
               </div>
 
               {/* Stats Cards - Ryne.ai Style */}
-              <div className="inline-flex items-center justify-center rounded-2xl bg-black/60 backdrop-blur-xl border-white/10 border-2" style={{ transform: 'translateZ(0)', willChange: 'transform' }}>
-                <div className="px-10 py-4 text-center">
-                  <div className="text-2xl font-bold bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">5+ years</div>
+              <div className="inline-flex flex-col md:flex-row items-center justify-center rounded-2xl bg-black/60 backdrop-blur-xl border-white/10 border-2 w-full md:w-auto" style={{ transform: 'translateZ(0)', willChange: 'transform' }}>
+                <div className="px-6 md:px-10 py-4 text-center w-full md:w-auto border-b md:border-b-0 md:border-r border-white/10 last:border-0">
+                  <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">5+ years</div>
                   <div className="text-xs text-purple-200/50 mt-0.5">Experience</div>
                 </div>
-                <div className="px-10 py-4 text-center">
-                  <div className="text-2xl font-bold bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">Swift</div>
+                <div className="px-6 md:px-10 py-4 text-center w-full md:w-auto border-b md:border-b-0 md:border-r border-white/10 last:border-0">
+                  <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">Swift</div>
                   <div className="text-xs text-purple-200/50 mt-0.5">iOS Dev</div>
                 </div>
-                <div className="px-10 py-4 text-center">
-                  <div className="text-2xl font-bold bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">React</div>
+                <div className="px-6 md:px-10 py-4 text-center w-full md:w-auto">
+                  <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-200 to-purple-600 bg-clip-text text-transparent">React</div>
                   <div className="text-xs text-purple-200/50 mt-0.5">Web Dev</div>
                 </div>
               </div>
