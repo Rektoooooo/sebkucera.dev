@@ -1,0 +1,11 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Development
+.vite
+
+# OS
+.DS_Store
