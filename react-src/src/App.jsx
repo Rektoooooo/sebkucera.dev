@@ -177,54 +177,79 @@ function App() {
               <div className="projects-grid">
                 {/* ShadowLift */}
                 <GlowCard glowColor="#a855f7">
-                  <a href="https://shadowlift.app" target="_blank" rel="noopener noreferrer" className="project-card">
+                  <div className="project-card">
                     <img src="/images/App icons/ShadowLift logo.png" alt="ShadowLift" className="app-icon" />
                     <div className="project-info">
                       <div className="project-category">Health & Fitness</div>
                       <h3 className="project-title">ShadowLift</h3>
                       <p className="project-description">Track strength progress and optimize your workouts.</p>
-                      <span className="get-button">VIEW</span>
+                      <div className="project-buttons">
+                        <a href="https://shadowlift.app" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
+                        <a href="https://github.com/Rektoooooo/ShadowLift" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
+                      </div>
                     </div>
-                  </a>
+                  </div>
                 </GlowCard>
 
                 {/* BattleShips */}
                 <GlowCard glowColor="#c084fc">
-                  <a href="https://github.com/Rektoooooo/SwiftUIBattleShips/tree/main/Battleship-SwiftUI" target="_blank" rel="noopener noreferrer" className="project-card">
+                  <div className="project-card">
                     <img src="/images/App icons/Battle ships logo.png" alt="BattleShips" className="app-icon" />
                     <div className="project-info">
                       <div className="project-category">Games</div>
                       <h3 className="project-title">BattleShips</h3>
                       <p className="project-description">Classic strategy game with smart AI opponent.</p>
-                      <span className="get-button">VIEW</span>
+                      <div className="project-buttons">
+                        <a href="https://github.com/Rektoooooo/SwiftUIBattleShips" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
+                      </div>
                     </div>
-                  </a>
+                  </div>
                 </GlowCard>
 
                 {/* Pushly */}
                 <GlowCard glowColor="#9333ea">
-                  <a href="https://github.com/Rektoooooo/Pushly" target="_blank" rel="noopener noreferrer" className="project-card">
+                  <div className="project-card">
                     <img src="/images/App icons/Pushly logo.png" alt="Pushly" className="app-icon" />
                     <div className="project-info">
                       <div className="project-category">Health & Fitness</div>
                       <h3 className="project-title">Pushly</h3>
                       <p className="project-description">Friendly nudges to help you stay active throughout the day.</p>
-                      <span className="get-button">VIEW</span>
+                      <div className="project-buttons">
+                        <a href="https://github.com/Rektoooooo/Pushly" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
+                      </div>
                     </div>
-                  </a>
+                  </div>
                 </GlowCard>
 
                 {/* Rick & Morty */}
                 <GlowCard glowColor="#8b5cf6">
-                  <a href="https://github.com/Rektoooooo/Rick-Morty" target="_blank" rel="noopener noreferrer" className="project-card">
+                  <div className="project-card">
                     <img src="/images/App icons/Rick and morty.jpg" alt="Rick & Morty" className="app-icon" />
                     <div className="project-info">
                       <div className="project-category">Entertainment</div>
                       <h3 className="project-title">Rick & Morty API</h3>
-                      <p className="project-description">SwiftUI app demonstrating modern API integration.</p>
-                      <span className="get-button">VIEW</span>
+                      <p className="project-description">SwiftUI app and web explorer using the Rick and Morty API.</p>
+                      <div className="project-buttons">
+                        <a href="https://sebkucera.dev/rick&morty/" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
+                        <a href="https://github.com/Rektoooooo/Rick-Morty" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
+                      </div>
                     </div>
-                  </a>
+                  </div>
+                </GlowCard>
+
+                {/* MyCarTally */}
+                <GlowCard glowColor="#ec4899">
+                  <div className="project-card">
+                    <img src="/images/App icons/MyCarTally logo.png" alt="MyCarTally" className="app-icon" />
+                    <div className="project-info">
+                      <div className="project-category">Utilities</div>
+                      <h3 className="project-title">MyCarTally</h3>
+                      <p className="project-description">A smart car expense tracking app built with SwiftUI.</p>
+                      <div className="project-buttons">
+                        <a href="https://github.com/Rektoooooo/mycartally-ios" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
+                      </div>
+                    </div>
+                  </div>
                 </GlowCard>
               </div>
             </div>
@@ -233,22 +258,25 @@ function App() {
             <div>
               <h3 className="text-2xl font-semibold mb-6 text-purple-300">Web Projects</h3>
               <div className="projects-grid">
-                {/* Rick & Morty Explorer */}
-                <GlowCard glowColor="#d946ef">
-                  <a href="https://sebkucera.dev/rick&morty/" target="_blank" rel="noopener noreferrer" className="project-card">
-                    <img src="/images/App icons/Rick and morty.jpg" alt="Rick & Morty Explorer" className="app-icon" />
+                {/* ApplyTailor */}
+                <GlowCard glowColor="#10b981">
+                  <div className="project-card">
+                    <img src="/images/App icons/ApplyTailor logo.png" alt="ApplyTailor" className="app-icon" />
                     <div className="project-info">
-                      <div className="project-category">Web Development</div>
-                      <h3 className="project-title">Rick & Morty Explorer</h3>
-                      <p className="project-description">Character search app using the Rick and Morty API.</p>
-                      <span className="get-button">VIEW</span>
+                      <div className="project-category">AI / Tools</div>
+                      <h3 className="project-title">ApplyTailor</h3>
+                      <p className="project-description">Land more interviews with AI-tailored applications.</p>
+                      <div className="project-buttons">
+                        <a href="https://applytailor.com" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
+                        <a href="https://github.com/Rektoooooo/applytailor" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
+                      </div>
                     </div>
-                  </a>
+                  </div>
                 </GlowCard>
 
                 {/* Real Estate Demo */}
                 <GlowCard glowColor="#a78bfa">
-                  <a href="https://sebkucera.dev/real-estate-demo/" target="_blank" rel="noopener noreferrer" className="project-card">
+                  <div className="project-card">
                     <div className="app-icon bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-4xl">
                       🏠
                     </div>
@@ -256,14 +284,16 @@ function App() {
                       <div className="project-category">Web Development</div>
                       <h3 className="project-title">Real Estate Demo</h3>
                       <p className="project-description">Modern real estate website with interactive property listings.</p>
-                      <span className="get-button">VIEW</span>
+                      <div className="project-buttons">
+                        <a href="https://sebkucera.dev/real-estate-demo/" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
+                      </div>
                     </div>
-                  </a>
+                  </div>
                 </GlowCard>
 
                 {/* Restaurant Demo */}
                 <GlowCard glowColor="#7c3aed">
-                  <a href="https://sebkucera.dev/restaurant-demo/" target="_blank" rel="noopener noreferrer" className="project-card">
+                  <div className="project-card">
                     <div className="app-icon bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-4xl">
                       🍽️
                     </div>
@@ -271,9 +301,11 @@ function App() {
                       <div className="project-category">Web Development</div>
                       <h3 className="project-title">Restaurant Demo</h3>
                       <p className="project-description">Beautiful restaurant website with menu and reservation system.</p>
-                      <span className="get-button">VIEW</span>
+                      <div className="project-buttons">
+                        <a href="https://sebkucera.dev/restaurant-demo/" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
+                      </div>
                     </div>
-                  </a>
+                  </div>
                 </GlowCard>
               </div>
             </div>

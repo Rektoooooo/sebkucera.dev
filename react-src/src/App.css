@@ -95,7 +95,7 @@ body {
   border-radius: 16px;
   padding: 20px;
   transition: all 0.3s ease;
-  cursor: pointer;
+  cursor: default;
   text-decoration: none;
   color: inherit;
   display: flex;
@@ -154,17 +154,35 @@ body {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
-  margin-top: 12px;
   transition: all 0.3s ease;
   align-self: flex-start;
   border: 1px solid rgba(168, 85, 247, 0.3);
   backdrop-filter: blur(10px);
+  text-decoration: none;
 }
 
 .get-button:hover {
   background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(99, 102, 241, 0.3));
   border-color: rgba(168, 85, 247, 0.5);
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.project-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.get-button-github {
+  background: linear-gradient(135deg, rgba(45, 186, 78, 0.15), rgba(35, 134, 54, 0.15));
+  border: 1px solid rgba(45, 186, 78, 0.3);
+}
+
+.get-button-github:hover {
+  background: linear-gradient(135deg, rgba(45, 186, 78, 0.25), rgba(35, 134, 54, 0.25));
+  border-color: rgba(45, 186, 78, 0.5);
+  box-shadow: 0 0 20px rgba(45, 186, 78, 0.3);
 }
 
 @media (max-width: 768px) {
