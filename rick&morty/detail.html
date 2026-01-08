@@ -2,23 +2,574 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="https://rickandmortyapi.com/api/character/avatar/119.jpeg">
-    <title>Rick & Morty</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://rickandmortyapi.com/api/character/avatar/1.jpeg">
+    <title>Character Details - Rick & Morty Explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --portal-green: #97ce4c;
+            --portal-glow: #39ff14;
+            --dimension-cyan: #00d4ff;
+            --void-black: #0a0a0a;
+            --space-dark: #0d1117;
+            --dead-red: #ff3d3d;
+            --unknown-gray: #6b7280;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: var(--void-black);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Star Field Background */
+        .star-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star-field::before,
+        .star-field::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 230px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 300px 150px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(1px 1px at 370px 50px, #fff, transparent),
+                radial-gradient(2px 2px at 450px 180px, rgba(255,255,255,0.8), transparent);
+            background-repeat: repeat;
+            background-size: 500px 200px;
+            animation: stars-move 60s linear infinite;
+        }
+
+        .star-field::after {
+            background-size: 400px 300px;
+            animation: stars-move 90s linear infinite reverse;
+            opacity: 0.5;
+        }
+
+        @keyframes stars-move {
+            from { transform: translateY(0); }
+            to { transform: translateY(-200px); }
+        }
+
+        /* Portal Glow Effect */
+        .portal-glow {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(151, 206, 76, 0.12) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: portal-pulse 4s ease-in-out infinite;
+        }
+
+        .portal-glow-1 {
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        @keyframes portal-pulse {
+            0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(151, 206, 76, 0.2);
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--portal-green);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            text-shadow: 0 0 20px rgba(151, 206, 76, 0.5);
+        }
+
+        .logo::before {
+            content: 'DIMENSION';
+            position: absolute;
+            top: -12px;
+            left: 0;
+            font-size: 0.5rem;
+            font-weight: 500;
+            color: var(--dimension-cyan);
+            letter-spacing: 4px;
+        }
+
+        .back-link {
+            font-size: 0.75rem;
+            color: #888;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link:hover {
+            color: var(--portal-green);
+            text-shadow: 0 0 10px rgba(151, 206, 76, 0.5);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Main Content */
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .loading.hidden {
+            display: none;
+        }
+
+        .portal-loader {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid rgba(151, 206, 76, 0.1);
+            border-top-color: var(--portal-green);
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .portal-loader::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 212, 255, 0.1);
+            border-top-color: var(--dimension-cyan);
+            animation: spin 0.6s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #666;
+        }
+
+        /* Detail Container */
+        .detail-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .detail-container.hidden {
+            display: none;
+        }
+
+        /* Image Section */
+        .image-section {
+            position: relative;
+        }
+
+        .image-frame {
+            position: relative;
+            background: linear-gradient(145deg, rgba(20, 20, 20, 0.9), rgba(10, 10, 10, 0.95));
+            border: 1px solid rgba(151, 206, 76, 0.2);
+            padding: 1rem;
+        }
+
+        .image-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--portal-green), var(--dimension-cyan));
+        }
+
+        .character-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Corner Decorations */
+        .frame-corner {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-color: var(--portal-green);
+            border-style: solid;
+        }
+
+        .frame-corner.top-left {
+            top: -1px;
+            left: -1px;
+            border-width: 3px 0 0 3px;
+        }
+
+        .frame-corner.top-right {
+            top: -1px;
+            right: -1px;
+            border-width: 3px 3px 0 0;
+        }
+
+        .frame-corner.bottom-left {
+            bottom: -1px;
+            left: -1px;
+            border-width: 0 0 3px 3px;
+        }
+
+        .frame-corner.bottom-right {
+            bottom: -1px;
+            right: -1px;
+            border-width: 0 3px 3px 0;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            margin-top: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .status-badge.alive {
+            background: rgba(151, 206, 76, 0.1);
+            border: 1px solid rgba(151, 206, 76, 0.3);
+            color: var(--portal-green);
+        }
+
+        .status-badge.dead {
+            background: rgba(255, 61, 61, 0.1);
+            border: 1px solid rgba(255, 61, 61, 0.3);
+            color: var(--dead-red);
+        }
+
+        .status-badge.unknown {
+            background: rgba(107, 114, 128, 0.1);
+            border: 1px solid rgba(107, 114, 128, 0.3);
+            color: var(--unknown-gray);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-badge.alive .status-dot {
+            background: var(--portal-green);
+            box-shadow: 0 0 10px var(--portal-green);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        .status-badge.dead .status-dot {
+            background: var(--dead-red);
+            box-shadow: 0 0 10px var(--dead-red);
+        }
+
+        .status-badge.unknown .status-dot {
+            background: var(--unknown-gray);
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Info Section */
+        .info-section {
+            padding-top: 1rem;
+        }
+
+        .character-id {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: var(--dimension-cyan);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+        }
+
+        .character-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+        }
+
+        .character-name span {
+            color: var(--portal-green);
+            text-shadow: 0 0 30px rgba(151, 206, 76, 0.5);
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .info-item {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(151, 206, 76, 0.1);
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #555;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        /* Back Button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 3rem;
+            padding: 1rem 2rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--void-black);
+            background: var(--portal-green);
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .back-button:hover {
+            background: var(--portal-glow);
+            box-shadow:
+                0 0 30px rgba(151, 206, 76, 0.5),
+                0 0 60px rgba(151, 206, 76, 0.3);
+        }
+
+        .back-button:hover::before {
+            left: 100%;
+        }
+
+        .back-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Error State */
+        .error-state {
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .error-state.hidden {
+            display: none;
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .error-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .detail-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .image-section {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            .logo::before {
+                display: none;
+            }
+
+            main {
+                padding: 2rem 1rem;
+            }
+
+            .info-item {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .back-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Background Effects -->
+    <div class="star-field"></div>
+    <div class="portal-glow portal-glow-1"></div>
 
-<main class="w-full bg-blue-500 px-20 py-3">
-    <a href="https://sebkucera.dev/rick&morty/">RICK&MORTY</a>
-</main>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">C-137</a>
+            <a href="index.html" class="back-link">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Search
+            </a>
+        </div>
+    </header>
 
-<div class="w-full flex justify-center text-center my-8" id="detail">
+    <!-- Main Content -->
+    <main>
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+            <div class="portal-loader"></div>
+            <p class="loading-text">Scanning dimension...</p>
+        </div>
 
-</div>
+        <!-- Detail Content -->
+        <div class="detail-container hidden" id="detail"></div>
 
-<script src="detail.js"></script>
+        <!-- Error State -->
+        <div class="error-state hidden" id="error">
+            <div class="error-icon">?</div>
+            <p class="error-text">Lifeform not found in this dimension</p>
+            <a href="index.html" class="back-button">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Return to Search
+            </a>
+        </div>
+    </main>
+
+    <script src="detail.js"></script>
 </body>
 </html>
