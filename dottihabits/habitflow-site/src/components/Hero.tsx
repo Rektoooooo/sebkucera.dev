@@ -44,7 +44,7 @@ export default function Hero() {
               }}
             >
               <Image
-                src="/images/HabitFlowPremium.png"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/HabitFlowPremium.png`}
                 alt="Dotti"
                 fill
                 style={{ objectFit: 'contain' }}
@@ -224,7 +224,7 @@ export default function Hero() {
               }}
             >
               <Image
-                src="/images/mockup-timer.png"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/mockup-timer.png`}
                 alt="Focus Timer"
                 fill
                 style={{ objectFit: 'contain' }}
@@ -244,7 +244,7 @@ export default function Hero() {
               }}
             >
               <Image
-                src="/images/mockup-habits.png"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/mockup-habits.png`}
                 alt="Habit Types"
                 fill
                 style={{ objectFit: 'contain' }}
@@ -264,7 +264,7 @@ export default function Hero() {
               }}
             >
               <Image
-                src="/images/mockup-home.png"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/mockup-home.png`}
                 alt="HabitFlow Home"
                 fill
                 style={{ objectFit: 'contain' }}

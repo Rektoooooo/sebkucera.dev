@@ -67,7 +67,7 @@ export default function DownloadCTA() {
                 borderRadius: '50%',
               }}
             />
-            <Image src="/images/HabitFlowPremium.png" alt="Dotti" fill style={{ objectFit: 'contain' }} />
+            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/HabitFlowPremium.png`} alt="Dotti" fill style={{ objectFit: 'contain' }} />
           </motion.div>
 
           <h2

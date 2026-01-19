@@ -51,7 +51,7 @@ export default function Navbar() {
               overflow: 'hidden',
             }}
           >
-            <Image src="/images/HabitFlow_AppIcon.jpg" alt="HabitFlow" fill style={{ objectFit: 'cover' }} />
+            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/HabitFlow_AppIcon.jpg`} alt="HabitFlow" fill style={{ objectFit: 'cover' }} />
           </div>
           <span
             style={{

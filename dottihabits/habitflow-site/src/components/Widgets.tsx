@@ -125,7 +125,7 @@ export default function Widgets() {
                 }}
               >
                 <Image
-                  src="/images/widget-large.png"
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/widget-large.png`}
                   alt="Large Widget"
                   fill
                   style={{ objectFit: 'cover' }}
@@ -156,7 +156,7 @@ export default function Widgets() {
                   }}
                 >
                   <Image
-                    src="/images/widget-small.png"
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/widget-small.png`}
                     alt="Lock Screen Widgets"
                     fill
                     style={{ objectFit: 'contain' }}
@@ -185,7 +185,7 @@ export default function Widgets() {
                   }}
                 >
                   <Image
-                    src="/images/widget-medium.png"
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/widget-medium.png`}
                     alt="Medium Widget"
                     fill
                     style={{ objectFit: 'cover' }}

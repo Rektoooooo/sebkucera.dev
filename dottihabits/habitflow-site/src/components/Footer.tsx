@@ -26,7 +26,7 @@ export default function Footer() {
                   boxShadow: '0 0 20px rgba(168, 85, 247, 0.3)',
                 }}
               >
-                <Image src="/images/HabitFlow_AppIcon.jpg" alt="HabitFlow" fill style={{ objectFit: 'cover' }} />
+                <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/HabitFlow_AppIcon.jpg`} alt="HabitFlow" fill style={{ objectFit: 'cover' }} />
               </div>
               <span style={{ fontSize: '22px', fontWeight: 600, color: 'var(--white)', letterSpacing: '-0.02em' }}>
                 HabitFlow
