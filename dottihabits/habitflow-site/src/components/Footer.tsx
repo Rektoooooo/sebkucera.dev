@@ -124,8 +124,8 @@ export default function Footer() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {[
-                  { label: 'Privacy Policy', href: '/privacy-policy' },
-                  { label: 'Terms of Service', href: '/tos' },
+                  { label: 'Privacy Policy', href: `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/privacy-policy` },
+                  { label: 'Terms of Service', href: `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/tos` },
                 ].map((link) => (
                   <a
                     key={link.label}
