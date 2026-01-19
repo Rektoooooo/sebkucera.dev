@@ -1,3 +1,9 @@
 .DS_Store/
 .DS_Store
 node_modules/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.local
