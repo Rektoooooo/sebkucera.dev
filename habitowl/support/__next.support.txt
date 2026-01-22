@@ -1,0 +1,4 @@
+1:"$Sreact.fragment"
+2:I[98334,["/habitowl/_next/static/chunks/0992961f8b265d90.js","/habitowl/_next/static/chunks/a4c663d109aae6c0.js"],"default"]
+3:I[60100,["/habitowl/_next/static/chunks/0992961f8b265d90.js","/habitowl/_next/static/chunks/a4c663d109aae6c0.js"],"default"]
+0:{"buildId":"3lDDYPJPvbLzb777Ids_3","rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"loading":null,"isPartial":false}

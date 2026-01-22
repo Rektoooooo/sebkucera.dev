@@ -65,8 +65,8 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.17.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.17.19&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;23.10.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;25.0.9&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
@@ -202,6 +202,9 @@
       <workItem from="1765973776744" duration="13049000" />
       <workItem from="1767376268718" duration="1000" />
       <workItem from="1767860170353" duration="1672000" />
+      <workItem from="1768745543877" duration="7329000" />
+      <workItem from="1768994326815" duration="1780000" />
+      <workItem from="1769082924961" duration="909000" />
     </task>
     <task id="LOCAL-00001" summary="iuh">
       <option name="closed" value="true" />
