@@ -150,9 +150,9 @@ body {
   justify-content: center;
   background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.2));
   color: #fff;
-  padding: 8px 20px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
   align-self: flex-start;
@@ -183,6 +183,17 @@ body {
   background: linear-gradient(135deg, rgba(45, 186, 78, 0.25), rgba(35, 134, 54, 0.25));
   border-color: rgba(45, 186, 78, 0.5);
   box-shadow: 0 0 20px rgba(45, 186, 78, 0.3);
+}
+
+.get-button-appstore {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.get-button-appstore:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.25));
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
 @media (max-width: 768px) {
@@ -224,4 +235,14 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Work With Me Section Animations */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

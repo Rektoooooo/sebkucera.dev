@@ -24,6 +24,9 @@ export default function ModernNav({ logo, logoAlt = 'Logo' }) {
               <a href="#projects" className="text-zinc-400 hover:text-white transition-colors">
                 Projects
               </a>
+              <a href="#work-with-me" className="text-zinc-400 hover:text-white transition-colors">
+                Hire Me
+              </a>
               <a href="#contact" className="text-zinc-400 hover:text-white transition-colors">
                 Contact
               </a>
@@ -84,6 +87,13 @@ export default function ModernNav({ logo, logoAlt = 'Logo' }) {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Projects
+                </a>
+                <a
+                  href="#work-with-me"
+                  className="text-zinc-400 hover:text-white transition-colors py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Hire Me
                 </a>
                 <a
                   href="#contact"
