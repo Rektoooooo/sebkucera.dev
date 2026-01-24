@@ -140,7 +140,7 @@ export default function Navbar() {
       <div className="w-full px-4">
         <div className="flex items-center justify-center h-14">
           {/* Logo + Nav categories - desktop */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-4">
             <a href="#" className="flex items-center gap-2 flex-shrink-0">
               <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
               <span className="font-mono text-sm text-text-primary whitespace-nowrap">~/</span>
@@ -239,7 +239,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile: Logo + menu button */}
-          <div className="md:hidden flex items-center justify-between w-full">
+          <div className="sm:hidden flex items-center justify-between w-full">
             <a href="#" className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
               <span className="font-mono text-sm text-text-primary whitespace-nowrap">~/</span>
@@ -258,7 +258,7 @@ export default function Navbar() {
 
       {/* Mobile menu dropdown */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-bg-primary/95 backdrop-blur-md border-b border-white/5">
+        <div className="sm:hidden bg-bg-primary/95 backdrop-blur-md border-b border-white/5">
           <div className="px-4 py-4">
             {/* Mobile Search */}
             <div className="mb-4">
