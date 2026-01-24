@@ -39,10 +39,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-white/5 text-center">
+        <div className="mt-8 pt-8 border-t border-white/5 text-center space-y-2">
           <p className="text-text-muted text-sm">
             <i className="bi bi-app-indicator mr-2"></i>
             Apps: <a href="https://github.com/Rektoooooo/ShadowLift" target="_blank" rel="noopener noreferrer" className="text-green-500 hover:underline">ShadowLift</a> | <a href="https://github.com/Rektoooooo/HabitFlow" target="_blank" rel="noopener noreferrer" className="text-green-500 hover:underline">HabitOwl</a> | <a href="https://github.com/Rektoooooo/MealPrepAI" target="_blank" rel="noopener noreferrer" className="text-green-500 hover:underline">MealPrepAI</a>
+          </p>
+          <p className="text-text-muted text-xs">
+            Design inspired by <a href="https://skillsmp.com" target="_blank" rel="noopener noreferrer" className="text-orange hover:underline">skillsmp.com</a>
           </p>
         </div>
       </div>
