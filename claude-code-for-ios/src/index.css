@@ -55,3 +55,13 @@ body {
 ::selection {
   background: rgba(217, 145, 120, 0.3);
 }
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

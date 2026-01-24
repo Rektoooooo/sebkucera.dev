@@ -270,54 +270,90 @@ $ /review-pr 42
 export const workflowSteps = [
   {
     step: 1,
-    title: "Project Setup",
-    description: "Create Xcode project, configure CLAUDE.md, set up MCP servers",
-    command: "$ claude 'Set up new iOS project with SwiftUI and SwiftData'"
+    title: "Project Setup & Planning",
+    description: "Create Xcode project, configure CLAUDE.md with architecture details, install MCP servers. Use ios-app-planner skill to define your app's scope, features, and data models before writing any code.",
+    command: "$ claude 'Plan a habit tracking app with streaks, reminders, and statistics'"
   },
   {
     step: 2,
-    title: "Plan Mode",
-    description: "Use plan mode to design architecture before coding",
-    command: "$ claude 'Plan the implementation for user authentication'"
+    title: "Architecture & Data Models",
+    description: "Enter plan mode to design your app structure. Claude creates PLAN.md with SwiftData models, view hierarchy, and implementation phases. Review and approve before coding begins.",
+    command: "$ claude 'Plan the data model for habits with daily completions and streaks'"
   },
   {
     step: 3,
-    title: "Feature Development",
-    description: "Use ios-developer skills to build features iteratively",
-    command: "$ claude 'Add user authentication with Sign in with Apple'"
+    title: "Core Feature Development",
+    description: "Build features iteratively using ios-developer skill. Claude writes code, builds with Xcode MCP to verify compilation, and fixes errors automatically. Commit frequently with /commit.",
+    command: "$ claude 'Implement the habit list view with swipe to complete'"
   },
   {
     step: 4,
-    title: "Testing & Polish",
-    description: "Generate tests, fix issues, prepare for App Store",
-    command: "$ claude 'Write tests and prepare for submission'"
+    title: "UI Polish & Animations",
+    description: "Use swiftui-animations and ios-ui-designer skills to add visual polish. Create smooth transitions, haptic feedback, and consistent styling across all screens.",
+    command: "$ claude 'Add celebration animation when completing a habit streak'"
+  },
+  {
+    step: 5,
+    title: "Testing & Edge Cases",
+    description: "Generate unit tests with ios-testing skill. Test on real devices, handle edge cases like no data states, error handling, and offline scenarios.",
+    command: "$ claude 'Write tests for HabitViewModel and add empty state handling'"
+  },
+  {
+    step: 6,
+    title: "App Store Preparation",
+    description: "Use ios-release-manager and ios-app-store skills to prepare for submission. Create screenshots, write descriptions, configure App Store Connect, and ensure compliance with guidelines.",
+    command: "$ claude 'Review this app for App Store submission and create metadata'"
   }
 ];
 
 export const tips = [
   {
     title: "Keep CLAUDE.md Updated",
-    description: "Update your project context as you build. Include current focus, known issues, and architectural decisions."
+    description: "Update your project context as you build. Include current focus, known issues, architectural decisions, and which skills to use. The more context you provide, the better Claude performs."
   },
   {
     title: "Use Plan Mode First",
-    description: "Before coding complex features, use plan mode to design the architecture and get alignment."
+    description: "Before coding complex features, use plan mode to design the architecture and get alignment. This prevents wasted effort on wrong approaches and documents decisions."
   },
   {
     title: "Leverage Xcode MCP",
-    description: "Let Claude build and test directly. It catches errors faster than manual verification."
+    description: "Let Claude build and test directly. It catches errors faster than manual verification. Tell Claude to 'build after every change' in CLAUDE.md for tight feedback loops."
   },
   {
-    title: "Iterate with Git",
-    description: "Use /commit frequently. Small, atomic commits make it easy to track and revert changes."
+    title: "Commit Frequently",
+    description: "Use /commit after completing each logical unit of work. Small, atomic commits make it easy to track progress and revert if something breaks."
   },
   {
     title: "Test on Device Early",
-    description: "Don't wait until the end. Test on real devices throughout development."
+    description: "Don't wait until the end. Test on real devices throughout development. Simulator can miss performance issues and doesn't support all features."
   },
   {
     title: "Document Edge Cases",
-    description: "Add edge cases and error scenarios to CLAUDE.md so Claude handles them proactively."
+    description: "Add edge cases and error scenarios to CLAUDE.md so Claude handles them proactively. Include empty states, network errors, and permission denials."
+  },
+  {
+    title: "Use Specific Skills",
+    description: "While ios-developer auto-routes, calling specific skills directly (e.g., 'use swift-data-persistence skill') gives more focused results for specialized tasks."
+  },
+  {
+    title: "Review Before Accepting",
+    description: "Always review Claude's changes before committing. Claude is a collaborator, not a replacement for your judgment on architecture and UX decisions."
+  },
+  {
+    title: "Break Down Large Tasks",
+    description: "Instead of 'build my entire app', break work into focused tasks: 'create the data model', 'build the list view', 'add the detail screen'. Smaller tasks = better results."
+  },
+  {
+    title: "Use Preview Providers",
+    description: "Ask Claude to include SwiftUI preview providers with sample data. This speeds up UI iteration without running the full app."
+  },
+  {
+    title: "Handle Permissions Early",
+    description: "Request camera, notifications, health data, and location permissions at appropriate times. Add usage descriptions to Info.plist during initial setup."
+  },
+  {
+    title: "Version Your Skills",
+    description: "Keep your custom skills in version control. As your workflow improves, update skills with new patterns and learnings."
   }
 ];
 
@@ -325,34 +361,48 @@ export const gettingStartedSteps = [
   {
     step: 1,
     title: "Install Claude Code",
-    description: "Install via npm globally",
+    description: "Install via npm globally. Requires Node.js 18+ installed on your Mac.",
     command: "npm install -g @anthropic-ai/claude-code"
   },
   {
     step: 2,
     title: "Authenticate",
-    description: "Sign in with your Anthropic account",
+    description: "Sign in with your Anthropic account. This opens a browser window for authentication.",
     command: "claude auth"
   },
   {
     step: 3,
     title: "Open Your Project",
-    description: "Navigate to your Xcode project directory",
+    description: "Navigate to your Xcode project directory (where .xcodeproj or .xcworkspace lives)",
     command: "cd ~/Developer/MyApp && claude"
   },
   {
     step: 4,
     title: "Create CLAUDE.md",
-    description: "Add project context at the root",
+    description: "Let Claude analyze your project and create a context file automatically",
     command: "claude 'Create a CLAUDE.md for this iOS project'"
+  },
+  {
+    step: 5,
+    title: "Install Xcode MCP",
+    description: "Add the Xcode build server so Claude can compile and test your code",
+    command: "npx -y @smithery/cli@latest install cameroncooke/xcodebuildmcp --client claude-code"
+  },
+  {
+    step: 6,
+    title: "Verify Setup",
+    description: "Test that everything is working correctly",
+    command: "claude 'What MCP tools do you have? Build this project.'"
   }
 ];
 
 export const prerequisites = [
-  { name: "Node.js 18+", description: "Required for Claude Code CLI" },
-  { name: "Xcode 15+", description: "For iOS development and simulator" },
-  { name: "Anthropic Account", description: "With Claude API access" },
-  { name: "GitHub Account", description: "Optional, for GitHub MCP integration" }
+  { name: "Node.js 18+", description: "Required for Claude Code CLI. Install via brew install node" },
+  { name: "Xcode 16+", description: "For iOS development, simulator, and command line tools" },
+  { name: "Anthropic Account", description: "Free tier available, Pro recommended for heavy use" },
+  { name: "macOS Sonoma+", description: "Required for latest SwiftUI features and Xcode" },
+  { name: "Git", description: "For version control and GitHub MCP integration" },
+  { name: "Terminal Basics", description: "Familiarity with cd, ls, and basic shell commands" }
 ];
 
 export const xcodeMcpInstallSteps = [
@@ -379,56 +429,441 @@ Generate a reusable SwiftUI component with:
 
 Component name: $ARGUMENTS`;
 
+export const customCommandExamples = [
+  {
+    name: "swiftui-view",
+    filename: "swiftui-view.md",
+    description: "Generate a complete SwiftUI view with ViewModel",
+    content: `Create a SwiftUI view with:
+- @Observable ViewModel with proper state management
+- Preview provider with sample data
+- Accessibility labels and traits
+- Dark mode support
+- Loading and error states
+
+View name: $ARGUMENTS`
+  },
+  {
+    name: "test-viewmodel",
+    filename: "test-viewmodel.md",
+    description: "Generate unit tests for a ViewModel",
+    content: `Write comprehensive unit tests for the specified ViewModel:
+- Test all public methods
+- Test state changes
+- Test error handling
+- Use Swift Testing framework (@Test macro)
+- Mock dependencies where needed
+
+ViewModel to test: $ARGUMENTS`
+  },
+  {
+    name: "swiftdata-model",
+    filename: "swiftdata-model.md",
+    description: "Create a SwiftData model with relationships",
+    content: `Create a SwiftData @Model with:
+- Appropriate property wrappers (@Attribute, @Relationship)
+- Codable conformance if needed
+- Custom initializer
+- Computed properties for common queries
+- Documentation comments
+
+Model name and properties: $ARGUMENTS`
+  },
+  {
+    name: "api-service",
+    filename: "api-service.md",
+    description: "Create a networking service",
+    content: `Create an async/await API service with:
+- Protocol for dependency injection
+- Proper error handling with custom errors
+- Request/Response models (Codable)
+- URLSession configuration
+- Retry logic for transient failures
+
+API endpoint: $ARGUMENTS`
+  },
+  {
+    name: "localize",
+    filename: "localize.md",
+    description: "Add localization to a view",
+    content: `Localize the specified view:
+- Extract all user-facing strings
+- Add to String Catalog
+- Use LocalizedStringKey where appropriate
+- Handle pluralization
+- Add accessibility labels
+
+View to localize: $ARGUMENTS`
+  }
+];
+
 export const troubleshootingItems = [
   {
     question: "Claude doesn't see my Xcode project",
-    answer: "Make sure you're in the project root directory (where .xcodeproj is). Run 'ls' to verify, then restart Claude."
+    answer: "Make sure you're in the project root directory (where .xcodeproj is). Run 'ls' to verify, then restart Claude. If using workspaces, navigate to where .xcworkspace is located."
   },
   {
     question: "MCP server not connecting",
-    answer: "Check your settings.json syntax. Ensure npx is in your PATH. Try running the npx command manually to see errors."
+    answer: "Check your settings.json syntax (must be valid JSON). Ensure npx is in your PATH. Try running the npx command manually to see errors. Run 'claude mcp list' to verify installed servers."
   },
   {
     question: "Build errors not showing",
-    answer: "Verify the Xcode MCP is loaded with 'What MCP tools are available?'. Make sure your scheme name is correct."
+    answer: "Verify the Xcode MCP is loaded with 'What MCP tools are available?'. Make sure your scheme name matches exactly (case-sensitive). Try 'xcode_schemes' to list available schemes."
   },
   {
     question: "GitHub token not working",
-    answer: "Ensure your token has the correct scopes (repo, workflow). Check if it's expired. Regenerate if needed."
+    answer: "Ensure your token has the correct scopes (repo, workflow, read:org). Check if it's expired. Fine-grained tokens need explicit repository access. Regenerate if needed."
   },
   {
     question: "Skills not loading",
-    answer: "Verify skills are in ~/.claude/skills/[skill-name]/SKILL.md. Check folder permissions. Restart Claude Code."
+    answer: "Verify skills are in ~/.claude/skills/[skill-name]/SKILL.md (exact path structure matters). Check folder permissions (chmod 755). Restart Claude Code after adding new skills."
   },
   {
     question: "Claude forgetting context",
-    answer: "Keep CLAUDE.md updated. For long sessions, periodically remind Claude of key architecture decisions."
+    answer: "Keep CLAUDE.md updated with current focus. For long sessions, periodically summarize key decisions. If context gets too long, start a new session with clear CLAUDE.md."
+  },
+  {
+    question: "Xcode build times out",
+    answer: "Clean your build folder in Xcode (Cmd+Shift+K). Delete DerivedData folder. Large projects may need longer timeouts. Consider building specific targets instead of whole workspace."
+  },
+  {
+    question: "Simulator not launching",
+    answer: "Ensure Xcode command line tools are installed: 'xcode-select --install'. Check that a simulator runtime is available in Xcode > Settings > Platforms."
+  },
+  {
+    question: "SwiftData migration issues",
+    answer: "SwiftData auto-migrates lightweight changes. For complex migrations, create a custom migration plan. Ask Claude to review your model changes and suggest migration strategy."
+  },
+  {
+    question: "Claude creates code that doesn't match my style",
+    answer: "Add coding conventions to CLAUDE.md: naming patterns, architectural preferences, formatting rules. Claude will follow your documented standards."
+  },
+  {
+    question: "Preview provider not working",
+    answer: "Ensure preview code is wrapped in #Preview macro (Swift 5.9+). Check that sample data is valid. Previews need a valid SwiftData ModelContainer if using @Query."
+  },
+  {
+    question: "Claude suggests deprecated APIs",
+    answer: "Specify your minimum iOS target in CLAUDE.md (e.g., 'Target: iOS 17+'). Claude will avoid deprecated APIs and use modern alternatives."
+  }
+];
+
+export const hooksConfigExample = `{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "swiftlint lint --path"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./hooks/protect-secrets.js"
+          }
+        ]
+      }
+    ]
+  }
+}`;
+
+export const hooksProtectSecretsExample = `// hooks/protect-secrets.js
+async function main() {
+  const chunks = [];
+  for await (const chunk of process.stdin) {
+    chunks.push(chunk);
+  }
+
+  const toolArgs = JSON.parse(Buffer.concat(chunks).toString());
+  const filePath = toolArgs.tool_input?.file_path ||
+                   toolArgs.tool_input?.path || "";
+
+  // Block access to sensitive iOS config files
+  const blocked = ['.xcconfig', 'Secrets.swift',
+                   'GoogleService-Info.plist', '.env'];
+
+  if (blocked.some(f => filePath.includes(f))) {
+    console.error("Access blocked: This file contains secrets");
+    process.exit(2);  // Exit code 2 blocks the operation
+  }
+}
+main();`;
+
+export const hooksSwiftLintExample = `// After Claude edits a Swift file, run SwiftLint
+{
+  "PostToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "if [[ \\"$CLAUDE_FILE_PATH\\" == *.swift ]]; then swiftlint lint --path \\"$CLAUDE_FILE_PATH\\"; fi"
+        }
+      ]
+    }
+  ]
+}`;
+
+export const hooksUseCases = [
+  {
+    title: "Auto-run SwiftLint",
+    description: "Run SwiftLint after every Swift file edit to catch style issues immediately",
+    type: "PostToolUse",
+    icon: "bi-check2-square"
+  },
+  {
+    title: "Protect Secrets",
+    description: "Block Claude from reading .xcconfig files, API keys, or GoogleService-Info.plist",
+    type: "PreToolUse",
+    icon: "bi-shield-lock"
+  },
+  {
+    title: "Auto-build Verification",
+    description: "Run xcodebuild after file changes to catch compile errors immediately",
+    type: "PostToolUse",
+    icon: "bi-hammer"
+  },
+  {
+    title: "Format Swift Code",
+    description: "Run swift-format or SwiftFormat after edits to maintain code style",
+    type: "PostToolUse",
+    icon: "bi-braces"
+  }
+];
+
+// App Store Submission Content
+export const appStorePreparationSteps = [
+  {
+    step: 1,
+    title: "Apple Developer Account",
+    description: "Enroll in the Apple Developer Program ($99/year). Required for App Store distribution.",
+    icon: "bi-person-badge"
+  },
+  {
+    step: 2,
+    title: "Bundle ID & App Record",
+    description: "Register a unique Bundle ID in the Developer Portal and create an app record in App Store Connect.",
+    icon: "bi-app-indicator"
+  },
+  {
+    step: 3,
+    title: "Signing & Capabilities",
+    description: "Configure signing certificates and provisioning profiles. Enable required capabilities (Push, HealthKit, etc.).",
+    icon: "bi-shield-check"
+  },
+  {
+    step: 4,
+    title: "App Icons & Launch Screen",
+    description: "Add a 1024x1024 App Store icon and configure your launch screen storyboard or SwiftUI scene.",
+    icon: "bi-image"
+  },
+  {
+    step: 5,
+    title: "Info.plist Configuration",
+    description: "Add required keys: privacy descriptions (camera, photos, location), supported orientations, and device requirements.",
+    icon: "bi-file-earmark-code"
+  },
+  {
+    step: 6,
+    title: "Version & Build Numbers",
+    description: "Set your marketing version (1.0.0) and build number (1). Build number must increment with each upload.",
+    icon: "bi-123"
+  }
+];
+
+export const appStoreUploadSteps = [
+  {
+    step: 1,
+    title: "Archive Your App",
+    description: "In Xcode: Product → Archive. Select 'Any iOS Device' as destination first.",
+    command: "Product → Archive (or Cmd+Shift+B for build, then archive)"
+  },
+  {
+    step: 2,
+    title: "Validate Archive",
+    description: "In Organizer, select archive → Validate App. Fixes issues before upload.",
+    command: "Window → Organizer → Select Archive → Validate App"
+  },
+  {
+    step: 3,
+    title: "Distribute to App Store",
+    description: "Click 'Distribute App' → App Store Connect → Upload. Follow signing prompts.",
+    command: "Distribute App → App Store Connect → Upload"
+  },
+  {
+    step: 4,
+    title: "Wait for Processing",
+    description: "Apple processes your build (5-30 minutes). You'll receive an email when ready.",
+    command: "Check App Store Connect → TestFlight → Builds"
+  }
+];
+
+export const appStoreMetadata = [
+  { field: "App Name", description: "30 characters max. Unique on the App Store.", required: true },
+  { field: "Subtitle", description: "30 characters max. Appears below app name.", required: false },
+  { field: "Description", description: "4000 characters max. First 3 lines most visible.", required: true },
+  { field: "Keywords", description: "100 characters total, comma-separated.", required: true },
+  { field: "Screenshots", description: "6.7\" and 5.5\" required. Up to 10 per size.", required: true },
+  { field: "App Preview", description: "15-30 second video. Optional but recommended.", required: false },
+  { field: "Promotional Text", description: "170 characters. Can update without new build.", required: false },
+  { field: "Support URL", description: "Link to your support page or contact.", required: true },
+  { field: "Privacy Policy URL", description: "Required for all apps.", required: true },
+  { field: "Age Rating", description: "Complete questionnaire about content.", required: true }
+];
+
+export const appReviewGuidelines = [
+  {
+    category: "Safety",
+    items: [
+      "No objectionable content",
+      "User-generated content needs moderation",
+      "Physical harm prevention",
+      "Accurate health/medical information"
+    ]
+  },
+  {
+    category: "Performance",
+    items: [
+      "App must be complete and functional",
+      "Accurate metadata and screenshots",
+      "No hidden features",
+      "Hardware compatibility"
+    ]
+  },
+  {
+    category: "Business",
+    items: [
+      "Use Apple's in-app purchase for digital goods",
+      "Accurate pricing and subscriptions",
+      "No bait-and-switch tactics",
+      "Clear terms of service"
+    ]
+  },
+  {
+    category: "Design",
+    items: [
+      "Follow Human Interface Guidelines",
+      "No copycat apps",
+      "Minimum functionality required",
+      "Consistent with platform conventions"
+    ]
+  },
+  {
+    category: "Legal",
+    items: [
+      "Privacy policy required",
+      "No illegal content",
+      "Respect intellectual property",
+      "Data handling transparency"
+    ]
+  }
+];
+
+export const commonRejectionReasons = [
+  {
+    reason: "Crashes or Bugs",
+    solution: "Test thoroughly on real devices. Use TestFlight with external testers before submission."
+  },
+  {
+    reason: "Broken Links",
+    solution: "Verify all URLs work, including privacy policy and support links."
+  },
+  {
+    reason: "Incomplete Information",
+    solution: "Provide demo account credentials if login required. Explain non-obvious features."
+  },
+  {
+    reason: "Misleading Metadata",
+    solution: "Screenshots must show actual app. Description must match functionality."
+  },
+  {
+    reason: "Privacy Issues",
+    solution: "Add all required privacy descriptions to Info.plist. Complete App Privacy questionnaire."
+  },
+  {
+    reason: "In-App Purchase Issues",
+    solution: "Digital goods must use Apple IAP. Physical goods/services can use external payment."
+  }
+];
+
+export const testFlightSteps = [
+  {
+    step: 1,
+    title: "Internal Testing",
+    description: "Add up to 100 team members. No review required. Instant access after upload."
+  },
+  {
+    step: 2,
+    title: "Beta App Review",
+    description: "Required before external testing. Usually 24-48 hours."
+  },
+  {
+    step: 3,
+    title: "External Testing",
+    description: "Invite up to 10,000 testers via email or public link."
+  },
+  {
+    step: 4,
+    title: "Collect Feedback",
+    description: "Testers can submit screenshots and feedback directly from TestFlight app."
   }
 ];
 
 export const resources = [
   {
     title: "Claude Code Docs",
-    description: "Official documentation and guides",
-    url: "https://docs.anthropic.com/claude-code",
+    description: "Official documentation, tutorials, and API reference",
+    url: "https://docs.anthropic.com/en/docs/claude-code",
     icon: "bi-book"
   },
   {
     title: "MCP Specification",
-    description: "Model Context Protocol details",
+    description: "Model Context Protocol details and server development",
     url: "https://modelcontextprotocol.io",
     icon: "bi-diagram-3"
   },
   {
     title: "Apple Developer",
-    description: "SwiftUI and iOS documentation",
+    description: "SwiftUI, SwiftData, and iOS framework documentation",
     url: "https://developer.apple.com/documentation/swiftui",
     icon: "bi-apple"
   },
   {
     title: "Swift.org",
-    description: "Swift language reference",
+    description: "Swift language reference and evolution proposals",
     url: "https://swift.org/documentation",
     icon: "bi-code-slash"
+  },
+  {
+    title: "Smithery MCP Registry",
+    description: "Browse and install community MCP servers",
+    url: "https://smithery.ai",
+    icon: "bi-box-seam"
+  },
+  {
+    title: "Xcode Build MCP",
+    description: "GitHub repo for the Xcode MCP server",
+    url: "https://github.com/cameroncooke/XcodeBuildMCP",
+    icon: "bi-github"
+  },
+  {
+    title: "Human Interface Guidelines",
+    description: "Apple's design guidelines for iOS apps",
+    url: "https://developer.apple.com/design/human-interface-guidelines",
+    icon: "bi-phone"
+  },
+  {
+    title: "App Store Review Guidelines",
+    description: "Requirements for App Store submission",
+    url: "https://developer.apple.com/app-store/review/guidelines",
+    icon: "bi-shop"
   }
 ];

@@ -68,13 +68,13 @@ export default function Hero() {
             <div className="bg-bg-terminal border border-white/10 rounded-lg p-4 mb-6 max-w-md">
               <div className="font-mono">
                 <span className="text-purple-500">const</span>
-                <span className="text-text-primary ml-2">apps</span>
+                <span className="text-text-primary ml-2">sections</span>
                 <span className="text-text-muted ml-2">=</span>
-                <span className="text-orange ml-2 text-3xl font-bold">3</span>
+                <span className="text-orange ml-2 text-3xl font-bold">16</span>
                 <span className="text-text-muted">;</span>
               </div>
               <p className="text-text-muted font-mono text-sm mt-2">
-                // Built from scratch to App Store
+                // Everything you need to ship iOS apps
               </p>
             </div>
 
@@ -85,20 +85,15 @@ export default function Hero() {
               </p>
               <p className="font-mono text-sm text-text-muted">
                 <span className="text-green-500"> * </span>
-                Complete guide based on building
-              </p>
-              <p className="font-mono text-sm">
-                <span className="text-green-500"> * </span>
-                <a href="https://github.com/Rektoooooo/ShadowLift" target="_blank" rel="noopener noreferrer" className="text-orange hover:underline">ShadowLift</a>
-                <span className="text-text-muted">, </span>
-                <a href="https://github.com/Rektoooooo/HabitFlow" target="_blank" rel="noopener noreferrer" className="text-orange hover:underline">HabitOwl</a>
-                <span className="text-text-muted">, and </span>
-                <a href="https://github.com/Rektoooooo/MealPrepAI" target="_blank" rel="noopener noreferrer" className="text-orange hover:underline">MealPrepAI</a>
-                <span className="text-text-muted">.</span>
+                From zero to App Store: setup, skills,
               </p>
               <p className="font-mono text-sm text-text-muted">
                 <span className="text-green-500"> * </span>
-                Skills, MCP setup, and workflows included.
+                MCP servers, hooks, and best practices.
+              </p>
+              <p className="font-mono text-sm text-text-muted">
+                <span className="text-green-500"> * </span>
+                Build SwiftUI apps faster with AI.
               </p>
               <p className="font-mono text-sm">
                 <span className="text-green-500"> */</span>
@@ -125,29 +120,29 @@ export default function Hero() {
                 <div className="w-3 h-3 rounded-full bg-control-close" />
                 <div className="w-3 h-3 rounded-full bg-control-minimize" />
                 <div className="w-3 h-3 rounded-full bg-control-maximize" />
-                <span className="text-text-muted text-sm font-mono ml-2">workflow-stats.tsx</span>
+                <span className="text-text-muted text-sm font-mono ml-2">guide-overview.tsx</span>
               </div>
 
               {/* Content */}
               <div className="p-6 font-mono text-sm">
                 <div className="flex justify-between items-center py-3 border-b border-white/5">
-                  <span className="text-text-muted">Apps Built</span>
-                  <span className="text-orange font-bold text-lg">3</span>
+                  <span className="text-text-muted">Guide Sections</span>
+                  <span className="text-orange font-bold text-lg">16</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-white/5">
                   <span className="text-text-muted">Custom Skills</span>
                   <span className="text-purple-500 font-bold text-lg">28</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-white/5">
-                  <span className="text-text-muted">MCP Servers</span>
-                  <span className="text-blue-500 font-bold text-lg">2</span>
+                  <span className="text-text-muted">Code Examples</span>
+                  <span className="text-blue-500 font-bold text-lg">30+</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-white/5">
-                  <span className="text-text-muted">Example Files</span>
-                  <span className="text-green-500 font-bold text-lg">3</span>
+                  <span className="text-text-muted">Pro Tips</span>
+                  <span className="text-green-500 font-bold text-lg">12</span>
                 </div>
                 <div className="flex justify-between items-center py-3">
-                  <span className="text-text-muted">AI Assisted</span>
+                  <span className="text-text-muted">iOS Focused</span>
                   <span className="text-green-500 font-bold text-lg">100%</span>
                 </div>
               </div>
