@@ -12,7 +12,7 @@ const navLinks = [
   { href: "#vozovy-park", label: "Vozový park" },
   { href: "#vyukova-plocha", label: "Výuková plocha" },
   { href: "#aktuality", label: "Aktuality" },
-  { href: "/cenik", label: "Ceník" },
+  { href: "/trefa/cenik", label: "Ceník" },
   { href: "#faq", label: "FAQ" },
   { href: "#kontakt", label: "Kontakt" },
 ];
@@ -24,7 +24,7 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
-    const homepage = window.location.pathname === "/";
+    const homepage = window.location.pathname === "/" || window.location.pathname === "/trefa" || window.location.pathname === "/trefa/";
     setIsHomepage(homepage);
     if (!homepage) {
       setActiveSection(window.location.pathname);
@@ -58,7 +58,7 @@ export default function Navbar() {
         el.scrollIntoView({ behavior: "smooth" });
       } else {
         // Not on homepage — navigate to homepage with anchor
-        window.location.href = "/" + href;
+        window.location.href = "/trefa/" + href;
       }
     }
   };

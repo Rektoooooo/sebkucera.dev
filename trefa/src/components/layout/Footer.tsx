@@ -35,7 +35,7 @@ export default function Footer() {
               {[
                 { id: "kurzy", label: "Chci řidičák" },
                 { id: "motoskola", label: "Motoškola" },
-                { id: "/cenik", label: "Ceník" },
+                { id: "/trefa/cenik", label: "Ceník" },
                 { id: "faq", label: "FAQ" },
               ].map((item) => (
                 <li key={item.id}>

@@ -75,7 +75,7 @@ export default function CoursesSection() {
             <div className="border-t border-border bg-surface-alt/30 px-5 py-4">
               <p className="mb-3 text-sm text-muted">Jdete do toho s námi?</p>
               <a
-                href="/prihlasit"
+                href="/trefa/prihlasit"
                 className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-2.5 text-sm font-semibold text-white shadow-[0_2px_12px_rgba(2,132,199,0.3)] transition-all hover:bg-accent-dark hover:shadow-[0_4px_20px_rgba(2,132,199,0.4)]"
               >
                 Přihlásit se
