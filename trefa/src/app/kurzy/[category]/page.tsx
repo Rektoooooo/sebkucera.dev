@@ -28,6 +28,10 @@ const categoryData: Record<string, { name: string; description: string; minAge: 
   },
 };
 
+export function generateStaticParams() {
+  return Object.keys(categoryData).map((category) => ({ category }));
+}
+
 interface Props {
   params: Promise<{ category: string }>;
 }

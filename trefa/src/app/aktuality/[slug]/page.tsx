@@ -22,6 +22,10 @@ const articlesData: Record<string, { title: string; content: string; publishedAt
   },
 };
 
+export function generateStaticParams() {
+  return Object.keys(articlesData).map((slug) => ({ slug }));
+}
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
