@@ -9,19 +9,19 @@ const articles = [
     title: "Nové motocykly Yamaha pro sezónu 2026",
     excerpt: "Do našeho vozového parku jsme zařadili nové motocykly Yamaha MT-125 a YZF-R125.",
     date: "2026-01-15",
-    image: "/images/vozovy-park.png",
+    image: "/trefa/images/vozovy-park.png",
   },
   {
     title: "Zázemí pro studenty — nová pergola",
     excerpt: "Pro naše studenty jsme vybudovali novou odpočinkovou zónu s pergolou.",
     date: "2026-01-10",
-    image: "/images/pergola.png",
+    image: "/trefa/images/pergola.png",
   },
   {
     title: "Jak probíhá výuka v naší autoškole",
     excerpt: "Podívejte se, jak vypadá teoretická i praktická výuka u nás v autoškole.",
     date: "2025-12-20",
-    image: "/images/ucebna2.png",
+    image: "/trefa/images/ucebna2.png",
   },
 ];
 

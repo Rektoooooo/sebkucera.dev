@@ -50,7 +50,7 @@ export default function MotoSection() {
         <AnimatedSection>
           <div className="mb-12 overflow-hidden rounded-2xl">
             <Image
-              src="/images/vozovy-park.png"
+              src="/trefa/images/vozovy-park.png"
               alt="Motocykly Yamaha Autoškola Trefa"
               width={1200}
               height={500}

@@ -8,27 +8,27 @@ const slides = [
   {
     heading: "Vaše cesta k řidičáku\nzačíná zde",
     subheading: "Profesionální výuka s vysokou úspěšností v Praze",
-    image: "/images/hero-1.png",
+    image: "/trefa/images/hero-1.png",
   },
   {
     heading: "Motoškola na\nmotocyklech Yamaha",
     subheading: "Kurzy pro začátečníky i pokročilé jezdce",
-    image: "/images/hero-2.png",
+    image: "/trefa/images/hero-2.png",
   },
   {
     heading: "Moderní vozový park\npro váš výcvik",
     subheading: "Učíme na nejnovějších vozidlech s nejlepší výbavou",
-    image: "/images/hero-3.png",
+    image: "/trefa/images/hero-3.png",
   },
   {
     heading: "Špičkové motocykly\npro váš zážitek",
     subheading: "Jezdíme na nejnovějších modelech Yamaha",
-    image: "/images/hero-4.png",
+    image: "/trefa/images/hero-4.png",
   },
   {
     heading: "Trefa Autoškola\nvaše správná volba",
     subheading: "Naše motorky poznáte na první pohled",
-    image: "/images/hero-5.png",
+    image: "/trefa/images/hero-5.png",
   },
 ];
 

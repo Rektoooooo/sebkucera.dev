@@ -16,37 +16,37 @@ const facilities = [
   {
     title: "Pergola",
     description: "Nejčastěji se budeme potkávat venku pod pergolou. Což je v Praze taková oáza klidu, kde si řekneme pár slov před výcvikem. Pokud přijdete včas tak i s kafem a cigárkem.",
-    image: "/images/pergola.png",
+    image: "/trefa/images/pergola.png",
     small: false,
   },
   {
     title: "Zdravověda",
     description: "Může probíhat i prakticky, pokud se to někomu nepovede. My budeme ale vždy připraveni vás odklidit, abyste nepřekáželi ve výcviku ostatním žákům.",
-    image: "/images/zdravoveda.png",
+    image: "/trefa/images/zdravoveda.png",
     small: false,
   },
   {
     title: "Učebna",
     description: "Máme bezva učebnu, kde si můžete pohodlně usednout a poslouchat výklad teorie pravidel provozu… ale protože radši ležíte doma, tak většinou zeje prázdnotou. To nevadí, my už vás známe a víte, že chcete jezdit a ne poslouchat výklad.",
-    image: "/images/ucebna.png",
+    image: "/trefa/images/ucebna.png",
     small: false,
   },
   {
     title: "Sociální zařízení",
     description: "Jelikož máme sociální cítění, máme pro vás i sociální zařízení. Po výcviku se můžete dát do pucu, pokud dále pokračujete na rande. Co kdyby se to zvrtlo, že?",
-    image: "/images/socialni-zazemi.png",
+    image: "/trefa/images/socialni-zazemi.png",
     small: true,
   },
   {
     title: "Toaletu",
     description: "Máme pro všech 72 pohlaví. Stejnou. Abyste se nehádali, že má někdo lepší. Nevylučujeme nikoho, kdo potřebuje vylučovat.",
-    image: "/images/toaleta.png",
+    image: "/trefa/images/toaleta.png",
     small: true,
   },
   {
     title: "Žijeme v digitální době",
     description: "Takže jsme věčně zavalení papíry, žádostmi, výkazy a výhružnými dopisy. Budeme rádi, pokud nám i vy přinesete svou žádost.",
-    image: "/images/kancelar.png",
+    image: "/trefa/images/kancelar.png",
     small: false,
   },
 ];
@@ -105,7 +105,7 @@ export default function TrainingGroundsSection() {
               {/* Map */}
               <div className="overflow-hidden rounded-2xl border border-border">
                 <Image
-                  src="/images/vyukova-plocha-mapa.png"
+                  src="/trefa/images/vyukova-plocha-mapa.png"
                   alt="Mapa výukové plochy — Třanovského, Praha 6"
                   width={800}
                   height={400}

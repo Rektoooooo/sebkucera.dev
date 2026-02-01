@@ -10,7 +10,7 @@ const team = [
   {
     name: "Zbyněk",
     role: "Instruktor — motocykly",
-    photo: "/images/ZbynekProfilePhoto.png",
+    photo: "/trefa/images/ZbynekProfilePhoto.png",
     funFacts: [
       "že neví, kudy teče řeka STYX, zato přesně ví, kde je APEX",
       "že se ho nesmíte na nic ptát, pokud nemáte alespoň hodinu volného času",
@@ -21,7 +21,7 @@ const team = [
   {
     name: "Richard",
     role: "Instruktor — motocykly",
-    photo: "/images/richard.png",
+    photo: "/trefa/images/richard.png",
     funFacts: [
       "že je kancelářská krysa.",
       "To je ale kec, je spíš myš. Tryskomyš!",
@@ -31,7 +31,7 @@ const team = [
   {
     name: "Michal",
     role: "Instruktor — motocykly",
-    photo: "/images/michal.png",
+    photo: "/trefa/images/michal.png",
     funFacts: [
       "že má stále hlavu v oblacích",
       "že se narodil s řidítky v ruce (podle Moniky to dost bolelo)",
@@ -42,7 +42,7 @@ const team = [
   {
     name: "Martin",
     role: "Instruktor — motocykly",
-    photo: "/images/martin.png",
+    photo: "/trefa/images/martin.png",
     funFacts: [
       "že je mladý padawan, který chce překonat svého mistra",
       "že si tvrdohlavě kupuje další a další R6",
@@ -52,7 +52,7 @@ const team = [
   {
     name: "Eliška",
     role: "Šéf",
-    photo: "/images/eliska.png",
+    photo: "/trefa/images/eliska.png",
     funFacts: [
       "že je vedoucí reklamačního oddělení",
       "že všechny žádosti zamítá",

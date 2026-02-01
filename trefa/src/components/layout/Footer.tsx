@@ -15,7 +15,7 @@ export default function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <img src="/images/trefa-logo.png" alt="Autoškola Trefa" className="h-12 w-auto" />
+            <img src="/trefa/images/trefa-logo.png" alt="Autoškola Trefa" className="h-12 w-auto" />
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
               Autoškola a motoškola v Praze. Řidičské oprávnění skupiny B, A1, AM.
               Profesionální výuka s vysokou úspěšností.

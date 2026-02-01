@@ -78,7 +78,7 @@ export default function Navbar() {
           className="flex items-center"
         >
           <Image
-            src="/images/trefa-logo.png"
+            src="/trefa/images/trefa-logo.png"
             alt="Autoškola Trefa"
             width={140}
             height={40}
