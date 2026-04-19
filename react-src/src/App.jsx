@@ -217,62 +217,37 @@ function App() {
                   </div>
                 </GlowCard>
 
-                {/* BattleShips */}
+                {/* MealPrepAI */}
                 <GlowCard glowColor="#c084fc">
                   <div className="project-card">
-                    <img src="/images/App icons/Battle ships logo.png" alt="BattleShips" className="app-icon" />
+                    <img src="/images/App icons/MealPrepAI logo.png" alt="MealPrepAI" className="app-icon" />
                     <div className="project-info">
-                      <div className="project-category">Games</div>
-                      <h3 className="project-title">BattleShips</h3>
-                      <p className="project-description">Classic strategy game with smart AI opponent.</p>
+                      <div className="project-category">Food & Drink</div>
+                      <h3 className="project-title">MealPrepAI</h3>
+                      <p className="project-description">AI-powered meal planning and prep tailored to your goals.</p>
                       <div className="project-buttons">
-                        <a href="https://github.com/Rektoooooo/SwiftUIBattleShips" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
+                        <a href="https://github.com/Rektoooooo/MealPrepAI" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
                       </div>
                     </div>
                   </div>
                 </GlowCard>
+              </div>
+            </div>
 
-                {/* Pushly */}
-                <GlowCard glowColor="#9333ea">
+            {/* macOS Section */}
+            <div className="mb-16">
+              <h3 className="text-2xl font-semibold mb-6 text-purple-300">macOS Apps</h3>
+              <div className="projects-grid">
+                {/* CC Settings */}
+                <GlowCard glowColor="#a855f7">
                   <div className="project-card">
-                    <img src="/images/App icons/Pushly logo.png" alt="Pushly" className="app-icon" />
+                    <img src="/images/macos/CC-settings.png" alt="CC Settings" className="web-screenshot" />
                     <div className="project-info">
-                      <div className="project-category">Health & Fitness</div>
-                      <h3 className="project-title">Pushly</h3>
-                      <p className="project-description">Friendly nudges to help you stay active throughout the day.</p>
+                      <div className="project-category">Developer Tools</div>
+                      <h3 className="project-title">CC Settings</h3>
+                      <p className="project-description">A native macOS app for managing Claude Code settings with ease.</p>
                       <div className="project-buttons">
-                        <a href="https://github.com/Rektoooooo/Pushly" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
-                      </div>
-                    </div>
-                  </div>
-                </GlowCard>
-
-                {/* Rick & Morty */}
-                <GlowCard glowColor="#8b5cf6">
-                  <div className="project-card">
-                    <img src="/images/App icons/Rick and morty.jpg" alt="Rick & Morty" className="app-icon" />
-                    <div className="project-info">
-                      <div className="project-category">Entertainment</div>
-                      <h3 className="project-title">Rick & Morty API</h3>
-                      <p className="project-description">SwiftUI app and web explorer using the Rick and Morty API.</p>
-                      <div className="project-buttons">
-                        <a href="https://sebkucera.dev/rick&morty/" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
-                        <a href="https://github.com/Rektoooooo/Rick-Morty" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
-                      </div>
-                    </div>
-                  </div>
-                </GlowCard>
-
-                {/* MyCarTally */}
-                <GlowCard glowColor="#ec4899">
-                  <div className="project-card">
-                    <img src="/images/App icons/MyCarTally logo.png" alt="MyCarTally" className="app-icon" />
-                    <div className="project-info">
-                      <div className="project-category">Utilities</div>
-                      <h3 className="project-title">MyCarTally</h3>
-                      <p className="project-description">A smart car expense tracking app built with SwiftUI.</p>
-                      <div className="project-buttons">
-                        <a href="https://github.com/Rektoooooo/mycartally-ios" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
+                        <a href="https://github.com/Rektoooooo/CC-Settings" target="_blank" rel="noopener noreferrer" className="get-button get-button-github">GitHub</a>
                       </div>
                     </div>
                   </div>
@@ -287,7 +262,7 @@ function App() {
                 {/* ApplyTailor */}
                 <GlowCard glowColor="#10b981">
                   <div className="project-card">
-                    <img src="/images/App icons/ApplyTailor logo.png" alt="ApplyTailor" className="app-icon" />
+                    <img src="/images/web-screenshots/applytailor.png" alt="ApplyTailor" className="web-screenshot" />
                     <div className="project-info">
                       <div className="project-category">AI / Tools</div>
                       <h3 className="project-title">ApplyTailor</h3>
@@ -303,9 +278,7 @@ function App() {
                 {/* Real Estate Demo */}
                 <GlowCard glowColor="#a78bfa">
                   <div className="project-card">
-                    <div className="app-icon bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-4xl">
-                      🏠
-                    </div>
+                    <img src="/images/web-screenshots/real-estate.png" alt="Real Estate Demo" className="web-screenshot" />
                     <div className="project-info">
                       <div className="project-category">Web Development</div>
                       <h3 className="project-title">Real Estate Demo</h3>
@@ -320,9 +293,7 @@ function App() {
                 {/* Restaurant Demo */}
                 <GlowCard glowColor="#7c3aed">
                   <div className="project-card">
-                    <div className="app-icon bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-4xl">
-                      🍽️
-                    </div>
+                    <img src="/images/web-screenshots/restaurant.png" alt="Restaurant Demo" className="web-screenshot" />
                     <div className="project-info">
                       <div className="project-category">Web Development</div>
                       <h3 className="project-title">Restaurant Demo</h3>
@@ -331,6 +302,49 @@ function App() {
                         <a href="https://sebkucera.dev/restaurant-demo/" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
                       </div>
                     </div>
+                  </div>
+                </GlowCard>
+
+                {/* Autoskola Trefa */}
+                <GlowCard glowColor="#f59e0b">
+                  <div className="project-card">
+                    <img src="/images/web-screenshots/autoskola-trefa.png" alt="Autoskola Trefa" className="web-screenshot" />
+                    <div className="project-info">
+                      <div className="project-category">Web Development</div>
+                      <h3 className="project-title">Autoškola Trefa</h3>
+                      <p className="project-description">Driving school website with course info and online booking.</p>
+                      <div className="project-buttons">
+                        <a href="https://www.autoskolatrefa.cz/" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
+                      </div>
+                    </div>
+                  </div>
+                </GlowCard>
+
+                {/* Claude Code for iOS */}
+                <GlowCard glowColor="#ec4899">
+                  <div className="project-card">
+                    <img src="/images/web-screenshots/claude-code-for-ios.png" alt="Claude Code for iOS" className="web-screenshot" />
+                    <div className="project-info">
+                      <div className="project-category">Landing Page</div>
+                      <h3 className="project-title">Claude Code for iOS</h3>
+                      <p className="project-description">Landing page for the Claude Code iOS companion experience.</p>
+                      <div className="project-buttons">
+                        <a href="https://sebkucera.dev/claude-code-for-ios/" target="_blank" rel="noopener noreferrer" className="get-button">Website</a>
+                      </div>
+                    </div>
+                  </div>
+                </GlowCard>
+
+                {/* Local Coder */}
+                <GlowCard glowColor="#38bdf8">
+                  <div className="project-card">
+                    <img src="/images/web-screenshots/local-coder.png" alt="Local Coder" className="web-screenshot" />
+                    <div className="project-info">
+                      <div className="project-category">Developer Tools</div>
+                      <h3 className="project-title">Local Coder</h3>
+                      <p className="project-description">Marketing site for a local-first coding assistant.</p>
+                    </div>
+                    {/* No public link yet */}
                   </div>
                 </GlowCard>
               </div>
