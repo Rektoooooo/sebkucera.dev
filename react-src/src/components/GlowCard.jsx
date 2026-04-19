@@ -53,7 +53,7 @@ export default function GlowCard({ children, className = '', glowColor = '#a855f
       )}
 
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 h-full">
         {children}
       </div>
     </div>
