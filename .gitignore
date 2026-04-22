@@ -1,6 +1,9 @@
 .DS_Store/
 .DS_Store
 node_modules/
+# Vite intermediate build output — committed artifacts live at <project>/{index.html, assets/, images/}
+studio/dist/
+react-src/dist/
 venv/
 __pycache__/
 *.pyc
