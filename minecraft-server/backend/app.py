@@ -609,6 +609,50 @@ def read_json_list(path: Path) -> list:
                 time.sleep(0.2)
     return []
 
+def write_json_list(path: Path, data: list) -> None:
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(data, indent=2))
+    os.replace(tmp, path)
+
+def dedupe_players(entries: list) -> list:
+    """Collapse duplicate entries for the same player name.
+
+    A server that switched online-mode ends up with two UUIDs (Mojang + offline)
+    per player; the panel operates on names, so show each name once.
+    """
+    seen = set()
+    result = []
+    for entry in entries:
+        key = str(entry.get("name", "")).lower() or str(entry.get("uuid", "")).lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(entry)
+    return result
+
+def uuid_for_name(name: str) -> Optional[str]:
+    """Look up a player's UUID from files the server maintains."""
+    lower = name.lower()
+    for path in (
+        MC_DIR / "usercache.json",
+        MC_DIR / "whitelist.json",
+        MC_DIR / "ops.json",
+        MC_DIR / "banned-players.json",
+    ):
+        for entry in read_json_list(path):
+            if str(entry.get("name", "")).lower() == lower and entry.get("uuid"):
+                return entry["uuid"]
+    return None
+
+def op_permission_level() -> int:
+    try:
+        for line in properties_path().read_text().splitlines():
+            if line.strip().startswith("op-permission-level="):
+                return int(line.split("=", 1)[1].strip())
+    except Exception:
+        pass
+    return 4
+
 @app.get("/players")
 async def get_players(username: str = Depends(verify_token)):
     running = await is_port_open()
@@ -633,52 +677,117 @@ async def get_players(username: str = Depends(verify_token)):
         "serverRunning": running,
         "playerCount": count,
         "online": online,
-        "whitelist": whitelist,
-        "ops": ops,
-        "banned": banned,
+        "whitelist": dedupe_players(whitelist),
+        "ops": dedupe_players(ops),
+        "banned": dedupe_players(banned),
     }
 
-async def player_console_action(command: str) -> GenericResponse:
-    await require_console()
-    await send_console_raw(command)
-    return GenericResponse(ok=True, message="Command sent")
+# Player mutations work in two modes:
+#  - server running: inject the real console command (the server owns its files)
+#  - server stopped: edit the JSON file directly (the server reads it at boot)
+
+async def console_or_offline(command: str, offline_edit) -> GenericResponse:
+    if await is_screen_running():
+        await send_console_raw(command)
+        return GenericResponse(ok=True, message="Command sent")
+    await asyncio.to_thread(offline_edit)
+    return GenericResponse(ok=True, message="Saved — applies when the server starts")
+
+def remove_by_name(path: Path, name: str) -> None:
+    lower = name.lower()
+    entries = read_json_list(path)
+    remaining = [e for e in entries if str(e.get("name", "")).lower() != lower]
+    if len(remaining) == len(entries):
+        raise HTTPException(status_code=404, detail=f"{name} not found in {path.name}")
+    write_json_list(path, remaining)
+
+def add_entry(path: Path, name: str, extra: Optional[dict] = None) -> None:
+    entries = read_json_list(path)
+    if any(str(e.get("name", "")).lower() == name.lower() for e in entries):
+        return  # already present
+    uuid = uuid_for_name(name)
+    if not uuid:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Unknown player '{name}' — they must have joined before, or start the server to add them",
+        )
+    entries.append({"uuid": uuid, "name": name, **(extra or {})})
+    write_json_list(path, entries)
 
 @app.post("/players/whitelist/add", response_model=GenericResponse)
 async def whitelist_add(action: PlayerAction, username: str = Depends(verify_token)):
     name = valid_player_name(action.name)
-    return await player_console_action(f"whitelist add {name}")
+    return await console_or_offline(
+        f"whitelist add {name}",
+        lambda: add_entry(MC_DIR / "whitelist.json", name),
+    )
 
 @app.post("/players/whitelist/remove", response_model=GenericResponse)
 async def whitelist_remove(action: PlayerAction, username: str = Depends(verify_token)):
     name = valid_player_name(action.name)
-    return await player_console_action(f"whitelist remove {name}")
+    return await console_or_offline(
+        f"whitelist remove {name}",
+        lambda: remove_by_name(MC_DIR / "whitelist.json", name),
+    )
 
 @app.post("/players/op", response_model=GenericResponse)
 async def op_player(action: PlayerAction, username: str = Depends(verify_token)):
     name = valid_player_name(action.name)
-    return await player_console_action(f"op {name}")
+    return await console_or_offline(
+        f"op {name}",
+        lambda: add_entry(
+            MC_DIR / "ops.json",
+            name,
+            {"level": op_permission_level(), "bypassesPlayerLimit": False},
+        ),
+    )
 
 @app.post("/players/deop", response_model=GenericResponse)
 async def deop_player(action: PlayerAction, username: str = Depends(verify_token)):
     name = valid_player_name(action.name)
-    return await player_console_action(f"deop {name}")
+    return await console_or_offline(
+        f"deop {name}",
+        lambda: remove_by_name(MC_DIR / "ops.json", name),
+    )
 
 @app.post("/players/kick", response_model=GenericResponse)
 async def kick_player(action: PlayerAction, username: str = Depends(verify_token)):
     name = valid_player_name(action.name)
     reason = clean_reason(action.reason)
-    return await player_console_action(f"kick {name} {reason}" if reason else f"kick {name}")
+    # Kick is only meaningful on a running server — no offline equivalent.
+    await require_console()
+    await send_console_raw(f"kick {name} {reason}" if reason else f"kick {name}")
+    return GenericResponse(ok=True, message="Command sent")
 
 @app.post("/players/ban", response_model=GenericResponse)
 async def ban_player(action: PlayerAction, username: str = Depends(verify_token)):
     name = valid_player_name(action.name)
     reason = clean_reason(action.reason)
-    return await player_console_action(f"ban {name} {reason}" if reason else f"ban {name}")
+
+    def offline_ban() -> None:
+        add_entry(
+            MC_DIR / "banned-players.json",
+            name,
+            {
+                "created": time.strftime("%Y-%m-%d %H:%M:%S %z"),
+                "source": "Server",
+                "expires": "forever",
+                "reason": reason or "Banned by an operator",
+            },
+        )
+
+    return await console_or_offline(
+        f"ban {name} {reason}" if reason else f"ban {name}",
+        offline_ban,
+    )
 
 @app.post("/players/pardon", response_model=GenericResponse)
 async def pardon_player(action: PlayerAction, username: str = Depends(verify_token)):
     name = valid_player_name(action.name)
-    return await player_console_action(f"pardon {name}")
+    return await console_or_offline(
+        f"pardon {name}",
+        lambda: remove_by_name(MC_DIR / "banned-players.json", name),
+    )
 
 # =====================================================================
 # server.properties

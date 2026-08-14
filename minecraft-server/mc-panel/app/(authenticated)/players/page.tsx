@@ -95,7 +95,8 @@ export default function PlayersPage() {
 
       {serverDown && (
         <div className="rounded-md border border-[hsl(var(--warning))]/40 bg-[hsl(var(--warning))]/10 px-4 py-3 text-sm text-[hsl(var(--warning))]">
-          The server is offline — player management commands are unavailable until it starts.
+          The server is offline. Whitelist, operator and ban changes are saved to the
+          server files and apply when it starts.
         </div>
       )}
 
@@ -247,11 +248,10 @@ export default function PlayersPage() {
                     e.key === 'Enter' && handleAdd('/players/whitelist/add', 'Added to whitelist')
                   }
                   className="max-w-xs"
-                  disabled={serverDown}
-                />
+                                  />
                 <Button
                   onClick={() => handleAdd('/players/whitelist/add', 'Added to whitelist')}
-                  disabled={serverDown || busy !== null}
+                  disabled={busy !== null}
                 >
                   <UserPlus />
                   Add
@@ -273,7 +273,7 @@ export default function PlayersPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            disabled={serverDown || busy !== null}
+                            disabled={busy !== null}
                             onClick={() =>
                               runPlayerAction(
                                 '/players/whitelist/remove',
@@ -311,11 +311,10 @@ export default function PlayersPage() {
                   onChange={(e) => setAddName(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAdd('/players/op', 'Player opped')}
                   className="max-w-xs"
-                  disabled={serverDown}
-                />
+                                  />
                 <Button
                   onClick={() => handleAdd('/players/op', 'Player opped')}
-                  disabled={serverDown || busy !== null}
+                  disabled={busy !== null}
                 >
                   <ShieldCheck />
                   Make OP
@@ -341,7 +340,7 @@ export default function PlayersPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            disabled={serverDown || busy !== null}
+                            disabled={busy !== null}
                             onClick={() =>
                               runPlayerAction('/players/deop', entry.name, `De-opped ${entry.name}`)
                             }
@@ -392,7 +391,7 @@ export default function PlayersPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            disabled={serverDown || busy !== null}
+                            disabled={busy !== null}
                             onClick={() =>
                               runPlayerAction('/players/pardon', entry.name, `Pardoned ${entry.name}`)
                             }
