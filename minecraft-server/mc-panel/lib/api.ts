@@ -115,6 +115,20 @@ export const api = {
     URL.revokeObjectURL(url);
   },
 
+  // Fetch an authenticated binary endpoint into an object URL for <img> use.
+  // Returns null on 404 (e.g. no server icon set yet).
+  async fetchBlobUrl(endpoint: string): Promise<string | null> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (response.status === 404) return null;
+    if (!response.ok) {
+      throw new ApiError(response.status, await readError(response, 'Request failed'));
+    }
+    return URL.createObjectURL(await response.blob());
+  },
+
   // XHR-based upload so we get progress events (fetch has none for uploads).
   uploadWithProgress<T>(
     endpoint: string,

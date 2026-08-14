@@ -98,6 +98,10 @@ class PlayerAction(BaseModel):
 class PropertiesUpdate(BaseModel):
     properties: dict
 
+class ModInstall(BaseModel):
+    url: str
+    filename: str
+
 class ScheduleUpdate(BaseModel):
     enabled: bool
     time: str
@@ -893,6 +897,47 @@ async def update_properties(update: PropertiesUpdate, username: str = Depends(ve
     return {"ok": True, "restartRequired": True}
 
 # =====================================================================
+# Server icon
+# =====================================================================
+
+MAX_ICON_BYTES = 256 * 1024
+
+def png_dimensions(data: bytes) -> Optional[tuple]:
+    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return (
+        int.from_bytes(data[16:20], "big"),
+        int.from_bytes(data[20:24], "big"),
+    )
+
+@app.get("/server/icon")
+async def get_server_icon(username: str = Depends(verify_token)):
+    icon = MC_DIR / "server-icon.png"
+    if not icon.exists():
+        raise HTTPException(status_code=404, detail="No server icon set")
+    return FileResponse(icon, media_type="image/png", filename="server-icon.png")
+
+@app.post("/server/icon")
+async def set_server_icon(
+    file: UploadFile = File(...),
+    username: str = Depends(verify_token),
+):
+    data = await file.read(MAX_ICON_BYTES + 1)
+    if len(data) > MAX_ICON_BYTES:
+        raise HTTPException(status_code=413, detail="Icon too large (max 256 KB)")
+    dims = png_dimensions(data)
+    if dims is None:
+        raise HTTPException(status_code=400, detail="Icon must be a PNG file")
+    if dims != (64, 64):
+        raise HTTPException(status_code=400, detail="Icon must be exactly 64×64 pixels")
+
+    icon = MC_DIR / "server-icon.png"
+    tmp = icon.with_suffix(".png.tmp")
+    tmp.write_bytes(data)
+    os.replace(tmp, icon)
+    return {"ok": True, "restartRequired": True}
+
+# =====================================================================
 # Backups
 # =====================================================================
 
@@ -1065,6 +1110,51 @@ async def upload_mod(
         tmp_path.unlink(missing_ok=True)
         raise HTTPException(status_code=500, detail=f"Upload failed: {e}")
 
+    return {"ok": True, "file": filename}
+
+# Only Modrinth's CDN — this endpoint downloads server-side, so an open URL
+# would be an SSRF hole.
+ALLOWED_MOD_HOSTS = {"cdn.modrinth.com"}
+
+@app.post("/mods/install")
+async def install_mod(action: ModInstall, username: str = Depends(verify_token)):
+    from urllib.parse import urlparse
+    from urllib.request import Request as UrlRequest, urlopen
+
+    filename = safe_name(action.filename, suffix=".jar")
+    parsed = urlparse(action.url)
+    if parsed.scheme != "https" or parsed.hostname not in ALLOWED_MOD_HOSTS:
+        raise HTTPException(status_code=400, detail="Only downloads from cdn.modrinth.com are allowed")
+
+    mods_dir = MC_DIR / "mods"
+    mods_dir.mkdir(exist_ok=True)
+    dest = resolve_in(mods_dir, filename)
+    tmp_path = mods_dir / (filename + ".part")
+
+    def download() -> None:
+        request = UrlRequest(action.url, headers={"User-Agent": "mc-panel/2.0"})
+        size = 0
+        try:
+            with urlopen(request, timeout=60) as response:
+                # urlopen follows redirects; make sure we didn't get bounced off-host
+                final_host = urlparse(response.geturl()).hostname
+                if final_host not in ALLOWED_MOD_HOSTS:
+                    raise HTTPException(status_code=400, detail="Download redirected to a disallowed host")
+                with open(tmp_path, "wb") as f:
+                    while chunk := response.read(1024 * 1024):
+                        size += len(chunk)
+                        if size > MAX_UPLOAD_BYTES:
+                            raise HTTPException(status_code=413, detail="Mod file too large")
+                        f.write(chunk)
+            os.replace(tmp_path, dest)
+        except HTTPException:
+            tmp_path.unlink(missing_ok=True)
+            raise
+        except Exception as e:
+            tmp_path.unlink(missing_ok=True)
+            raise HTTPException(status_code=502, detail=f"Download failed: {e}")
+
+    await asyncio.to_thread(download)
     return {"ok": True, "file": filename}
 
 @app.post("/mods/disable", response_model=GenericResponse)

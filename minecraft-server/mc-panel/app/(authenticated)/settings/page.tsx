@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { RotateCcw, Save, TriangleAlert } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ImagePlus, RotateCcw, Save, TriangleAlert } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { api } from '@/lib/api';
@@ -60,6 +60,44 @@ const SWITCH_FIELDS: Record<string, { label: string; hint: string }> = {
   hardcore: { label: 'Hardcore', hint: 'Players are banned on death' },
 };
 
+/** Cover-crop any image to the 64×64 PNG Minecraft requires. */
+async function resizeToServerIcon(file: File): Promise<Blob> {
+  const img = document.createElement('img');
+  const url = URL.createObjectURL(file);
+  try {
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = () => reject(new Error('Could not read that image'));
+      img.src = url;
+    });
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    ctx.imageSmoothingQuality = 'high';
+    const side = Math.min(img.width, img.height);
+    ctx.drawImage(
+      img,
+      (img.width - side) / 2,
+      (img.height - side) / 2,
+      side,
+      side,
+      0,
+      0,
+      64,
+      64
+    );
+    return await new Promise<Blob>((resolve, reject) =>
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error('Failed to process image'))),
+        'image/png'
+      )
+    );
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
 export default function SettingsPage() {
   const [data, setData] = useState<PropertiesResponse | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
@@ -67,6 +105,36 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [restartNeeded, setRestartNeeded] = useState(false);
   const [restarting, setRestarting] = useState(false);
+  const [iconUrl, setIconUrl] = useState<string | null>(null);
+  const [iconUploading, setIconUploading] = useState(false);
+  const iconInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    api.fetchBlobUrl('/server/icon').then(setIconUrl).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleIconUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setIconUploading(true);
+    try {
+      const blob = await resizeToServerIcon(file);
+      await api.upload(
+        '/server/icon',
+        new File([blob], 'server-icon.png', { type: 'image/png' })
+      );
+      if (iconUrl) URL.revokeObjectURL(iconUrl);
+      setIconUrl(URL.createObjectURL(blob));
+      setRestartNeeded(true);
+      toast.success('Server icon updated');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to update icon');
+    } finally {
+      setIconUploading(false);
+    }
+  };
 
   const load = async () => {
     try {
@@ -193,12 +261,52 @@ export default function SettingsPage() {
             <div className="grid gap-4 lg:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>General</CardTitle>
-                  <CardDescription>Identity and gameplay basics</CardDescription>
+                  <CardTitle>Server Identity</CardTitle>
+                  <CardDescription>How your server appears in the multiplayer list</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-5">
                   <div className="space-y-2">
-                    <Label htmlFor="motd">MOTD</Label>
+                    <Label>Server icon</Label>
+                    <div className="flex items-center gap-4">
+                      {iconUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={iconUrl}
+                          alt="Server icon"
+                          className="h-16 w-16 rounded-md border"
+                          style={{ imageRendering: 'pixelated' }}
+                        />
+                      ) : (
+                        <div className="flex h-16 w-16 items-center justify-center rounded-md border border-dashed text-muted-foreground">
+                          <ImagePlus className="h-6 w-6" />
+                        </div>
+                      )}
+                      <div className="space-y-1">
+                        <input
+                          ref={iconInputRef}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleIconUpload}
+                        />
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          loading={iconUploading}
+                          onClick={() => iconInputRef.current?.click()}
+                        >
+                          <ImagePlus />
+                          {iconUrl ? 'Change Icon' : 'Upload Icon'}
+                        </Button>
+                        <p className="text-xs text-muted-foreground">
+                          Any image works — it&apos;s cropped and resized to 64×64 automatically.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="motd">MOTD (description)</Label>
                     <Input
                       id="motd"
                       value={values['motd'] ?? ''}
