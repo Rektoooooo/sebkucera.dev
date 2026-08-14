@@ -1,9 +1,36 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
+// The login call is the one request where a 401 is an expected answer rather
+// than an expired session, so it must not trigger the redirect below.
+const LOGIN_ENDPOINT = '/auth/login';
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
     this.name = 'ApiError';
+  }
+}
+
+function redirectToLogin() {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('token');
+    // window.location bypasses the Next router, which is what applies basePath.
+    window.location.href = `${BASE_PATH}/login`;
+  }
+}
+
+// FastAPI reports errors as {"detail": "..."}; surface that instead of the
+// raw JSON envelope so the UI can show a usable message.
+async function readError(response: Response, fallback: string): Promise<string> {
+  const body = await response.text();
+  if (!body) return fallback;
+
+  try {
+    const detail = JSON.parse(body).detail;
+    return typeof detail === 'string' ? detail : body;
+  } catch {
+    return body;
   }
 }
 
@@ -28,17 +55,13 @@ export const api = {
       headers,
     });
 
-    if (response.status === 401) {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-      }
+    if (response.status === 401 && endpoint !== LOGIN_ENDPOINT) {
+      redirectToLogin();
       throw new ApiError(401, 'Unauthorized');
     }
 
     if (!response.ok) {
-      const error = await response.text();
-      throw new ApiError(response.status, error || 'Request failed');
+      throw new ApiError(response.status, await readError(response, 'Request failed'));
     }
 
     const contentType = response.headers.get('content-type');
@@ -76,16 +99,12 @@ export const api = {
       body: formData,
     }).then(async (response) => {
       if (response.status === 401) {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('token');
-          window.location.href = '/login';
-        }
+        redirectToLogin();
         throw new ApiError(401, 'Unauthorized');
       }
 
       if (!response.ok) {
-        const error = await response.text();
-        throw new ApiError(response.status, error || 'Upload failed');
+        throw new ApiError(response.status, await readError(response, 'Upload failed'));
       }
 
       return response.json();
