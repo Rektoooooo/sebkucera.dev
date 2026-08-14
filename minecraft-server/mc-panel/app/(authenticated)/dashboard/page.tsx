@@ -1,171 +1,257 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { api } from '@/lib/api';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { LogViewer } from '@/components/server/LogViewer';
+import { useState } from 'react';
+import {
+  Activity,
+  Cpu,
+  HardDrive,
+  MemoryStick,
+  Play,
+  RotateCcw,
+  Square,
+} from 'lucide-react';
+import { toast } from 'sonner';
 
-interface ServerStatus {
-  online: boolean;
-  players?: {
-    online: number;
-    max: number;
-  };
-  port: number;
+import { api } from '@/lib/api';
+import { usePoll } from '@/lib/use-poll';
+import { useServerStatus } from '@/lib/server-status-context';
+import { formatBytes, formatUptime, type Metrics } from '@/lib/types';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
+import { LogViewer } from '@/components/server/log-viewer';
+
+type Action = 'start' | 'stop' | 'restart';
+
+function StatCard({
+  title,
+  icon: Icon,
+  loading,
+  children,
+}: {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  loading: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          {title}
+        </CardTitle>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        {loading ? (
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-24" />
+            <Skeleton className="h-2 w-full" />
+          </div>
+        ) : (
+          children
+        )}
+      </CardContent>
+    </Card>
+  );
 }
 
 export default function DashboardPage() {
-  const [status, setStatus] = useState<ServerStatus | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const { status, loading: statusLoading, refetch: refetchStatus } = useServerStatus();
+  const { data: metrics, loading: metricsLoading } = usePoll<Metrics>(
+    () => api.get<Metrics>('/system/metrics'),
+    5000
+  );
+  const [actionLoading, setActionLoading] = useState<Action | null>(null);
 
-  const fetchStatus = useCallback(async () => {
-    try {
-      const data = await api.get<ServerStatus>('/server/status');
-      setStatus(data);
-
-      // Clear loading state when status changes as expected
-      setActionLoading((currentAction) => {
-        if (currentAction === 'start' && data.online) return null;
-        if (currentAction === 'stop' && !data.online) return null;
-        if (currentAction === 'restart' && data.online) return null;
-        return currentAction;
-      });
-    } catch (error) {
-      console.error('Failed to fetch status:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    setIsMounted(true);
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleServerAction = async (action: 'start' | 'stop' | 'restart') => {
+  const runAction = async (action: Action) => {
     setActionLoading(action);
     try {
       await api.post(`/server/${action}`);
-      // Don't clear loading state - let it clear when status changes
-      // The status poll will update and buttons will re-enable automatically
-    } catch (error: any) {
-      alert(`Failed to ${action} server: ${error.message}`);
+      toast.success(
+        action === 'start'
+          ? 'Server started'
+          : action === 'stop'
+            ? 'Server stopped'
+            : 'Server restarted'
+      );
+      await refetchStatus();
+    } catch (err: any) {
+      toast.error(err?.message || `Failed to ${action} server`);
+    } finally {
       setActionLoading(null);
     }
   };
 
-  const isOnline = status?.online === true;
-  const showLoading = !isMounted || loading;
-
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-zinc-400">Monitor and control your Minecraft server</p>
+        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-sm text-muted-foreground">
+          Monitor and control your Minecraft server
+        </p>
       </div>
 
-      {showLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card title="Server Status">
-              <div className="space-y-4">
-                <div>
-                  <Badge variant={isOnline ? 'success' : 'danger'} className="text-lg px-4 py-2">
-                    {isOnline ? '● Online' : '● Offline'}
-                  </Badge>
-                </div>
-                {isOnline && status?.players && (
-                  <div>
-                    <p className="text-zinc-400 text-sm mb-1">Players Online</p>
-                    <p className="text-2xl font-bold text-white">
-                      {status.players.online} / {status.players.max}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </Card>
-
-        <Card title="Quick Actions" className="lg:col-span-2">
-          <div className="flex flex-wrap gap-3">
-            <Button
-              variant="success"
-              onClick={() => handleServerAction('start')}
-              loading={actionLoading === 'start'}
-              disabled={isOnline || actionLoading !== null}
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              Start Server
-            </Button>
-            <Button
-              variant="danger"
-              onClick={() => handleServerAction('stop')}
-              loading={actionLoading === 'stop'}
-              disabled={!isOnline || actionLoading !== null}
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"
-                />
-              </svg>
-              Stop Server
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => handleServerAction('restart')}
-              loading={actionLoading === 'restart'}
-              disabled={!isOnline || actionLoading !== null}
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-              Restart Server
-            </Button>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard title="Server Status" icon={Activity} loading={statusLoading}>
+          <div className="flex items-center gap-2">
+            {status?.online ? (
+              <Badge variant="success">● Online</Badge>
+            ) : (
+              <Badge variant="danger">● Offline</Badge>
+            )}
+            {status?.online && status.players && (
+              <span className="text-sm text-muted-foreground">
+                {status.players.online}/{status.players.max} players
+              </span>
+            )}
           </div>
-        </Card>
+          {metrics?.java && (
+            <p className="mt-2 text-xs text-muted-foreground">
+              Uptime {formatUptime(metrics.java.uptimeSeconds)} · Java RSS{' '}
+              {formatBytes(metrics.java.rssBytes)}
+            </p>
+          )}
+        </StatCard>
+
+        <StatCard title="CPU" icon={Cpu} loading={metricsLoading}>
+          <div className="text-2xl font-bold">
+            {metrics ? `${metrics.cpuPercent.toFixed(0)}%` : '—'}
+          </div>
+          <Progress value={metrics?.cpuPercent ?? 0} className="mt-2" />
+        </StatCard>
+
+        <StatCard title="Memory" icon={MemoryStick} loading={metricsLoading}>
+          <div className="text-2xl font-bold">
+            {metrics ? `${metrics.memory.percent.toFixed(0)}%` : '—'}
+          </div>
+          <Progress value={metrics?.memory.percent ?? 0} className="mt-2" />
+          {metrics && (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {formatBytes(metrics.memory.usedBytes)} of{' '}
+              {formatBytes(metrics.memory.totalBytes)}
+            </p>
+          )}
+        </StatCard>
+
+        <StatCard title="Disk" icon={HardDrive} loading={metricsLoading}>
+          <div className="text-2xl font-bold">
+            {metrics ? `${metrics.disk.percent.toFixed(0)}%` : '—'}
+          </div>
+          <Progress value={metrics?.disk.percent ?? 0} className="mt-2" />
+          {metrics && (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {formatBytes(metrics.disk.usedBytes)} of{' '}
+              {formatBytes(metrics.disk.totalBytes)}
+            </p>
+          )}
+        </StatCard>
       </div>
 
-          <Card>
-            <LogViewer />
-          </Card>
-        </>
-      )}
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+          <CardDescription>
+            Start and stop can take a minute or two while the world loads or saves.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-3">
+          <Button
+            variant="success"
+            onClick={() => runAction('start')}
+            loading={actionLoading === 'start'}
+            disabled={actionLoading !== null || status?.online === true}
+          >
+            <Play />
+            Start Server
+          </Button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                loading={actionLoading === 'stop'}
+                disabled={actionLoading !== null || status?.online === false}
+              >
+                <Square />
+                Stop Server
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Stop the server?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  All players will be disconnected and the world will be saved.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={() => runAction('stop')}
+                >
+                  Stop Server
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="secondary"
+                loading={actionLoading === 'restart'}
+                disabled={actionLoading !== null || status?.online === false}
+              >
+                <RotateCcw />
+                Restart Server
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Restart the server?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  All players will be disconnected. The server comes back up
+                  automatically — this can take a minute or two.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => runAction('restart')}>
+                  Restart Server
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardContent>
+      </Card>
+
+      {/* Deliberately outside any loading conditional so the WebSocket
+          connection survives status refreshes. */}
+      <Card>
+        <CardContent className="pt-6">
+          <LogViewer />
+        </CardContent>
+      </Card>
     </div>
   );
 }

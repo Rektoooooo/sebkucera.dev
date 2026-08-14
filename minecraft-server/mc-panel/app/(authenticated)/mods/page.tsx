@@ -1,250 +1,240 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { api } from '@/lib/api';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Modal } from '@/components/ui/Modal';
+import { useEffect, useRef, useState } from 'react';
+import { Package, Trash2, Upload } from 'lucide-react';
+import { toast } from 'sonner';
 
-interface Mod {
-  file: string;
-  size?: string;
-  enabled: boolean;
-}
+import { api } from '@/lib/api';
+import { formatBytes, type Mod } from '@/lib/types';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Switch } from '@/components/ui/switch';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 export default function ModsPage() {
-  const [mods, setMods] = useState<Mod[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedMod, setSelectedMod] = useState<Mod | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [mods, setMods] = useState<Mod[] | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchMods = async () => {
+  const load = async () => {
     try {
-      const data = await api.get<{ mods: Mod[] }>('/mods');
-      setMods(data.mods || []);
-    } catch (error) {
-      console.error('Failed to fetch mods:', error);
-    } finally {
-      setLoading(false);
+      const res = await api.get<{ mods: Mod[] }>('/mods');
+      setMods(res.mods);
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to load mods');
+      setMods([]);
     }
   };
 
   useEffect(() => {
-    setIsMounted(true);
-    fetchMods();
+    load();
   }, []);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
     if (!file) return;
-
     if (!file.name.endsWith('.jar')) {
-      alert('Please upload a .jar file');
+      toast.error('Only .jar files can be uploaded');
       return;
     }
-
-    setUploading(true);
+    setUploadProgress(0);
     try {
-      await api.upload('/mods/upload', file);
-      await fetchMods();
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    } catch (error: any) {
-      alert(`Failed to upload mod: ${error.message}`);
+      await api.uploadWithProgress('/mods/upload', file, setUploadProgress);
+      toast.success(`Uploaded ${file.name}`);
+      await load();
+    } catch (err: any) {
+      toast.error(err?.message || 'Upload failed');
     } finally {
-      setUploading(false);
+      setUploadProgress(null);
     }
   };
 
-  const handleToggleMod = async (mod: Mod) => {
-    const action = mod.enabled ? 'disable' : 'enable';
-    setActionLoading(mod.file);
+  const toggleMod = async (mod: Mod, enable: boolean) => {
+    setBusy(mod.file);
     try {
-      await api.post(`/mods/${action}`, { file: mod.file });
-      await fetchMods();
-    } catch (error: any) {
-      alert(`Failed to ${action} mod: ${error.message}`);
+      await api.post(enable ? '/mods/enable' : '/mods/disable', { file: mod.file });
+      toast.success(`${enable ? 'Enabled' : 'Disabled'} ${mod.file}`, {
+        description: 'Restart the server for mod changes to take effect.',
+      });
+      await load();
+    } catch (err: any) {
+      toast.error(err?.message || 'Action failed');
     } finally {
-      setActionLoading(null);
+      setBusy(null);
     }
   };
 
-  const handleDelete = async () => {
-    if (!selectedMod) return;
-    setActionLoading(selectedMod.file);
+  const deleteMod = async (mod: Mod) => {
+    setBusy(mod.file);
     try {
-      await api.post('/mods/delete', { file: selectedMod.file });
-      setShowDeleteModal(false);
-      await fetchMods();
-    } catch (error: any) {
-      alert(`Failed to delete mod: ${error.message}`);
+      await api.post('/mods/delete', { file: mod.file });
+      toast.success(`Deleted ${mod.file}`);
+      await load();
+    } catch (err: any) {
+      toast.error(err?.message || 'Delete failed');
     } finally {
-      setActionLoading(null);
-      setSelectedMod(null);
+      setBusy(null);
     }
   };
 
-  const enabledMods = mods.filter((m) => m.enabled);
-  const disabledMods = mods.filter((m) => !m.enabled);
-  const showLoading = !isMounted || loading;
+  const enabledCount = mods?.filter((m) => m.enabled).length ?? 0;
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Mods</h1>
-          <p className="text-zinc-400">Manage your server modifications</p>
+          <h1 className="text-2xl font-bold tracking-tight">Mods</h1>
+          <p className="text-sm text-muted-foreground">
+            {mods ? `${enabledCount} enabled · ${mods.length} total` : 'Manage server mods'}
+          </p>
         </div>
         <div>
           <input
             ref={fileInputRef}
             type="file"
             accept=".jar"
-            onChange={handleFileUpload}
             className="hidden"
+            onChange={handleUpload}
           />
           <Button
-            variant="primary"
             onClick={() => fileInputRef.current?.click()}
-            loading={uploading}
-            disabled={!isMounted}
+            disabled={uploadProgress !== null}
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
+            <Upload />
             Upload Mod
           </Button>
         </div>
       </div>
 
-      {showLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        </div>
-      ) : (
-        <>
-          <Card title="Enabled Mods">
-        {enabledMods.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-zinc-500">No enabled mods</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {enabledMods.map((mod) => (
-              <div
-                key={mod.file}
-                className="flex items-center justify-between p-4 bg-zinc-900 rounded-lg border border-zinc-800"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                  <div>
-                    <h3 className="text-white font-medium">{mod.file}</h3>
-                    {mod.size && <p className="text-sm text-zinc-500">{mod.size}</p>}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => handleToggleMod(mod)}
-                    loading={actionLoading === mod.file}
-                    disabled={actionLoading !== null}
-                  >
-                    Disable
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() => {
-                      setSelectedMod(mod);
-                      setShowDeleteModal(true);
-                    }}
-                    disabled={actionLoading !== null}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </Card>
-
-      <Card title="Disabled Mods">
-        {disabledMods.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-zinc-500">No disabled mods</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {disabledMods.map((mod) => (
-              <div
-                key={mod.file}
-                className="flex items-center justify-between p-4 bg-zinc-900 rounded-lg border border-zinc-800 opacity-60"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-zinc-600"></div>
-                  <div>
-                    <h3 className="text-white font-medium">{mod.file}</h3>
-                    {mod.size && <p className="text-sm text-zinc-500">{mod.size}</p>}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="success"
-                    onClick={() => handleToggleMod(mod)}
-                    loading={actionLoading === mod.file}
-                    disabled={actionLoading !== null}
-                  >
-                    Enable
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() => {
-                      setSelectedMod(mod);
-                      setShowDeleteModal(true);
-                    }}
-                    disabled={actionLoading !== null}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-          </Card>
-        </>
+      {uploadProgress !== null && (
+        <Card>
+          <CardContent className="flex items-center gap-4 pt-6">
+            <Upload className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <Progress value={uploadProgress} className="flex-1" />
+            <span className="w-10 text-right text-sm text-muted-foreground">
+              {uploadProgress}%
+            </span>
+          </CardContent>
+        </Card>
       )}
 
-      <Modal
-        isOpen={showDeleteModal}
-        onClose={() => {
-          setShowDeleteModal(false);
-          setSelectedMod(null);
-        }}
-        onConfirm={handleDelete}
-        title="Delete Mod"
-        confirmText="Delete"
-        confirmVariant="danger"
-      >
-        <p>
-          Are you sure you want to delete <strong>{selectedMod?.file}</strong>?
-        </p>
-        <p className="text-red-400 mt-3">This action cannot be undone.</p>
-      </Modal>
+      <Card>
+        <CardHeader>
+          <CardTitle>Installed Mods</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {mods === null ? (
+            <div className="space-y-2">
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+            </div>
+          ) : mods.length === 0 ? (
+            <div className="flex flex-col items-center gap-2 py-10 text-center">
+              <Package className="h-10 w-10 text-muted-foreground/50" />
+              <p className="text-sm font-medium">No mods installed</p>
+              <p className="text-sm text-muted-foreground">
+                Upload a .jar file to get started.
+              </p>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-24">Status</TableHead>
+                  <TableHead>File</TableHead>
+                  <TableHead>Size</TableHead>
+                  <TableHead className="w-40 text-right">Enabled</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {mods.map((mod) => (
+                  <TableRow key={`${mod.file}-${mod.enabled}`} className={mod.enabled ? '' : 'opacity-60'}>
+                    <TableCell>
+                      {mod.enabled ? (
+                        <Badge variant="success">enabled</Badge>
+                      ) : (
+                        <Badge variant="secondary">disabled</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-mono text-xs">{mod.file}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatBytes(mod.sizeBytes)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-3">
+                        <Switch
+                          checked={mod.enabled}
+                          disabled={busy !== null}
+                          onCheckedChange={(checked) => toggleMod(mod, checked)}
+                        />
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-400 hover:text-red-400"
+                              disabled={busy !== null}
+                            >
+                              <Trash2 />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete this mod?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                <span className="font-mono text-foreground">{mod.file}</span>{' '}
+                                will be permanently removed from the server.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                variant="destructive"
+                                onClick={() => deleteMod(mod)}
+                              >
+                                Delete Mod
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

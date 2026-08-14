@@ -1,28 +1,26 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { Sidebar } from '@/components/ui/Sidebar';
+import { useRequireAuth } from '@/lib/auth-context';
+import { ServerStatusProvider } from '@/lib/server-status-context';
+import { Sidebar } from '@/components/layout/sidebar';
 
 export default function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
+  const ready = useRequireAuth();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token && pathname !== '/login') {
-      router.push('/login');
-    }
-  }, [router, pathname]);
+  if (!ready) {
+    return <div className="min-h-screen bg-background" />;
+  }
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="flex-1 p-8 overflow-auto">{children}</main>
-    </div>
+    <ServerStatusProvider>
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <main className="flex-1 overflow-auto p-8">{children}</main>
+      </div>
+    </ServerStatusProvider>
   );
 }

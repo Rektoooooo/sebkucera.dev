@@ -1,27 +1,34 @@
 import os
+import re
+import json
 import time
-import subprocess
+import hmac
 import asyncio
 import zipfile
 import shutil
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Optional, List
-import socket
+from typing import Optional
 
-from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect, UploadFile, File, Query
+import jwt
+import psutil
+from fastapi import (
+    FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect,
+    UploadFile, File, Query, Request,
+)
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from jose import JWTError, jwt
 from dotenv import load_dotenv
 from mcstatus import JavaServer
 
-# Load environment variables
+# =====================================================================
+# Configuration
+# =====================================================================
+
 load_dotenv()
 
-# Configuration
 JWT_SECRET = os.getenv("PANEL_JWT_SECRET", "change-this")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_DAYS = 7
@@ -31,24 +38,37 @@ MC_DIR = Path(os.getenv("MC_DIR", "/minecraft"))
 MC_SCREEN = os.getenv("MC_SCREEN", "mc")
 MC_JAR = os.getenv("MC_JAR", "server.jar")
 MC_ADDR = os.getenv("MC_ADDR", "178.17.3.31:25565")
-MC_PORT = 25565
+MC_JAVA_ARGS = os.getenv("MC_JAVA_ARGS", "-Xms6G -Xmx8G")
+MC_PORT = int(os.getenv("MC_PORT", "25565"))
+PANEL_DATA_DIR = Path(os.getenv("PANEL_DATA_DIR", "/srv/panel"))
 
-# Initialize FastAPI
+SCHEDULE_FILE = PANEL_DATA_DIR / "schedule.json"
+MAX_UPLOAD_BYTES = 300 * 1024 * 1024  # 300 MB
+
 app = FastAPI(title="Minecraft Server Control Panel API")
 
-# CORS
+# CORS: the panel UI is served from sebkucera.dev (GitHub Pages).
+# localhost entries allow local testing against the live API.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to specific domain in production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=[
+        "https://sebkucera.dev",
+        "https://www.sebkucera.dev",
+        "http://localhost:3000",
+        "http://localhost:4321",
+        "http://localhost:8080",
+    ],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
-# Security
 security = HTTPBearer()
 
+# =====================================================================
 # Models
+# =====================================================================
+
 class LoginRequest(BaseModel):
     username: str
     password: str
@@ -65,249 +85,463 @@ class GenericResponse(BaseModel):
     ok: bool
     message: Optional[str] = None
 
-class BackupInfo(BaseModel):
-    id: str
-    sizeBytes: int
-
-class ModInfo(BaseModel):
-    file: str
-    enabled: bool
-    sizeBytes: int
-
 class ModAction(BaseModel):
     file: str
 
-class BackupAction(BaseModel):
-    id: Optional[str] = None
+class CommandRequest(BaseModel):
+    command: str
 
-# Helper Functions
+class PlayerAction(BaseModel):
+    name: str
+    reason: Optional[str] = None
+
+class PropertiesUpdate(BaseModel):
+    properties: dict
+
+class ScheduleUpdate(BaseModel):
+    enabled: bool
+    time: str
+    retention: int
+
+# =====================================================================
+# Auth helpers
+# =====================================================================
 
 def create_token(username: str) -> str:
-    """Create JWT token"""
-    expiration = datetime.utcnow() + timedelta(days=JWT_EXPIRATION_DAYS)
-    payload = {
-        "sub": username,
-        "exp": expiration
-    }
+    expiration = datetime.now(timezone.utc) + timedelta(days=JWT_EXPIRATION_DAYS)
+    payload = {"sub": username, "exp": expiration}
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
-def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
-    """Verify JWT token"""
+def decode_token(token: str) -> Optional[str]:
+    """Return the username for a valid token, else None."""
     try:
-        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
-        return username
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return payload.get("sub")
+    except jwt.PyJWTError:
+        return None
 
-def is_port_open(port: int = MC_PORT) -> bool:
-    """Check if Minecraft port is open"""
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
+    username = decode_token(credentials.credentials)
+    if username is None:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    return username
+
+# Simple in-memory login rate limiter (single uvicorn worker).
+_login_attempts: dict = {}
+
+def check_login_rate_limit(request: Request) -> None:
+    forwarded = request.headers.get("x-forwarded-for", "")
+    ip = forwarded.split(",")[0].strip() if forwarded else (
+        request.client.host if request.client else "unknown"
+    )
+    now = time.monotonic()
+    attempts = [t for t in _login_attempts.get(ip, []) if now - t < 60]
+    if len(attempts) >= 5:
+        _login_attempts[ip] = attempts
+        raise HTTPException(status_code=429, detail="Too many login attempts. Try again in a minute.")
+    attempts.append(now)
+    _login_attempts[ip] = attempts
+    if len(_login_attempts) > 1000:  # bound memory
+        _login_attempts.clear()
+        _login_attempts[ip] = attempts
+
+# =====================================================================
+# Path-safety helpers
+# =====================================================================
+
+SAFE_NAME_RE = re.compile(r'^[A-Za-z0-9][A-Za-z0-9 ._+\[\]()-]{0,127}$')
+
+def safe_name(name: str, suffix: Optional[str] = None) -> str:
+    """Reject anything that is not a plain file name in the expected format."""
+    if not name or Path(name).name != name or not SAFE_NAME_RE.match(name):
+        raise HTTPException(status_code=400, detail="Invalid file name")
+    if suffix and not name.endswith(suffix):
+        raise HTTPException(status_code=400, detail=f"File name must end with {suffix}")
+    return name
+
+def resolve_in(directory: Path, name: str) -> Path:
+    """Resolve directory/name and require the result to stay inside directory."""
+    resolved = (directory / name).resolve()
+    if resolved.parent != directory.resolve():
+        raise HTTPException(status_code=400, detail="Invalid file name")
+    return resolved
+
+def validate_zip_members(zip_ref: zipfile.ZipFile, dest: Path) -> None:
+    """Reject archives whose members would escape dest (zip-slip)."""
+    dest_resolved = dest.resolve()
+    for member in zip_ref.infolist():
+        name = member.filename
+        if name.startswith("/") or ".." in Path(name).parts:
+            raise HTTPException(status_code=400, detail="Backup archive contains unsafe paths")
+        if not (dest / name).resolve().is_relative_to(dest_resolved):
+            raise HTTPException(status_code=400, detail="Backup archive contains unsafe paths")
+
+# =====================================================================
+# Server process helpers (all async — never block the event loop)
+# =====================================================================
+
+async def is_port_open() -> bool:
     try:
-        result = subprocess.run(
-            ["ss", "-ltnp"],
-            capture_output=True,
-            text=True,
-            timeout=5
+        _, writer = await asyncio.wait_for(
+            asyncio.open_connection("127.0.0.1", MC_PORT), timeout=1.0
         )
-        return f":{port}" in result.stdout
+        writer.close()
+        try:
+            await writer.wait_closed()
+        except Exception:
+            pass
+        return True
     except Exception:
         return False
 
-def get_player_count() -> Optional[dict]:
-    """Get player count from Minecraft server"""
+async def is_screen_running() -> bool:
     try:
-        server = JavaServer.lookup(MC_ADDR)
-        status = server.status()
-        return {
-            "online": status.players.online,
-            "max": status.players.max
-        }
+        proc = await asyncio.create_subprocess_exec(
+            "screen", "-list",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.STDOUT,
+        )
+        out, _ = await proc.communicate()
+        text = out.decode(errors="replace")
+        # screen -list lines look like "\t12345.mc\t(Detached)" — match the
+        # session name exactly, not as a substring.
+        return re.search(rf'\.{re.escape(MC_SCREEN)}[\s(]', text) is not None
+    except Exception:
+        return False
+
+async def get_player_count() -> Optional[dict]:
+    try:
+        server = await JavaServer.async_lookup(MC_ADDR)
+        status = await asyncio.wait_for(server.async_status(), timeout=5)
+        return {"online": status.players.online, "max": status.players.max}
     except Exception:
         return None
 
-def is_screen_running() -> bool:
-    """Check if screen session exists"""
+async def start_server() -> bool:
+    if await is_port_open():
+        return True
     try:
-        result = subprocess.run(
-            ["screen", "-list"],
-            capture_output=True,
-            text=True
+        # Built entirely from server-side config — no request data reaches this.
+        launch = f"cd {MC_DIR} && exec java {MC_JAVA_ARGS} -jar {MC_JAR} nogui"
+        proc = await asyncio.create_subprocess_exec(
+            "/usr/bin/screen", "-S", MC_SCREEN, "-dm", "bash", "-lc", launch
         )
-        return MC_SCREEN in result.stdout
-    except Exception:
-        return False
+        await proc.wait()
 
-def start_server() -> bool:
-    """Start Minecraft server in screen session"""
-    if is_port_open():
-        return True  # Already running
-
-    try:
-        # Start server in screen
-        cmd = f"/usr/bin/screen -S {MC_SCREEN} -dm bash -lc 'cd {MC_DIR} && exec java -Xms6G -Xmx8G -jar {MC_JAR} nogui'"
-        subprocess.run(cmd, shell=True, check=True)
-
-        # Wait for port to open (up to 90 seconds)
         for _ in range(90):
-            time.sleep(1)
-            if is_port_open():
+            await asyncio.sleep(1)
+            if await is_port_open():
                 return True
-
         return False
     except Exception as e:
         print(f"Error starting server: {e}")
         return False
 
-def stop_server() -> bool:
-    """Stop Minecraft server gracefully"""
-    if not is_port_open():
-        return True  # Already stopped
-
+async def stop_server() -> bool:
+    if not await is_port_open():
+        return True
     try:
-        # Send stop command to screen
-        subprocess.run(
-            ["screen", "-S", MC_SCREEN, "-X", "stuff", "stop\n"],
-            check=True
-        )
+        await send_console_raw("stop")
 
-        # Wait for server to stop (up to 30 seconds)
         for _ in range(30):
-            time.sleep(1)
-            if not is_port_open():
+            await asyncio.sleep(1)
+            if not await is_port_open():
                 break
 
-        # Fallback: force kill if still running
-        if is_port_open():
-            subprocess.run(
-                ["pkill", "-f", f"java.*{MC_JAR}"],
-                check=False
+        if await is_port_open():
+            proc = await asyncio.create_subprocess_exec(
+                "pkill", "-f", f"java.*{MC_JAR}"
             )
-            time.sleep(2)
+            await proc.wait()
+            await asyncio.sleep(2)
 
-        # Clean up screen session
-        if is_screen_running():
-            subprocess.run(
-                ["screen", "-S", MC_SCREEN, "-X", "quit"],
-                check=False
+        if await is_screen_running():
+            proc = await asyncio.create_subprocess_exec(
+                "screen", "-S", MC_SCREEN, "-X", "quit"
             )
+            await proc.wait()
 
-        return not is_port_open()
+        return not await is_port_open()
     except Exception as e:
         print(f"Error stopping server: {e}")
         return False
 
-# API Endpoints
+async def send_console_raw(command: str) -> None:
+    """Inject a command into the server console via screen. Caller sanitizes."""
+    proc = await asyncio.create_subprocess_exec(
+        "screen", "-S", MC_SCREEN, "-X", "stuff", command + "\n"
+    )
+    rc = await proc.wait()
+    if rc != 0:
+        raise HTTPException(status_code=500, detail="Failed to send command to server console")
+
+async def require_console() -> None:
+    if not await is_screen_running():
+        raise HTTPException(status_code=409, detail="Server is not running")
+
+PLAYER_NAME_RE = re.compile(r'^[A-Za-z0-9_]{1,16}$')
+
+def valid_player_name(name: str) -> str:
+    """Strict allowlist — this is the console-injection guard."""
+    if not PLAYER_NAME_RE.match(name):
+        raise HTTPException(status_code=400, detail="Invalid player name")
+    return name
+
+def clean_reason(reason: Optional[str]) -> Optional[str]:
+    if not reason:
+        return None
+    cleaned = "".join(c for c in reason if 32 <= ord(c) < 127).strip()[:100]
+    return cleaned or None
+
+# =====================================================================
+# Backup helpers + scheduler
+# =====================================================================
+
+backup_lock = asyncio.Lock()
+
+DEFAULT_SCHEDULE = {
+    "enabled": False,
+    "time": "03:30",
+    "retention": 7,
+    "lastRunDate": None,
+    "lastRunAt": None,
+    "lastRunResult": None,
+}
+
+def load_schedule() -> dict:
+    try:
+        data = json.loads(SCHEDULE_FILE.read_text())
+        return {**DEFAULT_SCHEDULE, **data}
+    except Exception:
+        return dict(DEFAULT_SCHEDULE)
+
+def save_schedule(config: dict) -> None:
+    tmp = SCHEDULE_FILE.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(config, indent=2))
+    os.replace(tmp, SCHEDULE_FILE)
+
+def build_backup_zip(dest: Path) -> None:
+    """Zip world dirs + server.properties. Runs in a thread."""
+    tmp = Path(str(dest) + ".part")
+    try:
+        with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zf:
+            for dirname in ("world", "world_nether", "world_the_end"):
+                d = MC_DIR / dirname
+                if not d.is_dir():
+                    continue
+                for path in sorted(d.rglob("*")):
+                    if path.is_file():
+                        zf.write(path, path.relative_to(MC_DIR))
+            props = MC_DIR / "server.properties"
+            if props.is_file():
+                zf.write(props, "server.properties")
+        os.replace(tmp, dest)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
+
+async def perform_backup(prefix: str = "") -> str:
+    """Shared by manual create and the scheduler. Stops/starts the server around the zip."""
+    if backup_lock.locked():
+        raise HTTPException(status_code=409, detail="Backup already in progress")
+    async with backup_lock:
+        world_dir = MC_DIR / "world"
+        if not world_dir.exists():
+            raise HTTPException(status_code=404, detail="World directory not found")
+
+        backup_dir = MC_DIR / "backups"
+        backup_dir.mkdir(exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        backup_name = f"{prefix}{timestamp}.zip"
+        backup_path = backup_dir / backup_name
+
+        was_running = await is_port_open()
+        if was_running and not await stop_server():
+            raise HTTPException(status_code=500, detail="Failed to stop server for backup")
+        try:
+            await asyncio.to_thread(build_backup_zip, backup_path)
+        finally:
+            if was_running:
+                await start_server()
+        return backup_name
+
+def prune_auto_backups(retention: int) -> None:
+    backup_dir = MC_DIR / "backups"
+    auto = sorted(backup_dir.glob("auto_*.zip"), key=lambda p: p.name, reverse=True)
+    for old in auto[max(retention, 1):]:
+        old.unlink(missing_ok=True)
+
+async def backup_scheduler() -> None:
+    """Daily scheduled backup. One attempt per day (success or failure)."""
+    while True:
+        try:
+            await asyncio.sleep(30)
+            config = load_schedule()
+            if not config.get("enabled"):
+                continue
+            now = datetime.now()
+            today = now.strftime("%Y-%m-%d")
+            if config.get("lastRunDate") == today:
+                continue
+            try:
+                hour, minute = (int(x) for x in config["time"].split(":"))
+            except Exception:
+                continue
+            if now < now.replace(hour=hour, minute=minute, second=0, microsecond=0):
+                continue
+
+            try:
+                name = await perform_backup(prefix="auto_")
+                result = f"ok: {name}"
+                prune_auto_backups(int(config.get("retention", 7)))
+            except Exception as e:
+                detail = getattr(e, "detail", None) or str(e)
+                result = f"failed: {detail}"
+
+            config = load_schedule()
+            config.update({
+                "lastRunDate": today,
+                "lastRunAt": datetime.now().isoformat(timespec="seconds"),
+                "lastRunResult": result,
+            })
+            save_schedule(config)
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            print(f"Scheduler error: {e}")
+
+@app.on_event("startup")
+async def on_startup() -> None:
+    psutil.cpu_percent(interval=None)  # prime; first call always returns 0.0
+    asyncio.create_task(backup_scheduler())
+
+# =====================================================================
+# Auth endpoints
+# =====================================================================
 
 @app.post("/auth/login", response_model=LoginResponse)
-async def login(request: LoginRequest):
-    """Authenticate and get JWT token"""
-    if request.username == PANEL_USER and request.password == PANEL_PASS:
-        token = create_token(request.username)
-        return LoginResponse(token=token)
+async def login(request: LoginRequest, http_request: Request):
+    check_login_rate_limit(http_request)
+    user_ok = hmac.compare_digest(request.username.encode(), PANEL_USER.encode())
+    pass_ok = hmac.compare_digest(request.password.encode(), PANEL_PASS.encode())
+    if user_ok & pass_ok:
+        return LoginResponse(token=create_token(request.username))
     raise HTTPException(status_code=401, detail="Invalid credentials")
+
+# =====================================================================
+# Server endpoints
+# =====================================================================
 
 @app.get("/server/status", response_model=ServerStatus)
 async def get_status(username: str = Depends(verify_token)):
-    """Get server status"""
-    online = is_port_open()
-    players = get_player_count() if online else None
-
-    return ServerStatus(
-        online=online,
-        players=players,
-        port=MC_PORT
-    )
+    online = await is_port_open()
+    players = await get_player_count() if online else None
+    return ServerStatus(online=online, players=players, port=MC_PORT)
 
 @app.post("/server/start", response_model=GenericResponse)
 async def server_start(username: str = Depends(verify_token)):
-    """Start the Minecraft server"""
-    success = start_server()
-    if not success:
+    if not await start_server():
         raise HTTPException(status_code=500, detail="Failed to start server")
     return GenericResponse(ok=True, message="Server started")
 
 @app.post("/server/stop", response_model=GenericResponse)
 async def server_stop(username: str = Depends(verify_token)):
-    """Stop the Minecraft server"""
-    success = stop_server()
-    if not success:
+    if not await stop_server():
         raise HTTPException(status_code=500, detail="Failed to stop server")
     return GenericResponse(ok=True, message="Server stopped")
 
 @app.post("/server/restart", response_model=GenericResponse)
 async def server_restart(username: str = Depends(verify_token)):
-    """Restart the Minecraft server"""
-    # Stop first
-    if not stop_server():
+    if not await stop_server():
         raise HTTPException(status_code=500, detail="Failed to stop server")
-
-    # Wait a moment
-    time.sleep(3)
-
-    # Start again
-    if not start_server():
+    await asyncio.sleep(3)
+    if not await start_server():
         raise HTTPException(status_code=500, detail="Failed to start server")
-
     return GenericResponse(ok=True, message="Server restarted")
+
+@app.post("/server/command", response_model=GenericResponse)
+async def server_command(req: CommandRequest, username: str = Depends(verify_token)):
+    command = req.command.strip()
+    if not command:
+        raise HTTPException(status_code=400, detail="Empty command")
+    if len(command) > 256:
+        raise HTTPException(status_code=400, detail="Command too long")
+    if any(ord(c) < 32 for c in command):
+        raise HTTPException(status_code=400, detail="Invalid characters in command")
+    await require_console()
+    await send_console_raw(command)
+    return GenericResponse(ok=True, message="Command sent")
+
+# =====================================================================
+# Logs
+# =====================================================================
 
 @app.get("/logs/last")
 async def get_logs(
     lines: int = Query(200, ge=1, le=1000),
-    username: str = Depends(verify_token)
+    username: str = Depends(verify_token),
 ):
-    """Get last N lines of server log"""
     log_file = MC_DIR / "logs" / "latest.log"
-
     if not log_file.exists():
         return PlainTextResponse("No log file yet.")
 
+    def tail() -> str:
+        with open(log_file, "r", errors="replace") as f:
+            return "".join(f.readlines()[-lines:])
+
     try:
-        result = subprocess.run(
-            ["tail", "-n", str(lines), str(log_file)],
-            capture_output=True,
-            text=True
-        )
-        return PlainTextResponse(result.stdout)
+        return PlainTextResponse(await asyncio.to_thread(tail))
     except Exception as e:
         return PlainTextResponse(f"Error reading logs: {e}")
 
 @app.websocket("/ws/logs")
 async def websocket_logs(websocket: WebSocket, token: Optional[str] = Query(None)):
-    """WebSocket endpoint for live log streaming"""
-    # Verify token
-    if not token:
-        await websocket.close(code=1008)
-        return
+    """Live log stream.
 
-    try:
-        jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-    except JWTError:
-        await websocket.close(code=1008)
-        return
-
+    Auth: preferred — client sends the JWT as the first text frame after
+    connecting and receives "__ok__". Legacy ?token= query param still accepted
+    (slated for removal; it leaks tokens into access logs).
+    """
     await websocket.accept()
 
+    authed = False
+    if token and decode_token(token):
+        authed = True  # legacy path — no ack, old clients don't expect one
+    else:
+        try:
+            first = await asyncio.wait_for(websocket.receive_text(), timeout=5)
+            if decode_token(first):
+                authed = True
+                await websocket.send_text("__ok__")
+        except Exception:
+            pass
+
+    if not authed:
+        await websocket.close(code=1008)
+        return
+
     log_file = MC_DIR / "logs" / "latest.log"
-
     try:
-        # Start from end of file
-        if log_file.exists():
-            with open(log_file, 'r') as f:
-                f.seek(0, 2)  # Seek to end
-                file_pos = f.tell()
-        else:
-            file_pos = 0
-
+        file_pos = log_file.stat().st_size if log_file.exists() else 0
+        heartbeat = 0
         while True:
             if log_file.exists():
-                with open(log_file, 'r') as f:
-                    f.seek(file_pos)
-                    new_lines = f.read()
-                    if new_lines:
-                        await websocket.send_text(new_lines)
-                    file_pos = f.tell()
+                size = log_file.stat().st_size
+                if size < file_pos:
+                    file_pos = 0  # log rotated
+                if size > file_pos:
+                    with open(log_file, "r", errors="replace") as f:
+                        f.seek(file_pos)
+                        data = f.read()
+                        file_pos = f.tell()
+                    if data:
+                        await websocket.send_text(data)
+
+            heartbeat += 1
+            if heartbeat >= 30:
+                heartbeat = 0
+                await websocket.send_text("")  # keepalive; surfaces dead peers
 
             await asyncio.sleep(1)
     except WebSocketDisconnect:
@@ -315,219 +549,455 @@ async def websocket_logs(websocket: WebSocket, token: Optional[str] = Query(None
     except Exception as e:
         print(f"WebSocket error: {e}")
 
+# =====================================================================
+# System metrics
+# =====================================================================
+
+def collect_metrics() -> dict:
+    memory = psutil.virtual_memory()
+    disk = psutil.disk_usage(str(MC_DIR))
+
+    java = None
+    for proc in psutil.process_iter(["name", "cmdline"]):
+        try:
+            if proc.info["name"] == "java" and any(
+                MC_JAR in (arg or "") for arg in (proc.info["cmdline"] or [])
+            ):
+                with proc.oneshot():
+                    java = {
+                        "rssBytes": proc.memory_info().rss,
+                        "cpuPercent": proc.cpu_percent(interval=None),
+                        "uptimeSeconds": int(time.time() - proc.create_time()),
+                    }
+                break
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    return {
+        "cpuPercent": psutil.cpu_percent(interval=None),
+        "memory": {
+            "usedBytes": memory.used,
+            "totalBytes": memory.total,
+            "percent": memory.percent,
+        },
+        "disk": {
+            "usedBytes": disk.used,
+            "totalBytes": disk.total,
+            "percent": disk.percent,
+        },
+        "java": java,
+    }
+
+@app.get("/system/metrics")
+async def system_metrics(username: str = Depends(verify_token)):
+    return await asyncio.to_thread(collect_metrics)
+
+# =====================================================================
+# Players
+# =====================================================================
+
+def read_json_list(path: Path) -> list:
+    """Read a Minecraft JSON list file, tolerating a transient mid-write state."""
+    for attempt in range(2):
+        try:
+            if not path.exists():
+                return []
+            data = json.loads(path.read_text())
+            return data if isinstance(data, list) else []
+        except Exception:
+            if attempt == 0:
+                time.sleep(0.2)
+    return []
+
+@app.get("/players")
+async def get_players(username: str = Depends(verify_token)):
+    running = await is_port_open()
+
+    online = []
+    count = None
+    if running:
+        try:
+            server = await JavaServer.async_lookup(MC_ADDR)
+            status = await asyncio.wait_for(server.async_status(), timeout=5)
+            count = {"online": status.players.online, "max": status.players.max}
+            if status.players.sample:
+                online = [{"name": p.name, "uuid": p.id} for p in status.players.sample]
+        except Exception:
+            pass
+
+    whitelist = await asyncio.to_thread(read_json_list, MC_DIR / "whitelist.json")
+    ops = await asyncio.to_thread(read_json_list, MC_DIR / "ops.json")
+    banned = await asyncio.to_thread(read_json_list, MC_DIR / "banned-players.json")
+
+    return {
+        "serverRunning": running,
+        "playerCount": count,
+        "online": online,
+        "whitelist": whitelist,
+        "ops": ops,
+        "banned": banned,
+    }
+
+async def player_console_action(command: str) -> GenericResponse:
+    await require_console()
+    await send_console_raw(command)
+    return GenericResponse(ok=True, message="Command sent")
+
+@app.post("/players/whitelist/add", response_model=GenericResponse)
+async def whitelist_add(action: PlayerAction, username: str = Depends(verify_token)):
+    name = valid_player_name(action.name)
+    return await player_console_action(f"whitelist add {name}")
+
+@app.post("/players/whitelist/remove", response_model=GenericResponse)
+async def whitelist_remove(action: PlayerAction, username: str = Depends(verify_token)):
+    name = valid_player_name(action.name)
+    return await player_console_action(f"whitelist remove {name}")
+
+@app.post("/players/op", response_model=GenericResponse)
+async def op_player(action: PlayerAction, username: str = Depends(verify_token)):
+    name = valid_player_name(action.name)
+    return await player_console_action(f"op {name}")
+
+@app.post("/players/deop", response_model=GenericResponse)
+async def deop_player(action: PlayerAction, username: str = Depends(verify_token)):
+    name = valid_player_name(action.name)
+    return await player_console_action(f"deop {name}")
+
+@app.post("/players/kick", response_model=GenericResponse)
+async def kick_player(action: PlayerAction, username: str = Depends(verify_token)):
+    name = valid_player_name(action.name)
+    reason = clean_reason(action.reason)
+    return await player_console_action(f"kick {name} {reason}" if reason else f"kick {name}")
+
+@app.post("/players/ban", response_model=GenericResponse)
+async def ban_player(action: PlayerAction, username: str = Depends(verify_token)):
+    name = valid_player_name(action.name)
+    reason = clean_reason(action.reason)
+    return await player_console_action(f"ban {name} {reason}" if reason else f"ban {name}")
+
+@app.post("/players/pardon", response_model=GenericResponse)
+async def pardon_player(action: PlayerAction, username: str = Depends(verify_token)):
+    name = valid_player_name(action.name)
+    return await player_console_action(f"pardon {name}")
+
+# =====================================================================
+# server.properties
+# =====================================================================
+
+# key -> (kind, constraint). Deliberately excludes online-mode, server-port, rcon.*.
+EDITABLE_PROPERTIES = {
+    "motd": ("str", 150),
+    "difficulty": ("enum", ["peaceful", "easy", "normal", "hard"]),
+    "gamemode": ("enum", ["survival", "creative", "adventure", "spectator"]),
+    "max-players": ("int", (1, 200)),
+    "view-distance": ("int", (3, 32)),
+    "simulation-distance": ("int", (3, 32)),
+    "spawn-protection": ("int", (0, 100)),
+    "pvp": ("bool", None),
+    "white-list": ("bool", None),
+    "enforce-whitelist": ("bool", None),
+    "allow-flight": ("bool", None),
+    "hardcore": ("bool", None),
+}
+
+def properties_path() -> Path:
+    return MC_DIR / "server.properties"
+
+def validate_property(key: str, value: str) -> str:
+    if key not in EDITABLE_PROPERTIES:
+        raise HTTPException(status_code=400, detail=f"Property '{key}' is not editable")
+    kind, constraint = EDITABLE_PROPERTIES[key]
+    value = "".join(c for c in str(value) if ord(c) >= 32).strip()
+    if kind == "bool":
+        if value not in ("true", "false"):
+            raise HTTPException(status_code=400, detail=f"'{key}' must be true or false")
+    elif kind == "int":
+        try:
+            n = int(value)
+        except ValueError:
+            raise HTTPException(status_code=400, detail=f"'{key}' must be a number")
+        lo, hi = constraint
+        if not lo <= n <= hi:
+            raise HTTPException(status_code=400, detail=f"'{key}' must be between {lo} and {hi}")
+    elif kind == "enum":
+        if value not in constraint:
+            raise HTTPException(status_code=400, detail=f"'{key}' must be one of: {', '.join(constraint)}")
+    elif kind == "str":
+        if len(value) > constraint:
+            raise HTTPException(status_code=400, detail=f"'{key}' too long (max {constraint})")
+    return value
+
+@app.get("/server/properties")
+async def get_properties(username: str = Depends(verify_token)):
+    path = properties_path()
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="server.properties not found")
+    raw = await asyncio.to_thread(path.read_text)
+
+    properties = {}
+    for line in raw.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        key, _, value = stripped.partition("=")
+        properties[key.strip()] = value.strip()
+
+    return {
+        "properties": properties,
+        "raw": raw,
+        "editable": list(EDITABLE_PROPERTIES.keys()),
+    }
+
+@app.put("/server/properties")
+async def update_properties(update: PropertiesUpdate, username: str = Depends(verify_token)):
+    if not update.properties:
+        raise HTTPException(status_code=400, detail="No properties provided")
+    validated = {k: validate_property(k, v) for k, v in update.properties.items()}
+
+    path = properties_path()
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="server.properties not found")
+
+    def write() -> None:
+        lines = path.read_text().splitlines(keepends=True)
+        remaining = dict(validated)
+        out = []
+        for line in lines:
+            stripped = line.strip()
+            if stripped and not stripped.startswith("#") and "=" in stripped:
+                key = stripped.partition("=")[0].strip()
+                if key in remaining:
+                    newline = "\n" if line.endswith("\n") else ""
+                    out.append(f"{key}={remaining.pop(key)}{newline}")
+                    continue
+            out.append(line)
+        if remaining:
+            if out and not out[-1].endswith("\n"):
+                out[-1] += "\n"
+            for key, value in remaining.items():
+                out.append(f"{key}={value}\n")
+        tmp = path.with_suffix(".properties.tmp")
+        tmp.write_text("".join(out))
+        os.replace(tmp, path)
+
+    await asyncio.to_thread(write)
+    return {"ok": True, "restartRequired": True}
+
+# =====================================================================
+# Backups
+# =====================================================================
+
 @app.get("/backups/list")
 async def list_backups(username: str = Depends(verify_token)):
-    """List all backups"""
     backup_dir = MC_DIR / "backups"
     backup_dir.mkdir(exist_ok=True)
-
-    backups = []
-    for backup_file in backup_dir.glob("*.zip"):
-        backups.append({
-            "id": backup_file.name,
-            "sizeBytes": backup_file.stat().st_size
-        })
-
+    backups = [
+        {"id": f.name, "sizeBytes": f.stat().st_size}
+        for f in backup_dir.glob("*.zip")
+    ]
     return {"backups": sorted(backups, key=lambda x: x["id"], reverse=True)}
 
 @app.post("/backups/create")
 async def create_backup(username: str = Depends(verify_token)):
-    """Create a new backup"""
-    world_dir = MC_DIR / "world"
-
-    if not world_dir.exists():
-        raise HTTPException(status_code=404, detail="World directory not found")
-
-    backup_dir = MC_DIR / "backups"
-    backup_dir.mkdir(exist_ok=True)
-
-    # Generate backup filename
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    backup_name = f"{timestamp}.zip"
-    backup_path = backup_dir / backup_name
-
-    try:
-        # Stop server for backup
-        was_running = is_port_open()
-        if was_running:
-            stop_server()
-
-        # Create zip archive
-        shutil.make_archive(
-            str(backup_path.with_suffix('')),
-            'zip',
-            world_dir
-        )
-
-        # Restart if it was running
-        if was_running:
-            start_server()
-
-        return {"id": backup_name, "ok": True}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Backup failed: {str(e)}")
+    name = await perform_backup()
+    return {"id": name, "ok": True}
 
 @app.get("/backups/download/{backup_id}")
 async def download_backup(backup_id: str, username: str = Depends(verify_token)):
-    """Download a backup"""
-    backup_file = MC_DIR / "backups" / backup_id
-
-    if not backup_file.exists() or not backup_file.name.endswith('.zip'):
-        raise HTTPException(status_code=404, detail="Backup not found")
-
-    return FileResponse(
-        backup_file,
-        media_type="application/zip",
-        filename=backup_id
-    )
-
-@app.post("/backups/restore/{backup_id}")
-async def restore_backup(backup_id: str, username: str = Depends(verify_token)):
-    """Restore a backup"""
-    backup_file = MC_DIR / "backups" / backup_id
-
+    backup_id = safe_name(backup_id, suffix=".zip")
+    backup_file = resolve_in(MC_DIR / "backups", backup_id)
     if not backup_file.exists():
         raise HTTPException(status_code=404, detail="Backup not found")
+    return FileResponse(backup_file, media_type="application/zip", filename=backup_id)
 
-    world_dir = MC_DIR / "world"
+@app.post("/backups/delete/{backup_id}", response_model=GenericResponse)
+async def delete_backup(backup_id: str, username: str = Depends(verify_token)):
+    backup_id = safe_name(backup_id, suffix=".zip")
+    backup_file = resolve_in(MC_DIR / "backups", backup_id)
+    if not backup_file.exists():
+        raise HTTPException(status_code=404, detail="Backup not found")
+    backup_file.unlink()
+    return GenericResponse(ok=True, message="Backup deleted")
 
-    try:
-        # Stop server
-        was_running = is_port_open()
-        if was_running:
-            stop_server()
+RESTORE_TOP_LEVEL = {"world", "world_nether", "world_the_end", "server.properties"}
 
-        # Backup current world (just in case)
-        if world_dir.exists():
-            backup_old = MC_DIR / f"world_backup_{int(time.time())}"
-            shutil.move(str(world_dir), str(backup_old))
+@app.post("/backups/restore/{backup_id}", response_model=GenericResponse)
+async def restore_backup(backup_id: str, username: str = Depends(verify_token)):
+    backup_id = safe_name(backup_id, suffix=".zip")
+    backup_file = resolve_in(MC_DIR / "backups", backup_id)
+    if not backup_file.exists():
+        raise HTTPException(status_code=404, detail="Backup not found")
+    if backup_lock.locked():
+        raise HTTPException(status_code=409, detail="Backup already in progress")
 
-        # Extract backup
-        world_dir.mkdir(exist_ok=True)
-        with zipfile.ZipFile(backup_file, 'r') as zip_ref:
-            zip_ref.extractall(world_dir)
+    async with backup_lock:
+        was_running = await is_port_open()
+        if was_running and not await stop_server():
+            raise HTTPException(status_code=500, detail="Failed to stop server for restore")
 
-        # Restart server
-        if was_running:
-            start_server()
+        def extract() -> None:
+            with zipfile.ZipFile(backup_file, "r") as zip_ref:
+                names = zip_ref.namelist()
+                new_format = any(n.startswith("world/") for n in names)
+                if new_format:
+                    # New format: entries prefixed world/, world_nether/, ... extract into MC_DIR
+                    for n in names:
+                        top = Path(n).parts[0] if Path(n).parts else ""
+                        if top not in RESTORE_TOP_LEVEL:
+                            raise HTTPException(status_code=400, detail="Backup archive contains unexpected paths")
+                    validate_zip_members(zip_ref, MC_DIR)
+                    safety = MC_DIR / f"world_backup_{int(time.time())}"
+                    safety.mkdir()
+                    for dirname in ("world", "world_nether", "world_the_end"):
+                        d = MC_DIR / dirname
+                        if d.exists():
+                            shutil.move(str(d), str(safety / dirname))
+                    zip_ref.extractall(MC_DIR)
+                else:
+                    # Legacy format: world contents at archive root; extract into world/
+                    world_dir = MC_DIR / "world"
+                    validate_zip_members(zip_ref, world_dir)
+                    if world_dir.exists():
+                        safety = MC_DIR / f"world_backup_{int(time.time())}"
+                        shutil.move(str(world_dir), str(safety))
+                    world_dir.mkdir()
+                    zip_ref.extractall(world_dir)
 
-        return GenericResponse(ok=True, message="Backup restored")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Restore failed: {str(e)}")
+            # Keep only the newest safety copy; older piles are pruned.
+            safety_dirs = sorted(
+                MC_DIR.glob("world_backup_*"),
+                key=lambda p: p.name,
+                reverse=True,
+            )
+            for old in safety_dirs[1:]:
+                shutil.rmtree(old, ignore_errors=True)
+
+        try:
+            await asyncio.to_thread(extract)
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Restore failed: {e}")
+        finally:
+            if was_running:
+                await start_server()
+
+    return GenericResponse(ok=True, message="Backup restored")
+
+# =====================================================================
+# Backup schedule
+# =====================================================================
+
+TIME_RE = re.compile(r'^([01]\d|2[0-3]):[0-5]\d$')
+
+@app.get("/backups/schedule")
+async def get_schedule(username: str = Depends(verify_token)):
+    return load_schedule()
+
+@app.put("/backups/schedule")
+async def put_schedule(update: ScheduleUpdate, username: str = Depends(verify_token)):
+    if not TIME_RE.match(update.time):
+        raise HTTPException(status_code=400, detail="Time must be HH:MM (24h)")
+    if not 1 <= update.retention <= 30:
+        raise HTTPException(status_code=400, detail="Retention must be between 1 and 30")
+    config = load_schedule()
+    config.update({
+        "enabled": update.enabled,
+        "time": update.time,
+        "retention": update.retention,
+    })
+    save_schedule(config)
+    return config
+
+# =====================================================================
+# Mods
+# =====================================================================
 
 @app.get("/mods")
 async def list_mods(username: str = Depends(verify_token)):
-    """List all mods (enabled and disabled)"""
     mods_dir = MC_DIR / "mods"
     mods_disabled_dir = MC_DIR / "mods_disabled"
-
     mods_dir.mkdir(exist_ok=True)
     mods_disabled_dir.mkdir(exist_ok=True)
 
-    mods = []
-
-    # Enabled mods
-    for mod_file in mods_dir.glob("*.jar"):
-        mods.append({
-            "file": mod_file.name,
-            "enabled": True,
-            "sizeBytes": mod_file.stat().st_size
-        })
-
-    # Disabled mods
-    for mod_file in mods_disabled_dir.glob("*.jar"):
-        mods.append({
-            "file": mod_file.name,
-            "enabled": False,
-            "sizeBytes": mod_file.stat().st_size
-        })
-
-    return {"mods": sorted(mods, key=lambda x: x["file"])}
+    mods = [
+        {"file": f.name, "enabled": True, "sizeBytes": f.stat().st_size}
+        for f in mods_dir.glob("*.jar")
+    ] + [
+        {"file": f.name, "enabled": False, "sizeBytes": f.stat().st_size}
+        for f in mods_disabled_dir.glob("*.jar")
+    ]
+    return {"mods": sorted(mods, key=lambda x: x["file"].lower())}
 
 @app.post("/mods/upload")
 async def upload_mod(
     file: UploadFile = File(...),
-    username: str = Depends(verify_token)
+    username: str = Depends(verify_token),
 ):
-    """Upload a new mod"""
-    if not file.filename.endswith('.jar'):
-        raise HTTPException(status_code=400, detail="Only .jar files are allowed")
-
+    filename = safe_name(Path(file.filename or "").name, suffix=".jar")
     mods_dir = MC_DIR / "mods"
     mods_dir.mkdir(exist_ok=True)
 
-    mod_path = mods_dir / file.filename
-
+    dest = resolve_in(mods_dir, filename)
+    tmp_path = mods_dir / (filename + ".part")
+    size = 0
     try:
-        with open(mod_path, 'wb') as f:
-            content = await file.read()
-            f.write(content)
-
-        return {"ok": True, "file": file.filename}
+        with open(tmp_path, "wb") as f:
+            while chunk := await file.read(1024 * 1024):
+                size += len(chunk)
+                if size > MAX_UPLOAD_BYTES:
+                    raise HTTPException(status_code=413, detail="File too large (max 300 MB)")
+                f.write(chunk)
+        os.replace(tmp_path, dest)
+    except HTTPException:
+        tmp_path.unlink(missing_ok=True)
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+        tmp_path.unlink(missing_ok=True)
+        raise HTTPException(status_code=500, detail=f"Upload failed: {e}")
 
-@app.post("/mods/disable")
+    return {"ok": True, "file": filename}
+
+@app.post("/mods/disable", response_model=GenericResponse)
 async def disable_mod(action: ModAction, username: str = Depends(verify_token)):
-    """Disable a mod (move to mods_disabled)"""
-    mods_dir = MC_DIR / "mods"
+    filename = safe_name(action.file, suffix=".jar")
     mods_disabled_dir = MC_DIR / "mods_disabled"
     mods_disabled_dir.mkdir(exist_ok=True)
-
-    source = mods_dir / action.file
-    dest = mods_disabled_dir / action.file
-
+    source = resolve_in(MC_DIR / "mods", filename)
     if not source.exists():
         raise HTTPException(status_code=404, detail="Mod not found")
+    shutil.move(str(source), str(mods_disabled_dir / filename))
+    return GenericResponse(ok=True, message="Mod disabled")
 
-    try:
-        shutil.move(str(source), str(dest))
-        return GenericResponse(ok=True, message="Mod disabled")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to disable mod: {str(e)}")
-
-@app.post("/mods/enable")
+@app.post("/mods/enable", response_model=GenericResponse)
 async def enable_mod(action: ModAction, username: str = Depends(verify_token)):
-    """Enable a mod (move to mods)"""
+    filename = safe_name(action.file, suffix=".jar")
     mods_dir = MC_DIR / "mods"
-    mods_disabled_dir = MC_DIR / "mods_disabled"
-
-    source = mods_disabled_dir / action.file
-    dest = mods_dir / action.file
-
+    mods_dir.mkdir(exist_ok=True)
+    source = resolve_in(MC_DIR / "mods_disabled", filename)
     if not source.exists():
         raise HTTPException(status_code=404, detail="Mod not found")
+    shutil.move(str(source), str(mods_dir / filename))
+    return GenericResponse(ok=True, message="Mod enabled")
 
-    try:
-        shutil.move(str(source), str(dest))
-        return GenericResponse(ok=True, message="Mod enabled")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to enable mod: {str(e)}")
-
-@app.post("/mods/delete")
+@app.post("/mods/delete", response_model=GenericResponse)
 async def delete_mod(action: ModAction, username: str = Depends(verify_token)):
-    """Delete a mod"""
-    mods_dir = MC_DIR / "mods"
-    mods_disabled_dir = MC_DIR / "mods_disabled"
-
-    # Try both directories
-    mod_path = mods_dir / action.file
+    filename = safe_name(action.file, suffix=".jar")
+    mod_path = resolve_in(MC_DIR / "mods", filename)
     if not mod_path.exists():
-        mod_path = mods_disabled_dir / action.file
-
+        mod_path = resolve_in(MC_DIR / "mods_disabled", filename)
     if not mod_path.exists():
         raise HTTPException(status_code=404, detail="Mod not found")
+    mod_path.unlink()
+    return GenericResponse(ok=True, message="Mod deleted")
 
-    try:
-        mod_path.unlink()
-        return GenericResponse(ok=True, message="Mod deleted")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to delete mod: {str(e)}")
+# =====================================================================
+# Health
+# =====================================================================
 
-# Health check
 @app.get("/")
 async def root():
-    return {"status": "Minecraft Control Panel API", "version": "1.0"}
+    return {"status": "Minecraft Control Panel API", "version": "2.0"}
 
 if __name__ == "__main__":
     import uvicorn

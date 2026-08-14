@@ -83,6 +83,80 @@ export const api = {
     });
   },
 
+  put<T>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  },
+
+  // Authenticated file download: fetch as blob with the Bearer header, then
+  // hand it to the browser. (window.open can't send auth headers.)
+  async download(endpoint: string, filename: string): Promise<void> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (response.status === 401) {
+      redirectToLogin();
+      throw new ApiError(401, 'Unauthorized');
+    }
+    if (!response.ok) {
+      throw new ApiError(response.status, await readError(response, 'Download failed'));
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  },
+
+  // XHR-based upload so we get progress events (fetch has none for uploads).
+  uploadWithProgress<T>(
+    endpoint: string,
+    file: File,
+    onProgress: (percent: number) => void
+  ): Promise<T> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    return new Promise<T>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `${API_BASE_URL}${endpoint}`);
+      if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+      };
+      xhr.onload = () => {
+        if (xhr.status === 401) {
+          redirectToLogin();
+          reject(new ApiError(401, 'Unauthorized'));
+          return;
+        }
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            resolve(JSON.parse(xhr.responseText));
+          } catch {
+            resolve(xhr.responseText as T);
+          }
+        } else {
+          let message = xhr.responseText || 'Upload failed';
+          try {
+            const detail = JSON.parse(xhr.responseText).detail;
+            if (typeof detail === 'string') message = detail;
+          } catch {}
+          reject(new ApiError(xhr.status, message));
+        }
+      };
+      xhr.onerror = () => reject(new ApiError(0, 'Network error during upload'));
+      const formData = new FormData();
+      formData.append('file', file);
+      xhr.send(formData);
+    });
+  },
+
   upload<T>(endpoint: string, file: File): Promise<T> {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const formData = new FormData();

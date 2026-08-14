@@ -6,10 +6,14 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/srv/panel
-Environment="PATH=/srv/panel/venv/bin"
+# Needs system paths too: the panel shells out to screen/pkill/java.
+Environment="PATH=/srv/panel/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ExecStart=/srv/panel/venv/bin/uvicorn app:app --host 0.0.0.0 --port 8081
 Restart=always
 RestartSec=10
+# Without this, restarting the panel would kill the Minecraft server too:
+# java is spawned by uvicorn (via screen), so it lives in this service's cgroup.
+KillMode=process
 
 [Install]
 WantedBy=multi-user.target
