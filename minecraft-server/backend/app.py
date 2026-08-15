@@ -17,7 +17,13 @@ from fastapi import (
     FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect,
     UploadFile, File, Query, Request,
 )
-from fastapi.responses import FileResponse, PlainTextResponse, RedirectResponse, Response
+from fastapi.responses import (
+    FileResponse,
+    PlainTextResponse,
+    RedirectResponse,
+    Response,
+    StreamingResponse,
+)
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -1249,6 +1255,35 @@ async def map_proxy(request: Request, path: str = ""):
 
     query = request.url.query
     target = f"{MAP_URL}/{path}" + (f"?{query}" if query else "")
+
+    # BlueMap pushes live updates (player positions etc.) over a Server-Sent
+    # Events stream. That response never ends, so it must be streamed through
+    # chunk by chunk — buffering it kills live updates entirely.
+    if path.endswith("live/sse"):
+        def event_stream():
+            req = UrlRequest(target, headers={
+                "User-Agent": "mc-panel-proxy",
+                "Accept": "text/event-stream",
+            })
+            try:
+                with urlopen(req, timeout=300) as resp:
+                    while True:
+                        chunk = resp.read1(8192)
+                        if not chunk:
+                            break
+                        yield chunk
+            except Exception:
+                return  # browser EventSource auto-reconnects
+
+        return StreamingResponse(
+            event_stream(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-store",
+                # Tells nginx/openresty not to buffer this response either.
+                "X-Accel-Buffering": "no",
+            },
+        )
 
     # Headers the browser needs for correct caching. Dropping Cache-Control
     # made browsers cache the live player feed — positions froze until reload.
