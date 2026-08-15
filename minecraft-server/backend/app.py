@@ -38,7 +38,9 @@ MC_DIR = Path(os.getenv("MC_DIR", "/minecraft"))
 MC_SCREEN = os.getenv("MC_SCREEN", "mc")
 MC_JAR = os.getenv("MC_JAR", "server.jar")
 MC_ADDR = os.getenv("MC_ADDR", "178.17.3.31:25565")
+MC_JAVA = os.getenv("MC_JAVA", "java")
 MC_JAVA_ARGS = os.getenv("MC_JAVA_ARGS", "-Xms6G -Xmx8G")
+MC_VERSION = os.getenv("PANEL_MC_VERSION", "26.2")
 MC_PORT = int(os.getenv("MC_PORT", "25565"))
 PANEL_DATA_DIR = Path(os.getenv("PANEL_DATA_DIR", "/srv/panel"))
 
@@ -226,7 +228,7 @@ async def start_server() -> bool:
         return True
     try:
         # Built entirely from server-side config — no request data reaches this.
-        launch = f"cd {MC_DIR} && exec java {MC_JAVA_ARGS} -jar {MC_JAR} nogui"
+        launch = f"cd {MC_DIR} && exec {MC_JAVA} {MC_JAVA_ARGS} -jar {MC_JAR} nogui"
         proc = await asyncio.create_subprocess_exec(
             "/usr/bin/screen", "-S", MC_SCREEN, "-dm", "bash", "-lc", launch
         )
@@ -1194,10 +1196,11 @@ async def delete_mod(action: ModAction, username: str = Depends(verify_token)):
 # Dynmap proxy
 # =====================================================================
 
-# Dynmap's web server runs inside the Minecraft server process on a port that
-# is not forwarded to the internet; the panel relays it. Deliberately
-# unauthenticated: it has to load in an <iframe>, and the map is read-only.
-DYNMAP_URL = os.getenv("DYNMAP_URL", "http://127.0.0.1:8123")
+# The map mod's web server (BlueMap, port 8100) runs inside the Minecraft
+# server process on a port that is not forwarded to the internet; the panel
+# relays it. Deliberately unauthenticated: it has to load in an <iframe>,
+# and the map is read-only.
+MAP_URL = os.getenv("MAP_URL", "http://127.0.0.1:8100")
 
 @app.get("/map")
 async def map_root():
@@ -1210,7 +1213,7 @@ async def map_proxy(request: Request, path: str = ""):
     from urllib.request import Request as UrlRequest, urlopen
 
     query = request.url.query
-    target = f"{DYNMAP_URL}/{path}" + (f"?{query}" if query else "")
+    target = f"{MAP_URL}/{path}" + (f"?{query}" if query else "")
 
     def fetch():
         req = UrlRequest(target, headers={"User-Agent": "mc-panel-proxy"})
@@ -1242,7 +1245,12 @@ async def map_proxy(request: Request, path: str = ""):
 
 @app.get("/")
 async def root():
-    return {"status": "Minecraft Control Panel API", "version": "2.0"}
+    return {
+        "status": "Minecraft Control Panel API",
+        "version": "2.0",
+        "mcVersion": MC_VERSION,
+        "loader": "fabric",
+    }
 
 if __name__ == "__main__":
     import uvicorn

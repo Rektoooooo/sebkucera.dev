@@ -18,7 +18,7 @@ export default function MapPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Live Map</h1>
           <p className="text-sm text-muted-foreground">
-            Dynmap — explore the world and see who&apos;s online where
+            BlueMap — explore the world in 3D and see who&apos;s online where
           </p>
         </div>
         <Button variant="secondary" onClick={() => window.open(MAP_URL, '_blank')}>
@@ -40,7 +40,7 @@ export default function MapPage() {
       ) : (
         <iframe
           src={MAP_URL}
-          title="Dynmap"
+          title="BlueMap"
           className="w-full flex-1 rounded-xl border bg-black/40"
         />
       )}

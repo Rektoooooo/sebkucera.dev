@@ -50,8 +50,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-// This server runs Better MC [FABRIC] 1.21.1
-const MC_VERSION = '1.21.1';
+// Fallbacks; the live values come from the backend (GET /) so a server
+// version bump doesn't require a frontend rebuild.
+const DEFAULT_MC_VERSION = '26.2';
 const MOD_LOADER = 'fabric';
 
 interface ModrinthHit {
@@ -93,6 +94,14 @@ export default function ModsPage() {
   const [searching, setSearching] = useState(false);
   const [hits, setHits] = useState<ModrinthHit[] | null>(null);
   const [installing, setInstalling] = useState<string | null>(null);
+  const [mcVersion, setMcVersion] = useState(DEFAULT_MC_VERSION);
+
+  useEffect(() => {
+    api
+      .get<{ mcVersion?: string }>('/')
+      .then((info) => info.mcVersion && setMcVersion(info.mcVersion))
+      .catch(() => {});
+  }, []);
 
   const load = async () => {
     try {
@@ -220,7 +229,7 @@ export default function ModsPage() {
       const facetList = [
         ['project_type:mod'],
         [`categories:${MOD_LOADER}`],
-        [`versions:${MC_VERSION}`],
+        [`versions:${mcVersion}`],
       ];
       if (cat) facetList.push([`categories:${cat}`]);
       const facets = encodeURIComponent(JSON.stringify(facetList));
@@ -260,12 +269,12 @@ export default function ModsPage() {
     setInstalling(hit.project_id);
     try {
       const res = await fetch(
-        `https://api.modrinth.com/v2/project/${hit.project_id}/version?loaders=${encodeURIComponent(`["${MOD_LOADER}"]`)}&game_versions=${encodeURIComponent(`["${MC_VERSION}"]`)}`
+        `https://api.modrinth.com/v2/project/${hit.project_id}/version?loaders=${encodeURIComponent(`["${MOD_LOADER}"]`)}&game_versions=${encodeURIComponent(`["${mcVersion}"]`)}`
       );
       if (!res.ok) throw new Error(`Modrinth returned ${res.status}`);
       const versions = await res.json();
       if (!versions.length) {
-        toast.error(`No ${MOD_LOADER} ${MC_VERSION} build available for ${hit.title}`);
+        toast.error(`No ${MOD_LOADER} ${mcVersion} build available for ${hit.title}`);
         return;
       }
       const files = versions[0].files;
@@ -305,7 +314,7 @@ export default function ModsPage() {
               <DialogHeader>
                 <DialogTitle>Browse Modrinth</DialogTitle>
                 <DialogDescription>
-                  {MOD_LOADER} mods for Minecraft {MC_VERSION} — installed straight onto the server
+                  {MOD_LOADER} mods for Minecraft {mcVersion} — installed straight onto the server
                 </DialogDescription>
               </DialogHeader>
               <div className="flex gap-2">
