@@ -909,21 +909,50 @@ async def player_sessions(
 # server.properties
 # =====================================================================
 
-# key -> (kind, constraint). Deliberately excludes online-mode, server-port, rcon.*.
+# key -> (kind, constraint). Deliberately excludes online-mode, server-port,
+# server-ip, rcon.*, enable-status (the panel's status checks depend on it)
+# and level-name (changing it re-points the world directory).
 EDITABLE_PROPERTIES = {
-    "motd": ("str", 150),
+    "motd": ("str", 250),
     "difficulty": ("enum", ["peaceful", "easy", "normal", "hard"]),
     "gamemode": ("enum", ["survival", "creative", "adventure", "spectator"]),
+    "force-gamemode": ("bool", None),
+    "hardcore": ("bool", None),
+    "pvp": ("bool", None),
+    "spawn-monsters": ("bool", None),
+    "allow-nether": ("bool", None),
+    "generate-structures": ("bool", None),
+    "enable-command-block": ("bool", None),
     "max-players": ("int", (1, 200)),
+    "white-list": ("bool", None),
+    "enforce-whitelist": ("bool", None),
+    "hide-online-players": ("bool", None),
+    "player-idle-timeout": ("int", (0, 1440)),
+    "op-permission-level": ("enum", ["1", "2", "3", "4"]),
     "view-distance": ("int", (3, 32)),
     "simulation-distance": ("int", (3, 32)),
     "spawn-protection": ("int", (0, 100)),
-    "pvp": ("bool", None),
-    "white-list": ("bool", None),
-    "enforce-whitelist": ("bool", None),
+    "entity-broadcast-range-percentage": ("int", (10, 1000)),
+    "max-world-size": ("int", (1, 29999984)),
+    "pause-when-empty-seconds": ("int", (-1, 86400)),
     "allow-flight": ("bool", None),
-    "hardcore": ("bool", None),
+    "resource-pack": ("str", 300),
+    "require-resource-pack": ("bool", None),
 }
+
+# server.properties is a Java .properties file: non-ASCII characters (like the
+# § used for MOTD colors) live in the file as \uXXXX escapes, and newlines
+# as \n. Decode when reading, encode when writing.
+
+def decode_prop_value(value: str) -> str:
+    value = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m.group(1), 16)), value)
+    return value.replace("\\n", "\n")
+
+def encode_prop_value(value: str) -> str:
+    value = value.replace("\n", "\\n")
+    return "".join(
+        c if 32 <= ord(c) < 127 else f"\\u{ord(c):04x}" for c in value
+    )
 
 def properties_path() -> Path:
     return MC_DIR / "server.properties"
@@ -932,7 +961,11 @@ def validate_property(key: str, value: str) -> str:
     if key not in EDITABLE_PROPERTIES:
         raise HTTPException(status_code=400, detail=f"Property '{key}' is not editable")
     kind, constraint = EDITABLE_PROPERTIES[key]
-    value = "".join(c for c in str(value) if ord(c) >= 32).strip()
+    # Keep newlines in strings (the MOTD supports a second line); strip other
+    # control characters everywhere.
+    value = "".join(
+        c for c in str(value) if ord(c) >= 32 or (kind == "str" and c == "\n")
+    ).strip()
     if kind == "bool":
         if value not in ("true", "false"):
             raise HTTPException(status_code=400, detail=f"'{key}' must be true or false")
@@ -965,7 +998,7 @@ async def get_properties(username: str = Depends(verify_token)):
         if not stripped or stripped.startswith("#") or "=" not in stripped:
             continue
         key, _, value = stripped.partition("=")
-        properties[key.strip()] = value.strip()
+        properties[key.strip()] = decode_prop_value(value.strip())
 
     return {
         "properties": properties,
@@ -985,7 +1018,7 @@ async def update_properties(update: PropertiesUpdate, username: str = Depends(ve
 
     def write() -> None:
         lines = path.read_text().splitlines(keepends=True)
-        remaining = dict(validated)
+        remaining = {k: encode_prop_value(v) for k, v in validated.items()}
         out = []
         for line in lines:
             stripped = line.strip()
