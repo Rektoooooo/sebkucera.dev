@@ -267,6 +267,17 @@ async def stop_server() -> bool:
             )
             await proc.wait()
 
+        # The JVM holds world/session.lock for a few seconds after the port
+        # closes; starting again too early fails with "already locked".
+        for _ in range(15):
+            proc = await asyncio.create_subprocess_exec(
+                "pgrep", "-f", f"java.*{MC_JAR}",
+                stdout=asyncio.subprocess.DEVNULL,
+            )
+            if await proc.wait() != 0:
+                break  # java is fully gone
+            await asyncio.sleep(1)
+
         return not await is_port_open()
     except Exception as e:
         print(f"Error stopping server: {e}")
@@ -1215,17 +1226,23 @@ async def map_proxy(request: Request, path: str = ""):
     query = request.url.query
     target = f"{MAP_URL}/{path}" + (f"?{query}" if query else "")
 
+    # Headers the browser needs for correct caching. Dropping Cache-Control
+    # made browsers cache the live player feed — positions froze until reload.
+    PASS_HEADERS = ("Cache-Control", "ETag", "Last-Modified", "Expires")
+
     def fetch():
         req = UrlRequest(target, headers={"User-Agent": "mc-panel-proxy"})
         try:
             with urlopen(req, timeout=30) as resp:
+                headers = {h: resp.headers[h] for h in PASS_HEADERS if resp.headers.get(h)}
                 return (
                     resp.status,
                     resp.headers.get("Content-Type", "application/octet-stream"),
+                    headers,
                     resp.read(),
                 )
         except HTTPError as e:
-            return e.code, e.headers.get("Content-Type", "text/plain"), e.read()
+            return e.code, e.headers.get("Content-Type", "text/plain"), {}, e.read()
         except URLError:
             return None
 
@@ -1236,8 +1253,15 @@ async def map_proxy(request: Request, path: str = ""):
             status_code=503,
             media_type="text/plain",
         )
-    status_code, content_type, body = result
-    return Response(content=body, status_code=status_code, media_type=content_type)
+    status_code, content_type, headers, body = result
+    if "/live/" in path or path.startswith("live/"):
+        headers.setdefault("Cache-Control", "no-store")
+    return Response(
+        content=body,
+        status_code=status_code,
+        media_type=content_type,
+        headers=headers,
+    )
 
 # =====================================================================
 # Health
