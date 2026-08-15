@@ -318,7 +318,7 @@ export default function PlayersPage() {
                 {(showAllActivity ? activity : activity.slice(0, 12)).map((event, i) => (
                   <div
                     key={`${event.name}-${event.at}-${i}`}
-                    className="flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-muted/40"
+                    className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md px-2 py-1.5 hover:bg-muted/40"
                   >
                     <PlayerHead name={event.name} size={28} />
                     <span className="text-sm font-medium">{event.name}</span>

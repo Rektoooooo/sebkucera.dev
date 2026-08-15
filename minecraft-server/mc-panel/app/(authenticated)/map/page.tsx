@@ -13,8 +13,8 @@ export default function MapPage() {
   const { status } = useServerStatus();
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col gap-4">
-      <div className="flex items-end justify-between">
+    <div className="flex h-[calc(100dvh-10rem)] flex-col gap-4 lg:h-[calc(100vh-4rem)]">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Live Map</h1>
           <p className="text-sm text-muted-foreground">

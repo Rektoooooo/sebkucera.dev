@@ -2,7 +2,7 @@
 
 import { useRequireAuth } from '@/lib/auth-context';
 import { ServerStatusProvider } from '@/lib/server-status-context';
-import { Sidebar } from '@/components/layout/sidebar';
+import { MobileTopbar, Sidebar } from '@/components/layout/sidebar';
 
 export default function AuthenticatedLayout({
   children,
@@ -17,9 +17,10 @@ export default function AuthenticatedLayout({
 
   return (
     <ServerStatusProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen flex-col lg:flex-row">
+        <MobileTopbar />
         <Sidebar />
-        <main className="flex-1 overflow-auto p-8">{children}</main>
+        <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </ServerStatusProvider>
   );
