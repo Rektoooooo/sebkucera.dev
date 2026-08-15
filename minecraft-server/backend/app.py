@@ -16,7 +16,7 @@ from fastapi import (
     FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect,
     UploadFile, File, Query, Request,
 )
-from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi.responses import FileResponse, PlainTextResponse, RedirectResponse, Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -1189,6 +1189,52 @@ async def delete_mod(action: ModAction, username: str = Depends(verify_token)):
         raise HTTPException(status_code=404, detail="Mod not found")
     mod_path.unlink()
     return GenericResponse(ok=True, message="Mod deleted")
+
+# =====================================================================
+# Dynmap proxy
+# =====================================================================
+
+# Dynmap's web server runs inside the Minecraft server process on a port that
+# is not forwarded to the internet; the panel relays it. Deliberately
+# unauthenticated: it has to load in an <iframe>, and the map is read-only.
+DYNMAP_URL = os.getenv("DYNMAP_URL", "http://127.0.0.1:8123")
+
+@app.get("/map")
+async def map_root():
+    # Trailing slash matters: dynmap's index.html uses relative asset paths.
+    return RedirectResponse(url="/map/")
+
+@app.get("/map/{path:path}")
+async def map_proxy(request: Request, path: str = ""):
+    from urllib.error import HTTPError, URLError
+    from urllib.request import Request as UrlRequest, urlopen
+
+    query = request.url.query
+    target = f"{DYNMAP_URL}/{path}" + (f"?{query}" if query else "")
+
+    def fetch():
+        req = UrlRequest(target, headers={"User-Agent": "mc-panel-proxy"})
+        try:
+            with urlopen(req, timeout=30) as resp:
+                return (
+                    resp.status,
+                    resp.headers.get("Content-Type", "application/octet-stream"),
+                    resp.read(),
+                )
+        except HTTPError as e:
+            return e.code, e.headers.get("Content-Type", "text/plain"), e.read()
+        except URLError:
+            return None
+
+    result = await asyncio.to_thread(fetch)
+    if result is None:
+        return Response(
+            content="Map unavailable — the Minecraft server is not running.",
+            status_code=503,
+            media_type="text/plain",
+        )
+    status_code, content_type, body = result
+    return Response(content=body, status_code=status_code, media_type=content_type)
 
 # =====================================================================
 # Health

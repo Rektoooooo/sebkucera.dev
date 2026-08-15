@@ -6,6 +6,7 @@ import {
   Archive,
   LayoutDashboard,
   LogOut,
+  Map,
   Package,
   Server,
   Settings2,
@@ -20,6 +21,7 @@ import { Separator } from '@/components/ui/separator';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/map', label: 'Map', icon: Map },
   { href: '/players', label: 'Players', icon: Users },
   { href: '/mods', label: 'Mods', icon: Package },
   { href: '/backups', label: 'Backups', icon: Archive },
