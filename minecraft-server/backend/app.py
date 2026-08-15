@@ -1,5 +1,6 @@
 import os
 import re
+import gzip
 import json
 import time
 import hmac
@@ -7,7 +8,7 @@ import asyncio
 import hashlib
 import zipfile
 import shutil
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -812,6 +813,80 @@ async def pardon_player(action: PlayerAction, username: str = Depends(verify_tok
         f"pardon {name}",
         lambda: remove_by_name(MC_DIR / "banned-players.json", name),
     )
+
+SESSION_LINE_RE = re.compile(
+    r'^\[(\d{2}:\d{2}:\d{2})\] \[Server thread/INFO\]: ([A-Za-z0-9_]{1,16}) (joined|left) the game'
+)
+ROTATED_LOG_RE = re.compile(r'^(\d{4}-\d{2}-\d{2})-\d+\.log\.gz$')
+
+def parse_session_file(path: Path, gzipped: bool) -> list:
+    """Extract (time_str, name, action) join/leave events from one log file."""
+    events = []
+    opener = gzip.open if gzipped else open
+    with opener(path, "rt", errors="replace") as f:
+        for line in f:
+            m = SESSION_LINE_RE.match(line)
+            if m:
+                events.append((m.group(1), m.group(2), m.group(3)))
+    return events
+
+def date_events(raw: list, start_date: date) -> list:
+    """Stamp events with dates, advancing the day when the clock rolls over."""
+    out = []
+    day_offset = 0
+    prev = None
+    for time_str, name, action in raw:
+        if prev is not None and time_str < prev:
+            day_offset += 1
+        prev = time_str
+        stamp = (start_date + timedelta(days=day_offset)).isoformat()
+        out.append({"name": name, "action": action, "at": f"{stamp}T{time_str}"})
+    return out
+
+@app.get("/players/sessions")
+async def player_sessions(
+    days: int = Query(7, ge=1, le=30),
+    username: str = Depends(verify_token),
+):
+    """Join/leave history parsed from the server logs."""
+    def collect() -> list:
+        logs_dir = MC_DIR / "logs"
+        cutoff = date.today() - timedelta(days=days)
+        events = []
+
+        rotated = []
+        for gz_file in logs_dir.glob("*.log.gz"):
+            m = ROTATED_LOG_RE.match(gz_file.name)
+            if m:
+                file_date = date.fromisoformat(m.group(1))
+                if file_date >= cutoff:
+                    rotated.append((file_date, gz_file))
+        rotated.sort(key=lambda t: (t[0], t[1].name))
+
+        for file_date, path in rotated:
+            try:
+                events.extend(date_events(parse_session_file(path, True), file_date))
+            except Exception:
+                continue
+
+        latest = logs_dir / "latest.log"
+        if latest.exists():
+            try:
+                raw = parse_session_file(latest, False)
+                # latest.log's date is only knowable from its mtime (the day of
+                # its LAST line) — walk rollovers backwards to find the start.
+                rollovers = sum(
+                    1 for i in range(1, len(raw)) if raw[i][0] < raw[i - 1][0]
+                )
+                start = datetime.fromtimestamp(latest.stat().st_mtime).date() - timedelta(days=rollovers)
+                events.extend(date_events(raw, start))
+            except Exception:
+                pass
+
+        events.sort(key=lambda e: e["at"], reverse=True)
+        return events[:300]
+
+    return {"events": await asyncio.to_thread(collect)}
 
 # =====================================================================
 # server.properties

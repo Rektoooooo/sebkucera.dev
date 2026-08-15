@@ -1,12 +1,22 @@
 'use client';
 
-import { useState } from 'react';
-import { Ban, Gavel, ShieldCheck, UserMinus, UserPlus, Users } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import {
+  Ban,
+  Gavel,
+  History,
+  LogIn,
+  LogOut,
+  ShieldCheck,
+  UserMinus,
+  UserPlus,
+  Users,
+} from 'lucide-react';
 import { toast } from 'sonner';
 
 import { api } from '@/lib/api';
 import { usePoll } from '@/lib/use-poll';
-import type { PlayersData } from '@/lib/types';
+import type { PlayersData, SessionEvent } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -41,14 +51,76 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const NAME_RE = /^[A-Za-z0-9_]{1,16}$/;
 
+function PlayerHead({ name, size = 28 }: { name: string; size?: number }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`https://mc-heads.net/avatar/${encodeURIComponent(name)}/${size * 2}`}
+      alt=""
+      width={size}
+      height={size}
+      className="shrink-0 rounded"
+      style={{ imageRendering: 'pixelated' }}
+    />
+  );
+}
+
+function formatEventTime(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+  if (sameDay(d, now)) return `Today ${time}`;
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (sameDay(d, yesterday)) return `Yesterday ${time}`;
+  return `${d.toLocaleDateString([], { month: 'short', day: 'numeric' })} ${time}`;
+}
+
+function formatDuration(ms: number): string {
+  const minutes = Math.round(ms / 60000);
+  if (minutes < 1) return '<1m';
+  if (minutes < 60) return `${minutes}m`;
+  return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+}
+
 export default function PlayersPage() {
   const { data, loading, refetch } = usePoll<PlayersData>(
     () => api.get<PlayersData>('/players'),
     10000
   );
+  const { data: sessions } = usePoll<{ events: SessionEvent[] }>(
+    () => api.get<{ events: SessionEvent[] }>('/players/sessions'),
+    60000
+  );
   const [busy, setBusy] = useState<string | null>(null);
   const [addName, setAddName] = useState('');
   const [banReason, setBanReason] = useState('');
+  const [showAllActivity, setShowAllActivity] = useState(false);
+
+  // Pair each "left" with the preceding "joined" to show session length.
+  const activity = useMemo(() => {
+    const events = sessions?.events ?? [];
+    const lastJoin: Record<string, string> = {};
+    const withDurations: Array<SessionEvent & { durationMs?: number }> = [];
+    for (let i = events.length - 1; i >= 0; i--) {
+      const event = events[i]; // events arrive newest-first; walk oldest-first
+      if (event.action === 'joined') {
+        lastJoin[event.name] = event.at;
+        withDurations.unshift(event);
+      } else {
+        const join = lastJoin[event.name];
+        delete lastJoin[event.name];
+        withDurations.unshift({
+          ...event,
+          durationMs: join
+            ? new Date(event.at).getTime() - new Date(join).getTime()
+            : undefined,
+        });
+      }
+    }
+    return withDurations;
+  }, [sessions]);
 
   // Minecraft flushes whitelist/ops/ban files shortly after the command runs;
   // refetch after a beat so the UI reflects it.
@@ -140,7 +212,12 @@ export default function PlayersPage() {
               <TableBody>
                 {data.online.map((player) => (
                   <TableRow key={player.uuid || player.name}>
-                    <TableCell className="font-medium">{player.name}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2.5">
+                        <PlayerHead name={player.name} size={24} />
+                        {player.name}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <AlertDialog>
@@ -213,6 +290,73 @@ export default function PlayersPage() {
                 ))}
               </TableBody>
             </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <History className="h-4 w-4 text-muted-foreground" />
+            <CardTitle>Recent Activity</CardTitle>
+          </div>
+          <CardDescription>Joins and leaves from the last 7 days</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {sessions === null ? (
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </div>
+          ) : activity.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No player activity in the logs yet.
+            </p>
+          ) : (
+            <>
+              <div className="space-y-1">
+                {(showAllActivity ? activity : activity.slice(0, 12)).map((event, i) => (
+                  <div
+                    key={`${event.name}-${event.at}-${i}`}
+                    className="flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-muted/40"
+                  >
+                    <PlayerHead name={event.name} size={28} />
+                    <span className="text-sm font-medium">{event.name}</span>
+                    {event.action === 'joined' ? (
+                      <Badge variant="success" className="gap-1">
+                        <LogIn className="h-3 w-3" />
+                        joined
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="gap-1">
+                        <LogOut className="h-3 w-3" />
+                        left
+                      </Badge>
+                    )}
+                    {event.action === 'left' && event.durationMs !== undefined && (
+                      <span className="text-xs text-muted-foreground">
+                        after {formatDuration(event.durationMs)}
+                      </span>
+                    )}
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      {formatEventTime(event.at)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              {activity.length > 12 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-2 w-full text-muted-foreground"
+                  onClick={() => setShowAllActivity((v) => !v)}
+                >
+                  {showAllActivity
+                    ? 'Show less'
+                    : `Show all ${activity.length} events`}
+                </Button>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

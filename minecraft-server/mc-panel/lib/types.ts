@@ -64,6 +64,12 @@ export interface PlayersData {
   banned: BanEntry[];
 }
 
+export interface SessionEvent {
+  name: string;
+  action: 'joined' | 'left';
+  at: string;
+}
+
 export interface PropertiesResponse {
   properties: Record<string, string>;
   raw: string;
