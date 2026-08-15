@@ -39,7 +39,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -64,6 +63,20 @@ interface ModrinthHit {
   downloads: number;
 }
 
+// Modrinth category facet values worth browsing by
+const CATEGORIES: Array<{ label: string; value: string | null }> = [
+  { label: 'Popular', value: null },
+  { label: 'Optimization', value: 'optimization' },
+  { label: 'Utility', value: 'utility' },
+  { label: 'World Gen', value: 'worldgen' },
+  { label: 'Mobs', value: 'mobs' },
+  { label: 'Magic', value: 'magic' },
+  { label: 'Tech', value: 'technology' },
+  { label: 'Storage', value: 'storage' },
+  { label: 'Decoration', value: 'decoration' },
+  { label: 'Food', value: 'food' },
+];
+
 export default function ModsPage() {
   const [mods, setMods] = useState<Mod[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -76,6 +89,7 @@ export default function ModsPage() {
   // Modrinth browser state
   const [browseOpen, setBrowseOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
   const [hits, setHits] = useState<ModrinthHit[] | null>(null);
   const [installing, setInstalling] = useState<string | null>(null);
@@ -200,19 +214,21 @@ export default function ModsPage() {
       });
   };
 
-  const searchModrinth = async () => {
-    const q = query.trim();
+  const runSearch = async (q: string, cat: string | null) => {
     setSearching(true);
     try {
-      const facets = encodeURIComponent(
-        JSON.stringify([
-          ['project_type:mod'],
-          [`categories:${MOD_LOADER}`],
-          [`versions:${MC_VERSION}`],
-        ])
-      );
+      const facetList = [
+        ['project_type:mod'],
+        [`categories:${MOD_LOADER}`],
+        [`versions:${MC_VERSION}`],
+      ];
+      if (cat) facetList.push([`categories:${cat}`]);
+      const facets = encodeURIComponent(JSON.stringify(facetList));
+      // With no query, sort by downloads so opening the dialog shows the
+      // most popular compatible mods right away.
+      const index = q ? 'relevance' : 'downloads';
       const res = await fetch(
-        `https://api.modrinth.com/v2/search?query=${encodeURIComponent(q)}&facets=${facets}&limit=20&index=relevance`
+        `https://api.modrinth.com/v2/search?query=${encodeURIComponent(q)}&facets=${facets}&limit=40&index=${index}`
       );
       if (!res.ok) throw new Error(`Modrinth returned ${res.status}`);
       const data = await res.json();
@@ -223,6 +239,22 @@ export default function ModsPage() {
       setSearching(false);
     }
   };
+
+  const searchModrinth = () => runSearch(query.trim(), category);
+
+  const pickCategory = (cat: string | null) => {
+    setCategory(cat);
+    runSearch(query.trim(), cat);
+  };
+
+  // Load popular mods as soon as the dialog opens — browsing shouldn't
+  // require typing a search first.
+  useEffect(() => {
+    if (browseOpen && hits === null && !searching) {
+      runSearch('', category);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [browseOpen]);
 
   const installFromModrinth = async (hit: ModrinthHit) => {
     setInstalling(hit.project_id);
@@ -289,10 +321,35 @@ export default function ModsPage() {
                   Search
                 </Button>
               </div>
-              <ScrollArea className="h-[420px] pr-3">
-                {hits === null ? (
+              <div className="flex flex-wrap gap-1.5">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.label}
+                    type="button"
+                    onClick={() => pickCategory(cat.value)}
+                    className={
+                      category === cat.value
+                        ? 'rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground'
+                        : 'rounded-full border px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground'
+                    }
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+              {/* Plain overflow div, NOT Radix ScrollArea — its display:table
+                  viewport wrapper lets rows exceed the container width in
+                  WebKit, which pushed the Install button out of view. */}
+              <div className="h-[420px] overflow-y-auto">
+                {searching && hits === null ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-16 w-full" />
+                    <Skeleton className="h-16 w-full" />
+                    <Skeleton className="h-16 w-full" />
+                  </div>
+                ) : hits === null ? (
                   <p className="py-10 text-center text-sm text-muted-foreground">
-                    Search Modrinth to find mods for your server.
+                    Loading popular mods…
                   </p>
                 ) : hits.length === 0 ? (
                   <p className="py-10 text-center text-sm text-muted-foreground">
@@ -305,21 +362,21 @@ export default function ModsPage() {
                       return (
                         <div
                           key={hit.project_id}
-                          className="flex items-center gap-3 rounded-md border p-3"
+                          className="grid w-full grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 rounded-md border p-3"
                         >
                           {hit.icon_url ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={hit.icon_url}
                               alt=""
-                              className="h-10 w-10 shrink-0 rounded-md border bg-muted"
+                              className="h-10 w-10 rounded-md border bg-muted"
                             />
                           ) : (
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border bg-muted">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-md border bg-muted">
                               <Package className="h-5 w-5 text-muted-foreground" />
                             </div>
                           )}
-                          <div className="min-w-0 flex-1">
+                          <div className="min-w-0 overflow-hidden">
                             <div className="flex items-center gap-2">
                               <span className="truncate text-sm font-medium">{hit.title}</span>
                               <span className="shrink-0 text-xs text-muted-foreground">
@@ -334,12 +391,13 @@ export default function ModsPage() {
                           <Button
                             size="sm"
                             variant="secondary"
-                            className="shrink-0"
                             loading={isInstalling}
                             disabled={installing !== null}
                             onClick={() => installFromModrinth(hit)}
                           >
-                            {isInstalling ? 'Installing…' : (
+                            {isInstalling ? (
+                              'Installing…'
+                            ) : (
                               <>
                                 <Download />
                                 Install
@@ -351,7 +409,7 @@ export default function ModsPage() {
                     })}
                   </div>
                 )}
-              </ScrollArea>
+              </div>
             </DialogContent>
           </Dialog>
           <input

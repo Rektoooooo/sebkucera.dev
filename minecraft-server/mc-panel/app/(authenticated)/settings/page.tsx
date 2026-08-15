@@ -27,7 +27,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -399,11 +398,11 @@ export default function SettingsPage() {
               <CardDescription>Read-only view of the full file</CardDescription>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-[480px] rounded-md border bg-black/40">
+              <div className="h-[480px] overflow-auto rounded-md border bg-black/40">
                 <pre className="p-4 font-mono text-xs leading-5 text-zinc-300">
                   {data?.raw ?? 'Loading…'}
                 </pre>
-              </ScrollArea>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
