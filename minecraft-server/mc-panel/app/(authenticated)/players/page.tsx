@@ -412,7 +412,12 @@ export default function PlayersPage() {
                   <TableBody>
                     {data.whitelist.map((entry) => (
                       <TableRow key={entry.uuid || entry.name}>
-                        <TableCell className="font-medium">{entry.name}</TableCell>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2.5">
+                            <PlayerHead name={entry.name} size={24} />
+                            {entry.name}
+                          </div>
+                        </TableCell>
                         <TableCell className="text-right">
                           <Button
                             variant="ghost"
@@ -476,7 +481,12 @@ export default function PlayersPage() {
                   <TableBody>
                     {data.ops.map((entry) => (
                       <TableRow key={entry.uuid || entry.name}>
-                        <TableCell className="font-medium">{entry.name}</TableCell>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2.5">
+                            <PlayerHead name={entry.name} size={24} />
+                            {entry.name}
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <Badge variant="secondary">{entry.level ?? '—'}</Badge>
                         </TableCell>
@@ -510,7 +520,63 @@ export default function PlayersPage() {
               <CardTitle>Banned Players</CardTitle>
               <CardDescription>Players blocked from joining the server</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <Input
+                  placeholder="Player name"
+                  value={addName}
+                  onChange={(e) => setAddName(e.target.value)}
+                  className="max-w-xs"
+                />
+                <Input
+                  placeholder="Reason (optional)"
+                  value={banReason}
+                  onChange={(e) => setBanReason(e.target.value)}
+                  className="max-w-xs"
+                />
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" disabled={busy !== null || !addName.trim()}>
+                      <Ban />
+                      Ban Player
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Ban {addName.trim() || 'this player'}?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        They will be unable to join the server until pardoned.
+                        {banReason.trim() && (
+                          <> Reason: &ldquo;{banReason.trim()}&rdquo;</>
+                        )}
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        variant="destructive"
+                        onClick={async () => {
+                          const name = addName.trim();
+                          if (!NAME_RE.test(name)) {
+                            toast.error('Invalid player name (1–16 letters, numbers, underscores)');
+                            return;
+                          }
+                          await runPlayerAction(
+                            '/players/ban',
+                            name,
+                            `Banned ${name}`,
+                            banReason.trim() || undefined
+                          );
+                          setAddName('');
+                          setBanReason('');
+                        }}
+                      >
+                        Ban Player
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
               {data && data.banned.length > 0 ? (
                 <Table>
                   <TableHeader>
@@ -524,7 +590,12 @@ export default function PlayersPage() {
                   <TableBody>
                     {data.banned.map((entry) => (
                       <TableRow key={entry.uuid || entry.name}>
-                        <TableCell className="font-medium">{entry.name}</TableCell>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2.5">
+                            <PlayerHead name={entry.name} size={24} />
+                            {entry.name}
+                          </div>
+                        </TableCell>
                         <TableCell className="text-muted-foreground">
                           {entry.reason || '—'}
                         </TableCell>

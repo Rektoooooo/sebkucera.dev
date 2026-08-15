@@ -711,9 +711,15 @@ async def get_players(username: str = Depends(verify_token)):
 #  - server running: inject the real console command (the server owns its files)
 #  - server stopped: edit the JSON file directly (the server reads it at boot)
 
-async def console_or_offline(command: str, offline_edit) -> GenericResponse:
+async def console_or_offline(command: str, offline_edit, post_clean=None) -> GenericResponse:
     if await is_screen_running():
         await send_console_raw(command)
+        if post_clean is not None:
+            # Console commands match players by their current (online-mode)
+            # UUID, so stale offline-mode entries survive e.g. `deop <name>`.
+            # Sweep the file afterwards so removals always stick.
+            await asyncio.sleep(0.8)
+            await asyncio.to_thread(post_clean)
         return GenericResponse(ok=True, message="Command sent")
     await asyncio.to_thread(offline_edit)
     return GenericResponse(ok=True, message="Saved — applies when the server starts")
@@ -725,6 +731,14 @@ def remove_by_name(path: Path, name: str) -> None:
     if len(remaining) == len(entries):
         raise HTTPException(status_code=404, detail=f"{name} not found in {path.name}")
     write_json_list(path, remaining)
+
+def remove_by_name_quiet(path: Path, name: str) -> None:
+    """Like remove_by_name but a no-op when nothing matches."""
+    lower = name.lower()
+    entries = read_json_list(path)
+    remaining = [e for e in entries if str(e.get("name", "")).lower() != lower]
+    if len(remaining) != len(entries):
+        write_json_list(path, remaining)
 
 def add_entry(path: Path, name: str, extra: Optional[dict] = None) -> None:
     entries = read_json_list(path)
@@ -753,6 +767,7 @@ async def whitelist_remove(action: PlayerAction, username: str = Depends(verify_
     return await console_or_offline(
         f"whitelist remove {name}",
         lambda: remove_by_name(MC_DIR / "whitelist.json", name),
+        post_clean=lambda: remove_by_name_quiet(MC_DIR / "whitelist.json", name),
     )
 
 @app.post("/players/op", response_model=GenericResponse)
@@ -773,6 +788,7 @@ async def deop_player(action: PlayerAction, username: str = Depends(verify_token
     return await console_or_offline(
         f"deop {name}",
         lambda: remove_by_name(MC_DIR / "ops.json", name),
+        post_clean=lambda: remove_by_name_quiet(MC_DIR / "ops.json", name),
     )
 
 @app.post("/players/kick", response_model=GenericResponse)
@@ -812,6 +828,7 @@ async def pardon_player(action: PlayerAction, username: str = Depends(verify_tok
     return await console_or_offline(
         f"pardon {name}",
         lambda: remove_by_name(MC_DIR / "banned-players.json", name),
+        post_clean=lambda: remove_by_name_quiet(MC_DIR / "banned-players.json", name),
     )
 
 SESSION_LINE_RE = re.compile(
