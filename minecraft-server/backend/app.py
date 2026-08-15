@@ -4,6 +4,7 @@ import json
 import time
 import hmac
 import asyncio
+import hashlib
 import zipfile
 import shutil
 from datetime import datetime, timedelta, timezone
@@ -1080,6 +1081,24 @@ async def put_schedule(update: ScheduleUpdate, username: str = Depends(verify_to
 # Mods
 # =====================================================================
 
+# sha512 per jar lets the frontend resolve name/description/icon via
+# Modrinth's version_files API. Cached by (name, size, mtime).
+_mod_hash_cache: dict = {}
+
+def jar_sha512(path: Path) -> str:
+    stat = path.stat()
+    key = (path.name, stat.st_size, int(stat.st_mtime))
+    cached = _mod_hash_cache.get(key)
+    if cached:
+        return cached
+    digest = hashlib.sha512()
+    with open(path, "rb") as f:
+        while chunk := f.read(1024 * 1024):
+            digest.update(chunk)
+    result = digest.hexdigest()
+    _mod_hash_cache[key] = result
+    return result
+
 @app.get("/mods")
 async def list_mods(username: str = Depends(verify_token)):
     mods_dir = MC_DIR / "mods"
@@ -1087,14 +1106,19 @@ async def list_mods(username: str = Depends(verify_token)):
     mods_dir.mkdir(exist_ok=True)
     mods_disabled_dir.mkdir(exist_ok=True)
 
-    mods = [
-        {"file": f.name, "enabled": True, "sizeBytes": f.stat().st_size}
-        for f in mods_dir.glob("*.jar")
-    ] + [
-        {"file": f.name, "enabled": False, "sizeBytes": f.stat().st_size}
-        for f in mods_disabled_dir.glob("*.jar")
-    ]
-    return {"mods": sorted(mods, key=lambda x: x["file"].lower())}
+    def build() -> list:
+        mods = []
+        for directory, enabled in ((mods_dir, True), (mods_disabled_dir, False)):
+            for f in directory.glob("*.jar"):
+                mods.append({
+                    "file": f.name,
+                    "enabled": enabled,
+                    "sizeBytes": f.stat().st_size,
+                    "sha512": jar_sha512(f),
+                })
+        return sorted(mods, key=lambda x: x["file"].lower())
+
+    return {"mods": await asyncio.to_thread(build)}
 
 @app.post("/mods/upload")
 async def upload_mod(

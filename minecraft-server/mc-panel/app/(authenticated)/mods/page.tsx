@@ -13,7 +13,7 @@ import {
 import { toast } from 'sonner';
 
 import { api } from '@/lib/api';
-import { formatBytes, type Mod } from '@/lib/types';
+import { formatBytes, type Mod, type ModMeta } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -103,6 +103,59 @@ export default function ModsPage() {
       .catch(() => {});
   }, []);
 
+  const [meta, setMeta] = useState<Record<string, ModMeta>>({});
+
+  // Resolve pretty names/descriptions/icons by asking Modrinth which
+  // projects these exact jar files belong to (matched by sha512).
+  const resolveMeta = async (list: Mod[]) => {
+    try {
+      const hashes = list.map((m) => m.sha512).filter(Boolean) as string[];
+      if (!hashes.length) return;
+      let cached: Record<string, ModMeta> = {};
+      try {
+        cached = JSON.parse(localStorage.getItem('modMeta') || '{}');
+      } catch {}
+      const missing = hashes.filter((h) => !cached[h]);
+      if (missing.length) {
+        const versionRes = await fetch('https://api.modrinth.com/v2/version_files', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hashes: missing, algorithm: 'sha512' }),
+        });
+        if (versionRes.ok) {
+          const versions: Record<string, { project_id: string }> = await versionRes.json();
+          const ids = Array.from(new Set(Object.values(versions).map((v) => v.project_id)));
+          if (ids.length) {
+            const projectRes = await fetch(
+              `https://api.modrinth.com/v2/projects?ids=${encodeURIComponent(JSON.stringify(ids))}`
+            );
+            if (projectRes.ok) {
+              const projects: any[] = await projectRes.json();
+              const byId = Object.fromEntries(projects.map((p) => [p.id, p]));
+              for (const [hash, version] of Object.entries(versions)) {
+                const project = byId[version.project_id];
+                if (project) {
+                  cached[hash] = {
+                    title: project.title,
+                    description: project.description,
+                    icon_url: project.icon_url,
+                    slug: project.slug,
+                  };
+                }
+              }
+              try {
+                localStorage.setItem('modMeta', JSON.stringify(cached));
+              } catch {}
+            }
+          }
+        }
+      }
+      setMeta(cached);
+    } catch {
+      // metadata is decoration — the list works without it
+    }
+  };
+
   const load = async () => {
     try {
       const res = await api.get<{ mods: Mod[] }>('/mods');
@@ -111,6 +164,7 @@ export default function ModsPage() {
         const names = new Set(res.mods.map((m) => m.file));
         return new Set(Array.from(prev).filter((f) => names.has(f)));
       });
+      resolveMeta(res.mods);
     } catch (err: any) {
       toast.error(err?.message || 'Failed to load mods');
       setMods([]);
@@ -125,8 +179,12 @@ export default function ModsPage() {
   const filtered = useMemo(() => {
     if (!mods) return [];
     const q = filter.trim().toLowerCase();
-    return q ? mods.filter((m) => m.file.toLowerCase().includes(q)) : mods;
-  }, [mods, filter]);
+    if (!q) return mods;
+    return mods.filter((m) => {
+      const title = (m.sha512 && meta[m.sha512]?.title) || '';
+      return m.file.toLowerCase().includes(q) || title.toLowerCase().includes(q);
+    });
+  }, [mods, filter, meta]);
 
   const allFilteredSelected =
     filtered.length > 0 && filtered.every((m) => selected.has(m.file));
@@ -546,14 +604,16 @@ export default function ModsPage() {
                         aria-label="Select all"
                       />
                     </TableHead>
+                    <TableHead>Mod</TableHead>
                     <TableHead className="w-24">Status</TableHead>
-                    <TableHead>File</TableHead>
-                    <TableHead>Size</TableHead>
+                    <TableHead className="w-24">Size</TableHead>
                     <TableHead className="w-40 text-right">Enabled</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filtered.map((mod) => (
+                  {filtered.map((mod) => {
+                    const info = mod.sha512 ? meta[mod.sha512] : undefined;
+                    return (
                     <TableRow
                       key={`${mod.file}-${mod.enabled}`}
                       className={mod.enabled ? '' : 'opacity-60'}
@@ -566,13 +626,47 @@ export default function ModsPage() {
                         />
                       </TableCell>
                       <TableCell>
+                        <div className="flex items-center gap-3 py-1">
+                          {info?.icon_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={info.icon_url}
+                              alt=""
+                              className="h-9 w-9 shrink-0 rounded-md border bg-muted"
+                            />
+                          ) : (
+                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-muted">
+                              <Package className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <div className="text-sm font-medium">
+                              {info?.title ?? mod.file}
+                            </div>
+                            {info ? (
+                              <>
+                                <p className="max-w-xl truncate text-xs text-muted-foreground">
+                                  {info.description}
+                                </p>
+                                <p className="font-mono text-[10px] text-muted-foreground/60">
+                                  {mod.file}
+                                </p>
+                              </>
+                            ) : (
+                              <p className="text-xs text-muted-foreground">
+                                Not found on Modrinth — showing file name
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
                         {mod.enabled ? (
                           <Badge variant="success">enabled</Badge>
                         ) : (
                           <Badge variant="secondary">disabled</Badge>
                         )}
                       </TableCell>
-                      <TableCell className="font-mono text-xs">{mod.file}</TableCell>
                       <TableCell className="text-muted-foreground">
                         {formatBytes(mod.sizeBytes)}
                       </TableCell>
@@ -620,7 +714,8 @@ export default function ModsPage() {
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                    );
+                  })}
                 </TableBody>
               </Table>
               {filter && (

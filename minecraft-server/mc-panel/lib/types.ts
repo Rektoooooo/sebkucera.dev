@@ -8,6 +8,14 @@ export interface Mod {
   file: string;
   enabled: boolean;
   sizeBytes: number;
+  sha512?: string;
+}
+
+export interface ModMeta {
+  title: string;
+  description: string;
+  icon_url: string | null;
+  slug: string;
 }
 
 export interface Backup {
