@@ -52,6 +52,10 @@ MC_VERSION = os.getenv("PANEL_MC_VERSION", "26.2")
 MC_PORT = int(os.getenv("MC_PORT", "25565"))
 PANEL_DATA_DIR = Path(os.getenv("PANEL_DATA_DIR", "/srv/panel"))
 
+# Stop the server automatically after this many minutes with nobody online,
+# so it does not sit idle holding 8G of RAM. 0 disables the watcher.
+IDLE_STOP_MINUTES = int(os.getenv("IDLE_STOP_MINUTES", "60"))
+
 SCHEDULE_FILE = PANEL_DATA_DIR / "schedule.json"
 MAX_UPLOAD_BYTES = 300 * 1024 * 1024  # 300 MB
 
@@ -90,6 +94,11 @@ class ServerStatus(BaseModel):
     online: bool
     players: Optional[dict] = None
     port: int = MC_PORT
+    # How long the server has had zero players, and why it last stopped. The
+    # Discord bot reads these so it can say "stopped automatically" instead of
+    # a bare "offline". Both are None when they do not apply.
+    idleSeconds: Optional[int] = None
+    lastStopReason: Optional[str] = None
 
 class GenericResponse(BaseModel):
     ok: bool
@@ -231,6 +240,17 @@ async def get_player_count() -> Optional[dict]:
     except Exception:
         return None
 
+# Why the server last stopped, and when it went empty. Module-level because the
+# idle watcher, the stop endpoint and /server/status all need to see them.
+last_stop_reason: Optional[str] = None
+idle_since: Optional[float] = None
+
+def current_idle_seconds() -> Optional[int]:
+    """Seconds the server has had zero players, or None when it is not idle."""
+    if idle_since is None:
+        return None
+    return int(time.monotonic() - idle_since)
+
 async def start_server() -> bool:
     if await is_port_open():
         return True
@@ -251,7 +271,8 @@ async def start_server() -> bool:
         print(f"Error starting server: {e}")
         return False
 
-async def stop_server() -> bool:
+async def stop_server(reason: str = "manual") -> bool:
+    global last_stop_reason
     if not await is_port_open():
         return True
     try:
@@ -286,7 +307,10 @@ async def stop_server() -> bool:
                 break  # java is fully gone
             await asyncio.sleep(1)
 
-        return not await is_port_open()
+        stopped = not await is_port_open()
+        if stopped:
+            last_stop_reason = reason
+        return stopped
     except Exception as e:
         print(f"Error stopping server: {e}")
         return False
@@ -436,10 +460,64 @@ async def backup_scheduler() -> None:
         except Exception as e:
             print(f"Scheduler error: {e}")
 
+async def idle_stop_watcher() -> None:
+    """
+    Stop the server once it has had nobody online for IDLE_STOP_MINUTES.
+
+    Lives here rather than in the Discord bot so the auto-stop keeps working
+    whether or not the bot is running.
+    """
+    global idle_since
+
+    if IDLE_STOP_MINUTES <= 0:
+        return  # disabled
+
+    idle_limit_seconds = IDLE_STOP_MINUTES * 60
+
+    while True:
+        try:
+            await asyncio.sleep(60)
+
+            if backup_lock.locked():
+                # A backup stops and restarts the server. Without this guard the
+                # watcher could stop it moments after the backup brought it back.
+                continue
+
+            if not await is_port_open():
+                idle_since = None
+                continue
+
+            players = await get_player_count()
+            if players is None:
+                # Port is open but the status query gave nothing — the JVM is
+                # still booting, or the query blipped. Unknown is not zero, so
+                # do not let it count toward a shutdown.
+                continue
+
+            if players["online"] > 0:
+                idle_since = None
+                continue
+
+            if idle_since is None:
+                idle_since = time.monotonic()
+                continue
+
+            if current_idle_seconds() < idle_limit_seconds:
+                continue
+
+            print(f"No players for {IDLE_STOP_MINUTES} min — stopping the server")
+            await stop_server(reason="idle")
+            idle_since = None
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            print(f"Idle watcher error: {e}")
+
 @app.on_event("startup")
 async def on_startup() -> None:
     psutil.cpu_percent(interval=None)  # prime; first call always returns 0.0
     asyncio.create_task(backup_scheduler())
+    asyncio.create_task(idle_stop_watcher())
 
 # =====================================================================
 # Auth endpoints
@@ -462,7 +540,14 @@ async def login(request: LoginRequest, http_request: Request):
 async def get_status(username: str = Depends(verify_token)):
     online = await is_port_open()
     players = await get_player_count() if online else None
-    return ServerStatus(online=online, players=players, port=MC_PORT)
+    return ServerStatus(
+        online=online,
+        players=players,
+        port=MC_PORT,
+        idleSeconds=current_idle_seconds(),
+        # Only meaningful while the server is actually down.
+        lastStopReason=None if online else last_stop_reason,
+    )
 
 @app.post("/server/start", response_model=GenericResponse)
 async def server_start(username: str = Depends(verify_token)):

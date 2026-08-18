@@ -1,0 +1,11 @@
+# discord.py must be >= 2.5: earlier versions import the stdlib `audioop`
+# module, which Python 3.13 removed (PEP 594), so 2.4.0 fails to import on any
+# modern Python. 2.7.1 is verified working on 3.11 through 3.14.
+discord.py==2.7.1
+
+# panel_client.py imports aiohttp directly, so it is declared here rather than
+# relied on as a discord.py transitive dep. Range, not a pin, to avoid fighting
+# discord.py's own aiohttp requirement.
+aiohttp>=3.9,<4
+
+python-dotenv==1.0.0

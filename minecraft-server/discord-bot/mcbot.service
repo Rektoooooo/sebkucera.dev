@@ -1,0 +1,22 @@
+[Unit]
+Description=Minecraft Discord Bot
+# The bot only talks to the panel over HTTP, so it can start before the panel
+# is ready — the poll loop just reports "panel unreachable" until it is.
+After=network.target panel.service
+Wants=panel.service
+
+[Service]
+Type=simple
+# Unlike the panel, the bot never touches screen/java/files, so it does not
+# need root. install.sh creates this user.
+User=mcbot
+WorkingDirectory=/srv/mcbot
+Environment="PATH=/srv/mcbot/venv/bin:/usr/local/bin:/usr/bin:/bin"
+# Without this, print() is buffered and journalctl shows nothing until exit.
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/srv/mcbot/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
