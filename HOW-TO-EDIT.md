@@ -1,73 +1,57 @@
-# How to Edit Your Website
+# How to edit sebkucera.dev
 
-## Quick Start
+The root site is a React + Vite + Tailwind v4 app that lives in **`site/`**.
+(The previous version's source is archived in `react-src/` — no longer used.)
 
-Your website source code is in the `react-src/` directory.
+## Edit content
 
-### To Make Changes:
+Almost everything you'd want to change (projects, skills, links, services,
+contact info, stats) lives in one file: **`site/src/content.js`**.
 
-1. **Go to the source directory:**
-   ```bash
-   cd react-src
-   ```
+Section layouts live in `site/src/components/`. Images go in `site/public/img/`.
 
-2. **Install dependencies (first time only):**
-   ```bash
-   npm install
-   ```
+## Preview locally
 
-3. **Start development server (to preview changes):**
-   ```bash
-   npm run dev
-   ```
-   - Opens at http://localhost:5173
-   - Changes reload automatically
+```bash
+cd site
+npm install     # first time only
+npm run dev     # open http://localhost:5173
+```
 
-4. **Edit the site:**
-   - Open `src/App.jsx` in your code editor
-   - Make your changes
-   - Save and see them instantly in the browser
+## Publish
 
-5. **Build for production:**
-   ```bash
-   npm run build
-   ```
+```bash
+cd site
+npm run deploy   # builds and copies the output to the repo root
+cd ..
+git add . && git commit -m "Update site" && git push
+```
 
-6. **Copy to root:**
-   ```bash
-   cd ..
-   cp dist/index.html .
-   cp dist/assets/* assets/
-   ```
+GitHub Pages serves the repo root directly — `deploy` copies `index.html`,
+`assets/`, `img/`, and `favicon.svg` there and prunes old hashed bundles.
+Legacy folders (`/studio`, `/trefa`, old demos) are never touched.
 
-7. **Commit and push:**
-   ```bash
-   git add .
-   git commit -m "Update website"
-   git push
-   ```
+## 3D hero (Spline)
 
-## What to Edit
+The hero can show an interactive Spline scene instead of the floating cards:
 
-### Projects Section (App Store Style)
-- **File:** `react-src/src/App.jsx`
-- **Line:** Around 150
-- **How:** Copy/paste project blocks, change text and image paths
+1. In Spline, **Remix** the scene you like into your workspace.
+2. (Optional) Edit the key labels; set the scene background to transparent.
+3. **Export → Code**, copy the URL ending in `scene.splinecode`.
+4. Paste it into `SPLINE.scene` in `site/src/content.js`.
 
-### About/Skills/Contact
-- **File:** `react-src/src/App.jsx`
-- **Sections:** Clearly marked with comments
+Clicks on scene objects are mapped in `SPLINE.actions` (object name → `#section`,
+`mailto:`, `party` for confetti, `toast:…`). `SPLINE.zoom` sets the camera zoom
+(0.4 fits the keyboard; it's absolute, smaller = further out). The cursor-follow
+is damped in code (`FOLLOW_DAMP` in `SplineScene.jsx`, 0–1). Falls back to the
+floating cards on mobile, reduced-motion, and while loading.
 
-### Colors
-- **File:** `react-src/src/App.css` (for project cards)
-- **File:** `react-src/src/components/FluidBackground.jsx` (for background)
+Removing the "Built with Spline" badge requires a paid Spline plan — enable
+"hide logo" there and re-publish; the same scene URL updates in place.
 
-## Full Instructions
+## Easter eggs (yes, they're intentional)
 
-See `react-src/README.md` for detailed instructions.
-
-## Need Help?
-
-1. Read `react-src/README.md`
-2. Check browser console (F12) for errors
-3. Make sure you ran `npm install` first
+- Konami code (↑ ↑ ↓ ↓ ← → ← → B A) → confetti party mode
+- Clicking the name in the nav 5× → Czech mode
+- An owl peeks from the corner when you reach the footer
+- Open the browser console for a greeting
