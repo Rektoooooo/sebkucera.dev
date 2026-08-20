@@ -1141,7 +1141,9 @@ def png_dimensions(data: bytes) -> Optional[tuple]:
     )
 
 @app.get("/server/icon")
-async def get_server_icon(username: str = Depends(verify_token)):
+async def get_server_icon():
+    # Deliberately public: every Minecraft client already sees this image in
+    # the multiplayer list, and the Discord bot embeds it from here.
     icon = MC_DIR / "server-icon.png"
     if not icon.exists():
         raise HTTPException(status_code=404, detail="No server icon set")

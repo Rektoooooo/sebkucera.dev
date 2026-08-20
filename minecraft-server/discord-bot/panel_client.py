@@ -142,6 +142,10 @@ class PanelClient:
         """Server state: {"online": bool, "players": {"online": n, "max": n} | None, ...}"""
         return await self.request("GET", "/server/status", READ_TIMEOUT_SECONDS)
 
+    async def get_info(self):
+        """Panel root: {"mcVersion": "26.2", "loader": "fabric", ...}"""
+        return await self.request("GET", "/", READ_TIMEOUT_SECONDS)
+
     async def get_players(self):
         """Online sample plus the whitelist / ops / banned lists."""
         return await self.request("GET", "/players", READ_TIMEOUT_SECONDS)

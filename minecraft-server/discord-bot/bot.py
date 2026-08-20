@@ -72,6 +72,9 @@ class Config:
         self.panel_user = read_required("PANEL_USER")
         self.panel_pass = read_required("PANEL_PASS")
         self.public_address = os.getenv("MC_PUBLIC_ADDRESS", "178.17.3.31")
+        # Public https base of the panel, used for embed images (server icon)
+        # and the live map link. Unlike panel_url this goes through the proxy.
+        self.panel_public_url = os.getenv("PANEL_PUBLIC_URL", "https://panel.sebkucera.dev")
 
 
 def describe_status(status):
@@ -187,7 +190,10 @@ class MinecraftBot(discord.Client):
         Post to the announce channel when online/offline flipped.
 
         Driven by the poll rather than by the commands, so a start from the web
-        panel — or the backend's idle auto-stop — gets announced too.
+        panel — or the backend's idle auto-stop — gets announced too. Command
+        handlers set last_online themselves after a successful start/stop, so a
+        change the bot itself caused (already visible as the command's reply in
+        the channel) is NOT announced a second time.
         """
         if self.config.announce_channel_id is None:
             return
@@ -230,6 +236,9 @@ def register_commands(bot):
         """Cooldown is shared per guild, not per user — one server, one queue."""
         return interaction.guild_id
 
+    def head_url(name):
+        return f"https://mc-heads.net/avatar/{name}/64"
+
     @bot.tree.command(name="status", description="Is the Minecraft server up?")
     async def status_command(interaction):
         await interaction.response.defer()
@@ -243,9 +252,24 @@ def register_commands(bot):
             embed.add_field(name="Address", value=f"`{bot.config.public_address}`")
             if players:
                 embed.add_field(name="Players", value=f"{players['online']}/{players['max']}")
+            try:
+                info = await bot.panel.get_info()
+                if info.get("mcVersion"):
+                    embed.add_field(name="Version", value=info["mcVersion"])
+            except PanelError:
+                pass
+            embed.add_field(
+                name="Live map",
+                value=f"{bot.config.panel_public_url}/map/",
+                inline=False,
+            )
+            embed.set_thumbnail(url=f"{bot.config.panel_public_url}/server/icon")
+            embed.set_footer(text="💤 Stops by itself after 1h with nobody on — /start wakes it")
         else:
             embed = discord.Embed(title="🔴 Server offline", color=COLOR_OFFLINE)
-            embed.description = "Use `/start` to bring it up."
+            embed.description = "Use `/start` to bring it up — it takes about half a minute."
+            if status.get("lastStopReason") == "idle":
+                embed.set_footer(text="Went to sleep automatically — nobody was online for an hour")
 
         await interaction.followup.send(embed=embed)
 
@@ -255,27 +279,45 @@ def register_commands(bot):
         data = await bot.panel.get_players()
 
         if not data.get("serverRunning"):
-            await interaction.followup.send("🔴 Server is offline.")
+            embed = discord.Embed(title="🔴 Server offline", color=COLOR_OFFLINE)
+            embed.description = "Nobody can be online — use `/start` to bring it up."
+            await interaction.followup.send(embed=embed)
             return
 
         count = data.get("playerCount")
-        header = "Players"
-        if count:
-            header = f"Players ({count['online']}/{count['max']})"
-
-        embed = discord.Embed(title=header, color=COLOR_ONLINE)
-
         online_players = data.get("online", [])
-        if online_players:
-            names = [player["name"] for player in online_players]
-            embed.add_field(name="Online", value="\n".join(names), inline=False)
-        else:
-            embed.add_field(name="Online", value="Nobody right now.", inline=False)
+        total = count["online"] if count else len(online_players)
+        cap = count["max"] if count else "?"
 
-        embed.add_field(name="Whitelisted", value=str(len(data.get("whitelist", []))))
-        embed.add_field(name="Ops", value=str(len(data.get("ops", []))))
+        header = discord.Embed(
+            title=f"Players — {total}/{cap} online",
+            color=COLOR_ONLINE if total else 0x99AAB5,
+        )
+        header.set_footer(
+            text=f"Whitelisted: {len(data.get('whitelist', []))} · Ops: {len(data.get('ops', []))}"
+        )
 
-        await interaction.followup.send(embed=embed)
+        if not online_players:
+            header.description = "Nobody right now. 💤"
+            await interaction.followup.send(embed=header)
+            return
+
+        # One mini-embed per player: the author line carries their skin head.
+        # Discord allows 10 embeds per message — header + 9 heads, rest as text.
+        embeds = [header]
+        for player in online_players[:9]:
+            card = discord.Embed(color=COLOR_ONLINE)
+            card.set_author(name=player["name"], icon_url=head_url(player["name"]))
+            embeds.append(card)
+        overflow = online_players[9:]
+        if overflow:
+            header.add_field(
+                name="Also online",
+                value=", ".join(p["name"] for p in overflow),
+                inline=False,
+            )
+
+        await interaction.followup.send(embeds=embeds)
 
     @bot.tree.command(name="start", description="Start the Minecraft server")
     @app_commands.checks.cooldown(1, CONTROL_COOLDOWN_SECONDS, key=guild_cooldown_key)
@@ -284,11 +326,16 @@ def register_commands(bot):
             await interaction.response.send_message("You are not allowed to do that.", ephemeral=True)
             return
 
-        # Must acknowledge within 3 seconds; the panel can take 90.
+        # Must acknowledge within 3 seconds; the panel can take 90. The
+        # deferred "thinking…" message becomes the single final reply.
         await interaction.response.defer()
-        await interaction.followup.send("⏳ Starting the server — this takes up to a minute…")
         await bot.panel.start_server()
-        await interaction.followup.send("🟢 Server started.")
+        # We caused this state change and are about to say so — the poll
+        # loop must not announce it a second time.
+        bot.last_online = True
+        await interaction.edit_original_response(
+            content=f"🟢 **Server is online** — join at `{bot.config.public_address}`"
+        )
 
     @bot.tree.command(name="stop", description="Stop the Minecraft server")
     @app_commands.checks.cooldown(1, CONTROL_COOLDOWN_SECONDS, key=guild_cooldown_key)
@@ -298,9 +345,9 @@ def register_commands(bot):
             return
 
         await interaction.response.defer()
-        await interaction.followup.send("⏳ Stopping the server…")
         await bot.panel.stop_server()
-        await interaction.followup.send("🔴 Server stopped.")
+        bot.last_online = False
+        await interaction.edit_original_response(content="🔴 **Server stopped.**")
 
     @bot.tree.command(name="restart", description="Restart the Minecraft server")
     @app_commands.checks.cooldown(1, CONTROL_COOLDOWN_SECONDS, key=guild_cooldown_key)
@@ -310,9 +357,11 @@ def register_commands(bot):
             return
 
         await interaction.response.defer()
-        await interaction.followup.send("⏳ Restarting — this takes a couple of minutes…")
         await bot.panel.restart_server()
-        await interaction.followup.send("🟢 Server restarted.")
+        bot.last_online = True
+        await interaction.edit_original_response(
+            content=f"🔄 **Server restarted** — join at `{bot.config.public_address}`"
+        )
 
     @bot.tree.error
     async def on_command_error(interaction, error):
