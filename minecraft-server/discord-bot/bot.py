@@ -258,13 +258,7 @@ def register_commands(bot):
                     embed.add_field(name="Version", value=info["mcVersion"])
             except PanelError:
                 pass
-            embed.add_field(
-                name="Live map",
-                value=f"{bot.config.panel_public_url}/map/",
-                inline=False,
-            )
             embed.set_thumbnail(url=f"{bot.config.panel_public_url}/server/icon")
-            embed.set_footer(text="💤 Stops by itself after 1h with nobody on — /start wakes it")
         else:
             embed = discord.Embed(title="🔴 Server offline", color=COLOR_OFFLINE)
             embed.description = "Use `/start` to bring it up — it takes about half a minute."
