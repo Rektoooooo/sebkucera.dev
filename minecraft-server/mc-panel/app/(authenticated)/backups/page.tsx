@@ -194,8 +194,8 @@ export default function BackupsPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Create a backup now?</AlertDialogTitle>
               <AlertDialogDescription>
-                The server will briefly stop while the world is archived, then start
-                again. Players will be disconnected.
+                The backup runs live — players stay connected. World saving pauses
+                for a moment while the archive is written, then resumes.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

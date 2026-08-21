@@ -389,8 +389,45 @@ def build_backup_zip(dest: Path) -> None:
         tmp.unlink(missing_ok=True)
         raise
 
+def log_position() -> int:
+    """Current end offset of latest.log, for wait_for_log."""
+    log_file = MC_DIR / "logs" / "latest.log"
+    try:
+        return log_file.stat().st_size
+    except OSError:
+        return 0
+
+async def wait_for_log(pattern: str, timeout: float, start_pos: int) -> bool:
+    """Wait until latest.log grows a line containing pattern. True if seen."""
+    log_file = MC_DIR / "logs" / "latest.log"
+    deadline = time.monotonic() + timeout
+    pos = start_pos
+    while time.monotonic() < deadline:
+        await asyncio.sleep(1)
+        try:
+            size = log_file.stat().st_size
+            if size < pos:
+                pos = 0  # log rotated mid-wait
+            if size > pos:
+                with open(log_file, "r", errors="replace") as f:
+                    f.seek(pos)
+                    data = f.read()
+                    pos = f.tell()
+                if pattern in data:
+                    return True
+        except OSError:
+            pass
+    return False
+
 async def perform_backup(prefix: str = "") -> str:
-    """Shared by manual create and the scheduler. Stops/starts the server around the zip."""
+    """Shared by manual create and the scheduler.
+
+    Runs LIVE when the server is up: suspend chunk saving (save-off), flush
+    everything in memory to disk (save-all flush), zip the world while writes
+    are paused, then resume saving. Players stay connected throughout —
+    stopping the server here used to kick overnight AFK players at 03:30.
+    With the server down it simply zips the files.
+    """
     if backup_lock.locked():
         raise HTTPException(status_code=409, detail="Backup already in progress")
     async with backup_lock:
@@ -405,14 +442,25 @@ async def perform_backup(prefix: str = "") -> str:
         backup_name = f"{prefix}{timestamp}.zip"
         backup_path = backup_dir / backup_name
 
-        was_running = await is_port_open()
-        if was_running and not await stop_server():
-            raise HTTPException(status_code=500, detail="Failed to stop server for backup")
+        live = await is_screen_running() and await is_port_open()
+        if live:
+            pos = log_position()
+            await send_console_raw("save-off")
+            await send_console_raw("save-all flush")
+            # The flush is done when the server logs "Saved the game". On the
+            # slow disk this can take a while; zip only after it (or after a
+            # generous timeout — a crash-consistent zip is still a backup).
+            flushed = await wait_for_log("Saved the game", timeout=120, start_pos=pos)
+            if not flushed:
+                print("WARNING: save-all flush not confirmed within 120s, zipping anyway")
         try:
             await asyncio.to_thread(build_backup_zip, backup_path)
         finally:
-            if was_running:
-                await start_server()
+            if live:
+                try:
+                    await send_console_raw("save-on")
+                except Exception as e:
+                    print(f"WARNING: could not re-enable saving after backup: {e}")
         return backup_name
 
 def prune_auto_backups(retention: int) -> None:
