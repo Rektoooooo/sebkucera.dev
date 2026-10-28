@@ -78,6 +78,19 @@ contact, easter eggs, a GitHub card with the contribution grid.
 - [x] Scroll spy line 25% → 20% (Today stays active right after unlocking on phones)
 - Verified: 16/16 reviewer cases, width/aspect, smoke, perf (LCP 2.2–2.4 s slow 4G, CLS ≈ 0, 188 KB)
 
+## Domain move → sebthe.dev (2026-10-28)
+sebkucera.dev expired 2026-09-15; redemption was $91.18 and Seb declined. Bought sebthe.dev at Namecheap
+(auto-renew + WHOIS privacy on, renews ~$21/yr).
+- [x] Namecheap DNS: 4× A + 4× AAAA (GitHub Pages) + CNAME www → rektoooooo.github.io; parking records removed
+- [x] CNAME → sebthe.dev, og:url/og:image/canonical, docs; deploy; commit f5f76a9 pushed to main
+- [x] Pages: custom domain sebthe.dev, certificate approved, HTTPS enforced; repo homepage updated
+- [x] Live check: https://sebthe.dev 200, www/http → 301, /habitowl /trefa /minecraft-server 200, smoke clean
+- [ ] Seb: App Store Connect (MyHabitOwl) URLs → https://sebthe.dev/habitowl/{support,privacy-policy}/
+- [ ] Seb: GitHub profile website field → https://sebthe.dev
+- [ ] Minecraft panel API lived on panel.sebkucera.dev → needs panel.sebthe.dev A record (server IP),
+      backend CORS origin, and a rebuild of minecraft-server/ (separate task)
+- [ ] Old absolute "sebkucera.dev" links in studio/, claude-code-for-ios/, rick&morty/ (untouched by request)
+
 ---
 
 # MC Panel Redesign + Full Admin Panel (2026-08-14)
