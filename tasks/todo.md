@@ -1,3 +1,85 @@
+# Root site redesign: Mac lock screen → App Store (2026-10-28)
+
+Direction (approved by Seb): A+B combo. Mac lock screen hero ("Sebastian" as the clock,
+notifications, password dots) unlocks on scroll into a Mac App Store window (B layout).
+Phones get the iPhone version (Face ID padlock, swipe up, App Store Today + tab bar).
+Prototype: session scratch `mockups/ab-unlock.html`.
+
+Seb's change requests: always light mode · cleaner Dock/tab bar with better animation ·
+more GitHub projects · clicking an app opens an in-site App Store product page (real link
+only behind its button).
+
+## Todo
+- [x] 1. Assets: real icons + screenshots → `site/public/img/{apps,shots}` (WebP, sized)
+- [x] 2. `content.js`: every app's product-page data (facts only from READMEs / App Store)
+- [x] 3. Components: Wallpaper, MenuBar, LockScreen, Window(Sidebar, Discover, AppPage), Dock, TabBar
+- [x] 4. Hooks: scroll unlock (--p), hash routes `#/app/<id>`, Prague clock, scroll spy, Konami
+- [x] 5. Dock: cursor magnification, launch bounce, tooltips, autohide; tab bar sliding pill
+- [x] 6. Drop Spline + Tailwind deps and old components; update HOW-TO-EDIT.md
+- [x] 7. Verify: build, bundle size, desktop + phone screenshots, no overflow, reduced motion
+- [ ] 8. Confirm other top-level folders untouched; ask Seb before commit/deploy
+
+## Review (2026-10-28)
+- Built in `site/`: lock screen → App Store window, 10 app pages (6 featured + 4 from GitHub:
+  MealPrepAI, MyCarTally, ApplyTailor, Computational Redstone), Dock with cursor magnification,
+  launch bounce, tooltips, autohide, GitHub + Mail tiles; iPhone tab bar with a sliding pill.
+- Weight: first load 174 KB / 15 requests (was ~4.5 MB with Spline). JS 73 KB gz, CSS 7 KB gz.
+  Screenshots (1.5 MB total) only load when their app page opens.
+- Dropped deps: @splinetool/*, tailwindcss, @tailwindcss/vite.
+- Verified in Chromium at 1440×900 and 390×844: no horizontal overflow, every image keeps its
+  aspect ratio, routing (card → page → Back restores scroll; Esc; deep links), Konami, reduced motion.
+- Bugs caught on the way: class-name clashes (`.mac`, `.discover`) restyling other elements;
+  HTML width/height attributes overriding CSS aspect-ratio (stretched icons); the page slide-in
+  making phones 32px too wide (fixed with `overflow-x: clip` on `.content`).
+- Facts not on the site on purpose: DrivePass has no App Store listing yet; MealPrepAI/MyCarTally
+  link to GitHub (no confirmed listing); ApplyTailor's dashboard screenshot shows Seb's email.
+- Not deployed. Root `index.html`/`assets/`/`img/` untouched until `npm run deploy`.
+
+## Polish round (Seb, same day)
+Asked for: fuller sidebar, an About section (what I do), a "website or app for your business?"
+contact, easter eggs, a GitHub card with the contribution grid.
+- [x] Sidebar: Spotlight search field, About + Hire me items, What's new (Bow 0.1), availability card
+- [x] About section: Meet the developer, GitHub activity card (build-time snapshot), What I do
+- [x] Business CTA ("Need an app or a website for your business?") with Email + Copy email
+- [x] Menu bar: logo menu (About This Developer window, Spotlight, Sleep, Lock Screen), battery/Wi-Fi menus
+- [x] Spotlight (⌘K): search apps, sections, actions, a few joke answers
+- [x] `scripts/github-activity.mjs` runs before deploy; keeps the old snapshot if `gh` fails
+- [x] Re-verify desktop + phone, overflow, aspect, build size
+- Result: first load 182 KB / 15 requests; JS 79 KB gz, CSS 9 KB gz. All checks re-run on the
+  production build (unlock frames, 390px width, image aspect, routing, Konami, reduced motion).
+- GitHub card now reads the public profile calendar (API fallback) + month/weekday labels. Seb sees
+  2,188 when logged in vs 756 public: the rest is private-repo work, hidden unless he enables
+  "Private contributions" on GitHub. Wi-Fi glyph redrawn (was missing an arc).
+- GitHub card rebuilt as a full-width dark widget (GitHubCard.jsx): whole-pixel squares (15px desktop,
+  10px + sideways scroll on phones), GitHub dark greens with glow, custom tooltip, column-by-column
+  fill-in, Best day stat. Private contributions now on → 2,203.
+- Domain: sebkucera.dev is in redemption ("pending delete"). panel.sebkucera.dev (MC panel API)
+  and the MyHabitOwl site at /habitowl depend on it, so recovering it matters more than switching.
+
+## Review + ideas round (Seb: "go through the whole site, find bugs, intro animation, more content")
+- [x] Bug hunt: code review (subagent) + runtime audit (keyboard, links, 404s, layout shift, resize)
+- [x] Fix confirmed bugs
+- [x] Intro animation on first load
+- [x] More content (real data only)
+- [x] Re-verify + screenshots
+- Fixed (11 from code review + 2 from runtime audit): blank hero under reduced motion; "‹ Discover"
+  could leave the site / go to the wrong app (history entries now tagged fromDiscover); Esc on an
+  app page also closed it when dismissing Spotlight/menus (capture listener); Back lost the scroll
+  position; Spotlight/About focus management + selection kept in view; Dock reachable by keyboard
+  while auto-hidden; faded lock screen blocked clicks mid-unlock; GitHub tooltip stuck on touch;
+  Dock layout thrash; color-mix() removed (Safari < 16.2); invisible menu items in Tab order; "Sept".
+- Added: wake-up intro; "What's New" on app pages + "Shipped so far" timeline from a release
+  snapshot (scripts/releases.mjs: GitHub releases + Apple lookup API), `npm run data`.
+- Verified: 16 scripted regression checks, LCP 2.0–2.5 s on slow 4G + 4× CPU, CLS ≈ 0, 186 KB.
+
+## Weather + slower unlock (Seb)
+- [x] Live Prague weather widget on the lock screen (Open-Meteo, client-side, 15-min cache, reserved slot)
+- [x] Unlock takes ~2 screens (1.8 on phones); window pinned during the unlock via --wy (useUnlock)
+- [x] Scroll spy line 25% → 20% (Today stays active right after unlocking on phones)
+- Verified: 16/16 reviewer cases, width/aspect, smoke, perf (LCP 2.2–2.4 s slow 4G, CLS ≈ 0, 188 KB)
+
+---
+
 # MC Panel Redesign + Full Admin Panel (2026-08-14)
 
 Plan: ~/.claude/plans/ancient-conjuring-tome.md

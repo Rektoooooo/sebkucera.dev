@@ -1,0 +1,105 @@
+{
+  "shadowlift": {
+    "version": "1.0",
+    "date": "2026-01-15",
+    "summary": "",
+    "first": {
+      "date": "2026-01-15"
+    },
+    "url": "https://apps.apple.com/us/app/shadowlift/id6743451583",
+    "store": true
+  },
+  "myhabitowl": {
+    "version": "1.0",
+    "date": "2026-01-26",
+    "summary": "",
+    "first": {
+      "date": "2026-01-26"
+    },
+    "url": "https://apps.apple.com/us/app/myhabitowl/id6757938878",
+    "store": true
+  },
+  "bow": {
+    "version": "0.1.0",
+    "date": "2026-10-28",
+    "summary": "The first release of Bow, an open-source browser in the spirit of Arc.",
+    "count": 1,
+    "first": {
+      "version": "0.1.0",
+      "date": "2026-10-28"
+    },
+    "history": [
+      {
+        "version": "0.1.0",
+        "date": "2026-10-28"
+      }
+    ],
+    "url": "https://github.com/Rektoooooo/bow/releases"
+  },
+  "cc-settings": {
+    "version": "1.6.0",
+    "date": "2026-09-07",
+    "summary": "Catch-up with Claude Code 2.1.221 – 2.1.263.",
+    "count": 21,
+    "first": {
+      "version": "1.0.0",
+      "date": "2026-02-23"
+    },
+    "history": [
+      {
+        "version": "1.6.0",
+        "date": "2026-09-07"
+      },
+      {
+        "version": "1.5.1",
+        "date": "2026-07-26"
+      },
+      {
+        "version": "1.5.0",
+        "date": "2026-06-10"
+      },
+      {
+        "version": "1.4.0",
+        "date": "2026-05-29"
+      },
+      {
+        "version": "1.3.0",
+        "date": "2026-05-28"
+      }
+    ],
+    "url": "https://github.com/Rektoooooo/CC-Settings/releases"
+  },
+  "stayawake": {
+    "version": "1.2.0",
+    "date": "2026-09-05",
+    "summary": "Auto-resume rebuilt around Claude Code's own continuation, and a thermal guard.",
+    "count": 10,
+    "first": {
+      "version": "1.0",
+      "date": "2026-07-26"
+    },
+    "history": [
+      {
+        "version": "1.2.0",
+        "date": "2026-09-05"
+      },
+      {
+        "version": "1.1.0",
+        "date": "2026-07-31"
+      },
+      {
+        "version": "1.0.7",
+        "date": "2026-07-30"
+      },
+      {
+        "version": "1.0.6",
+        "date": "2026-07-27"
+      },
+      {
+        "version": "1.0.5",
+        "date": "2026-07-27"
+      }
+    ],
+    "url": "https://github.com/Rektoooooo/StayAwake/releases"
+  }
+}
