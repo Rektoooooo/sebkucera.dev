@@ -105,6 +105,10 @@ Clients per Seb: Autoškola Trefa, B24 Studios, LocalCoder. No section for his o
       output only when changed (as github-actions[bot]), pull --rebase, push (the push starts the Pages build;
       an extra build request only made a duplicate that got cancelled, so it was dropped). Test run 2026-10-29:
       success, snapshot read from the profile grid (2265), bot commit 7b52795 published
+- [x] Sidebar "What's new" card is automatic (Seb: "always show the latest release"): newest release across
+      APPS from releases.json (title "<App> <version> is out", date, release-notes summary clamped to 3 lines,
+      falls back to the subtitle); WHATS_NEW removed from content.js. Tested with a faked newer CC Settings
+      release → card switched to it. 16/16 checks pass.
 - Verified: 16/16 reviewer cases (Dock test now scrolls instantly; smooth scroll made it flaky in Chrome 116),
   width/aspect at 390 + 1440, all three client pages load with no errors or broken images
 - Spotted on the client's live Trefa site (separate repo, not touched): at 390px a 320px-wide card row

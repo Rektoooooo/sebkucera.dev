@@ -25,7 +25,6 @@ Everything you'd want to change lives in one file: **`site/src/content.js`**.
 - `DOCK` — the apps in the Mac Dock (`null` draws a divider).
 - `ME`, `ABOUT`, `FACTS`, `STACK`, `LINKS` — your name, pitch, bio, quick facts, tools and links.
 - `SERVICES`, `HIRE` — "What I do" and the "Need an app or a website for your business?" card.
-- `WHATS_NEW` — the sidebar's "What's new" card (point it at an app id).
 - `SYSTEM_INFO`, `SPOTLIGHT_JOKES` — the easter eggs below.
 
 To add an app: put a 256×256 icon in `site/public/img/apps/<id>.webp`, screenshots in
@@ -55,8 +54,10 @@ Prague's current weather, cached for 15 minutes. If it can't be reached the widg
 can't be reached, the previous snapshot is kept, so a deploy never fails because of it.
 
 - `releases.json` — each app's latest version, date and release summary for the "What's New"
-  sections and the About timeline. Apps with `repo` in `content.js` use their GitHub releases;
-  apps with `appStoreId` use Apple's public lookup API.
+  sections, the About timeline and the sidebar's "What's new" card, which always shows the newest
+  release across all your apps (its text is the first paragraph of the GitHub release notes).
+  Apps with `repo` in `content.js` use their GitHub releases; apps with `appStoreId` use Apple's
+  public lookup API.
 - `github.json` — the contribution grid (see below).
 
 ## GitHub activity card

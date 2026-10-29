@@ -43,8 +43,6 @@ export const HIRE = {
 }
 
 // Sidebar "What's new" card.
-export const WHATS_NEW = { app: 'bow', title: 'Bow 0.1 is out', text: 'The first release of my Arc-style browser for the Mac.' }
-
 // Easter eggs: the "About This Developer" window (menu bar logo, or tap the avatar) and Spotlight (⌘K).
 export const SYSTEM_INFO = {
   version: 'Sebastian 26',

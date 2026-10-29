@@ -1,4 +1,6 @@
-import { APPS, HIRE, ME, WHATS_NEW } from '../content'
+import { APPS, HIRE, ME } from '../content'
+import releases from '../data/releases.json'
+import { shortDate } from '../format'
 import { appHref } from '../hooks/useRoute'
 import { I } from './Icons'
 import { useUI } from './ui'
@@ -14,6 +16,11 @@ export const SECTIONS = [
   { id: 'contact', label: 'Hire me', tab: 'Hire', icon: 'briefcase', group: 'me' },
 ]
 
+// "What's new" is the newest release across all apps, from the release snapshot (refreshed nightly).
+const latest = Object.entries(releases)
+  .filter(([id, r]) => APPS[id] && r?.date)
+  .sort(([, a], [, b]) => b.date.localeCompare(a.date))[0]
+
 function NavLink({ s, active }) {
   return (
     <a className={active === s.id ? 'on' : undefined} href={`#${s.id}`}>
@@ -23,10 +30,27 @@ function NavLink({ s, active }) {
   )
 }
 
+function NewsCard({ id, rel }) {
+  const app = APPS[id]
+  return (
+    <a className="side-card news" href={appHref(id)}>
+      <img src={app.icon} alt="" width="36" height="36" />
+      <span>
+        <span className="k">
+          What’s new <time dateTime={rel.date}>{shortDate(rel.date)}</time>
+        </span>
+        <b>
+          {app.name} {rel.version} is out
+        </b>
+        <span className="t">{rel.summary || app.subtitle}</span>
+      </span>
+    </a>
+  )
+}
+
 // The App Store window's sidebar doubles as the site navigation.
 export default function Sidebar({ active }) {
   const ui = useUI()
-  const news = APPS[WHATS_NEW.app]
   return (
     <aside className="side">
       <div className="side-in">
@@ -51,14 +75,7 @@ export default function Sidebar({ active }) {
         </nav>
 
         <div className="side-cards">
-          <a className="side-card news" href={appHref(WHATS_NEW.app)}>
-            <img src={news.icon} alt="" width="36" height="36" />
-            <span>
-              <span className="k">What’s new</span>
-              <b>{WHATS_NEW.title}</b>
-              <span>{WHATS_NEW.text}</span>
-            </span>
-          </a>
+          {latest && <NewsCard id={latest[0]} rel={latest[1]} />}
           <div className="side-card avail">
             <span className="k">
               <i className="live" /> {HIRE.status}

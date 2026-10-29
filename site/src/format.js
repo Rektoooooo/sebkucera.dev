@@ -7,3 +7,4 @@ const make = (opts) => {
 export const fullDate = make({ day: 'numeric', month: 'short', year: 'numeric' })
 export const dayDate = make({ weekday: 'short', day: 'numeric', month: 'short' })
 export const monthYear = make({ month: 'short', year: 'numeric' })
+export const shortDate = make({ day: 'numeric', month: 'short' })
