@@ -43,7 +43,8 @@ function WhatsNew({ rel }) {
 // An App Store–style product page. The real link only lives behind the big blue button.
 export default function AppPage({ id }) {
   const app = APPS[id]
-  const others = Object.keys(APPS).filter((k) => k !== id)
+  const client = app.kind === 'client'
+  const others = Object.keys(APPS).filter((k) => k !== id && (APPS[k].kind === 'client') === client)
 
   useEffect(() => {
     // Escape goes back, unless it's closing Spotlight or a window first
@@ -68,6 +69,7 @@ export default function AppPage({ id }) {
           <h2 id="app-name">{app.name}</h2>
           <p className="sub">{app.subtitle}</p>
           <a className="dev" href="#about">
+            {client ? 'Built by ' : ''}
             {ME.first} {ME.last}
           </a>
           <div className="app-actions">
@@ -75,6 +77,12 @@ export default function AppPage({ id }) {
               {app.action.label}
               <I name="out" />
             </a>
+            {app.secondary && (
+              <a className="btn-get secondary" href={app.secondary.href} {...external}>
+                {app.secondary.label}
+                <I name="out" />
+              </a>
+            )}
           </div>
         </div>
       </header>
@@ -148,9 +156,7 @@ export default function AppPage({ id }) {
       </section>
 
       <section className="more-by">
-        <h3>
-          More by {ME.first} {ME.last}
-        </h3>
+        <h3>{client ? 'More client work' : `More by ${ME.first} ${ME.last}`}</h3>
         <div className="more">
           {others.map((k) => (
             <AppRow key={k} id={k} onClick={(e) => switchApp(e, k)} />

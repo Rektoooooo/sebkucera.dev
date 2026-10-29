@@ -91,6 +91,24 @@ sebkucera.dev expired 2026-09-15; redemption was $91.18 and Seb declined. Bought
       backend CORS origin, and a rebuild of minecraft-server/ (separate task)
 - [ ] Old absolute "sebkucera.dev" links in studio/, claude-code-for-ios/, rick&morty/ (untouched by request)
 
+## Client work + Bow website (Seb, 2026-10-29)
+Clients per Seb: Autoškola Trefa, B24 Studios, LocalCoder. No section for his own app sites; Bow's site is a link only.
+- [x] APPS gets trefa / b24 / localcoder with kind: 'client' and site (domain); icons + live screenshots in public/img
+- [x] Discover: "Client work" section (#clients), each site in a little Safari window; swipe carousel on phones
+- [x] Sidebar + menu bar "Clients" entry; Spotlight labels them "Client"
+- [x] App page: "Built by …" for clients, "More client work" stays among clients, optional second button
+- [x] Bow: "Website" button + link → https://bowbrowser.sebthe.dev
+- [x] Link preview: og:image is now the lock-screen hero (img/og.jpg, 1200×628, 48 KB, 9:41) instead of the
+      photo; added og:image size/alt + twitter:card summary_large_image; HOW-TO-EDIT documents clients + preview
+- [x] GitHub card was a deploy-time snapshot only (Seb: "today it didn't update"). Added nightly Action
+      .github/workflows/refresh-site-data.yml: npm run deploy at 21:40 UTC, commits site/src/data + root build
+      output only when changed (as github-actions[bot]), pull --rebase, push, then requests a Pages build
+- Verified: 16/16 reviewer cases (Dock test now scrolls instantly; smooth scroll made it flaky in Chrome 116),
+  width/aspect at 390 + 1440, all three client pages load with no errors or broken images
+- Spotted on the client's live Trefa site (separate repo, not touched): at 390px a 320px-wide card row
+  (`div.flex h-[260px] w-[320px] shrink-0`) widens the page to 543px, so phones get sideways scroll/zoom
+  and the cookie banner buttons end up off screen
+
 ---
 
 # MC Panel Redesign + Full Admin Panel (2026-08-14)

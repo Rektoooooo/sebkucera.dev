@@ -26,6 +26,7 @@ export default function MenuBar({ clock }) {
         <b>{ME.first}</b>
         <a href="#apps">iPhone</a>
         <a href="#mac">Mac</a>
+        <a href="#clients">Clients</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>

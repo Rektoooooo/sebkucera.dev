@@ -9,6 +9,7 @@ export const SECTIONS = [
   { id: 'apps', label: 'iPhone', tab: 'iPhone', icon: 'phone' },
   { id: 'mac', label: 'Mac', tab: 'Mac', icon: 'mac' },
   { id: 'more', label: 'More', icon: 'grid' },
+  { id: 'clients', label: 'Clients', icon: 'globe' },
   { id: 'about', label: 'About', tab: 'About', icon: 'person', group: 'me' },
   { id: 'contact', label: 'Hire me', tab: 'Hire', icon: 'briefcase', group: 'me' },
 ]

@@ -26,6 +26,34 @@ function ArtCard({ id, center }) {
   )
 }
 
+// A client website, shown in a little Safari window.
+function SiteCard({ id }) {
+  const app = APPS[id]
+  return (
+    <a className="card site" href={appHref(id)}>
+      <div className="site-window" aria-hidden="true">
+        <div className="site-bar">
+          <span className="site-lights">
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="site-url">{app.site}</span>
+        </div>
+        <img src={app.shots[0].src} alt="" width={app.shots[0].w} height={app.shots[0].h} loading="lazy" decoding="async" />
+      </div>
+      <div className="site-meta">
+        <img src={app.icon} alt="" width="44" height="44" />
+        <div>
+          <b>{app.name}</b>
+          <span>{app.subtitle}</span>
+        </div>
+        <span className="pill">VIEW</span>
+      </div>
+    </a>
+  )
+}
+
 export function AppRow({ id, onClick }) {
   const app = APPS[id]
   return (
@@ -91,6 +119,18 @@ export default function Discover({ date, time }) {
         <div className="more">
           {DISCOVER.more.map((id) => (
             <AppRow key={id} id={id} />
+          ))}
+        </div>
+      </section>
+
+      <section className="sec" id="clients">
+        <div className="sec-head">
+          <h3>Client work</h3>
+          <span>Websites I’ve built for clients</span>
+        </div>
+        <div className="sites">
+          {DISCOVER.clients.map((id) => (
+            <SiteCard key={id} id={id} />
           ))}
         </div>
       </section>

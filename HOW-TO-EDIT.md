@@ -20,7 +20,7 @@ Everything you'd want to change lives in one file: **`site/src/content.js`**.
 
 - `APPS` — one entry per app: name, subtitle, icon, the blue button (`action`), the facts
   strip, screenshots, description, highlights and the Information table.
-- `DISCOVER` — which apps go where on the Discover page (featured, App Store, Mac, More).
+- `DISCOVER` — which apps go where on the Discover page (featured, App Store, Mac, More, Client work).
 - `NOTIFICATIONS` — the three lock-screen notifications.
 - `DOCK` — the apps in the Mac Dock (`null` draws a divider).
 - `ME`, `ABOUT`, `FACTS`, `STACK`, `LINKS` — your name, pitch, bio, quick facts, tools and links.
@@ -30,7 +30,17 @@ Everything you'd want to change lives in one file: **`site/src/content.js`**.
 
 To add an app: put a 256×256 icon in `site/public/img/apps/<id>.webp`, screenshots in
 `site/public/img/shots/<id>-<n>.webp` (phones ~560px wide, Mac shots ~1400px wide), then add
-an entry to `APPS` and list its id in `DISCOVER`.
+an entry to `APPS` and list its id in `DISCOVER`. An optional `secondary: { label, href }` adds
+a grey second button next to the blue one (Bow's "Website").
+
+To add a client website: copy one of the `kind: 'client'` entries (trefa, b24, localcoder). `site` is
+the domain shown in the little Safari window, and its first screenshot is the page in that window.
+Then add its id to `DISCOVER.clients`. Client pages say "Built by Sebastian Kučera" and only
+link to other client work.
+
+The link preview (what iMessage, WhatsApp, Slack and X show) is `site/public/img/og.jpg`: the lock
+screen at 1200×628, set in `site/index.html`. It's a screenshot, so retake it if the hero changes
+a lot. Apps cache previews, so a link that was already shared keeps its old picture for a while.
 
 Layouts live in `site/src/components/`, the unlock animation in `site/src/hooks/useUnlock.js`
 plus the `--p` variables at the top of `site/src/index.css`. How much scrolling the unlock takes is
@@ -39,7 +49,7 @@ plus the `--p` variables at the top of `site/src/index.css`. How much scrolling 
 The lock screen's weather widget is live: visitors' browsers ask Open-Meteo (free, no key) for
 Prague's current weather, cached for 15 minutes. If it can't be reached the widget just stays hidden.
 
-## Live data (refreshed on every deploy)
+## Live data (refreshed every night and on every deploy)
 
 `npm run data` (also run by `npm run deploy`) takes two snapshots into `site/src/data/`. If a source
 can't be reached, the previous snapshot is kept, so a deploy never fails because of it.
@@ -59,6 +69,11 @@ Private contributions** is switched on (on your GitHub profile). Repo stats use 
 refreshes it automatically; `npm run data` refreshes it on its own. If `gh` isn't available the
 old snapshot is kept, so a deploy never fails because of it.
 
+**Nightly refresh:** the GitHub Action `.github/workflows/refresh-site-data.yml` runs the same
+deploy every night (~22:40 Prague time) and pushes a small "Refresh GitHub card and release info"
+commit to `main` when something changed. So **`git pull` before you push** your own changes. To
+refresh right now: GitHub → Actions → Refresh site data → Run workflow.
+
 ## Preview locally
 
 ```bash
@@ -70,6 +85,7 @@ npm run dev     # open http://localhost:5173
 ## Publish
 
 ```bash
+git pull         # the nightly refresh may have pushed since you last pulled
 cd site
 npm run deploy   # builds and copies the output to the repo root
 cd ..

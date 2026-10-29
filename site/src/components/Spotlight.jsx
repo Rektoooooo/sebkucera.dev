@@ -21,7 +21,7 @@ export default function Spotlight({ onClose }) {
     }
     const run = { email: () => window.location.assign(`mailto:${LINKS.email}`), party: ui.party }
     return {
-      apps: Object.entries(APPS).map(([id, a]) => ({ key: id, title: a.name, text: a.subtitle, icon: a.icon, kind: 'App', go: go(appHref(id)) })),
+      apps: Object.entries(APPS).map(([id, a]) => ({ key: id, title: a.name, text: a.subtitle, icon: a.icon, kind: a.kind === 'client' ? 'Client' : 'App', go: go(appHref(id)) })),
       sections: SECTIONS.map((s) => ({ key: `s-${s.id}`, title: s.label, text: 'Section', glyph: s.icon, kind: 'Section', go: go(`#${s.id}`) })),
       actions: [
         { key: 'a-about', title: 'About This Developer', text: 'System information', glyph: 'person', go: ui.openAbout },

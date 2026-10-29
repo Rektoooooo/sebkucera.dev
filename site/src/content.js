@@ -31,7 +31,7 @@ export const STACK = ['Swift', 'SwiftUI', 'SwiftData', 'CloudKit', 'HealthKit', 
 export const SERVICES = [
   { icon: 'phone', tint: 'tint-blue', title: 'iPhone & iPad apps', text: 'Native SwiftUI apps from the first sketch to the App Store, with HealthKit, widgets, Apple Watch and subscriptions when you need them.' },
   { icon: 'mac', tint: 'tint-violet', title: 'Mac apps & tools', text: 'Native Mac apps and menu-bar utilities, signed, notarized and installable with Homebrew.' },
-  { icon: 'globe', tint: 'tint-pink', title: 'Websites & web apps', text: 'Fast, polished sites and web apps in React and Next.js, like drivepass.cz and applytailor.com.' },
+  { icon: 'globe', tint: 'tint-pink', title: 'Websites & web apps', text: 'Fast, polished sites and web apps in React and Next.js, for clients like Autoškola Trefa and LocalCoder.' },
 ]
 export const HIRE = {
   eyebrow: 'For businesses',
@@ -209,6 +209,7 @@ export const APPS = {
     icon: '/img/apps/bow.webp',
     repo: 'bow',
     action: { label: 'Download for Mac', href: `${gh('bow')}/releases/latest` },
+    secondary: { label: 'Website', href: 'https://bowbrowser.sebthe.dev' },
     card: {
       eyebrow: 'Browser',
       title: 'A browser in the spirit of Arc',
@@ -243,7 +244,10 @@ export const APPS = {
       ['Price', 'Free'],
       ['Built with', 'Electron, TypeScript'],
     ],
-    links: [['Source code', gh('bow')]],
+    links: [
+      ['Website', 'https://bowbrowser.sebthe.dev'],
+      ['Source code', gh('bow')],
+    ],
   },
 
   'cc-settings': {
@@ -469,12 +473,131 @@ export const APPS = {
   },
 }
 
+// Client work: websites built for other people. Same page layout as the apps (kind: 'client').
+Object.assign(APPS, {
+  trefa: {
+    kind: 'client',
+    name: 'Autoškola Trefa',
+    subtitle: 'Driving and motorcycle school, Prague 6',
+    icon: '/img/apps/trefa.webp',
+    site: 'autoskolatrefa.cz',
+    action: { label: 'Visit autoskolatrefa.cz', href: 'https://www.autoskolatrefa.cz' },
+    strip: [
+      { label: 'Client', value: 'Trefa', note: 'Driving school' },
+      { label: 'Location', value: 'Prague', note: 'Prague 6' },
+      { label: 'Built with', value: 'Next.js', note: 'Tailwind CSS' },
+      { label: 'Language', value: 'CS', note: 'Czech' },
+      { label: 'Built', value: '2026', note: 'Feb – May' },
+    ],
+    shotsKind: 'mac',
+    shots: [
+      { src: '/img/shots/trefa-1.webp', w: 1400, h: 875 },
+      { src: '/img/shots/trefa-2.webp', w: 1400, h: 875 },
+    ],
+    description: [
+      'A new website for Autoškola Trefa, a driving and motorcycle school in Prague 6. It covers every licence they teach, from mopeds and motorbikes to cars, trucks and buses, plus refresher lessons, express courses and getting a licence back.',
+      'The school runs it themselves: a built-in admin lets them edit news, prices, course dates, the team, the fleet, the gallery and the FAQ without touching code, and the contact form emails them directly.',
+    ],
+    features: [
+      'Pages for every course and licence group',
+      'Fleet, training ground and gallery',
+      'Prices, FAQ, news and reviews',
+      'Gift vouchers and a careers page',
+      'Admin for news, prices, dates and team',
+      'Contact form that emails the school',
+    ],
+    info: [
+      ['Client', 'Autoškola & Motoškola Trefa'],
+      ['Location', 'Prague 6'],
+      ['Built', 'February – May 2026'],
+      ['Language', 'Czech'],
+      ['Built with', 'Next.js, React, Tailwind CSS, Framer Motion, Resend'],
+    ],
+    links: [['Website', 'https://www.autoskolatrefa.cz']],
+  },
+
+  b24: {
+    kind: 'client',
+    name: 'B24 Studios',
+    subtitle: 'Website for an iOS development studio',
+    icon: '/img/apps/b24.webp',
+    site: 'b24studios.dev',
+    action: { label: 'Visit b24studios.dev', href: 'https://b24studios.dev' },
+    strip: [
+      { label: 'Client', value: 'B24', note: 'iOS studio' },
+      { label: 'Highlight', value: '3D', note: 'Real-time scene' },
+      { label: 'Built with', value: 'React', note: 'Three.js' },
+      { label: 'Built', value: '2026', note: 'February' },
+    ],
+    shotsKind: 'mac',
+    shots: [
+      { src: '/img/shots/b24-1.webp', w: 1400, h: 875 },
+      { src: '/img/shots/b24-2.webp', w: 1400, h: 875 },
+      { src: '/img/shots/b24-3.webp', w: 560, h: 1212 },
+    ],
+    description: [
+      'A website for B24 Studios, an iOS development studio. It opens on a real-time 3D scene rendered with Three.js, then walks through the studio’s apps, among them ShadowLift, Habit Owl and Stoppr, and the team behind them.',
+    ],
+    features: [
+      'Real-time 3D hero (Three.js)',
+      'A section for each of the studio’s apps',
+      'Team section',
+      'Scroll animations with Framer Motion',
+    ],
+    info: [
+      ['Client', 'B24 Studios'],
+      ['Built', 'February 2026'],
+      ['Built with', 'React, Three.js (React Three Fiber), Framer Motion, Vite'],
+    ],
+    links: [['Website', 'https://b24studios.dev']],
+  },
+
+  localcoder: {
+    kind: 'client',
+    name: 'LocalCoder',
+    subtitle: 'An on-prem AI coding assistant',
+    icon: '/img/apps/localcoder.webp',
+    site: 'localcoder-site.vercel.app',
+    action: { label: 'Visit the website', href: 'https://localcoder-site.vercel.app' },
+    strip: [
+      { label: 'Client', value: 'LocalCoder', note: 'AI for companies' },
+      { label: 'Languages', value: 'CS', note: '+ English' },
+      { label: 'Built with', value: 'Next.js', note: 'shadcn/ui' },
+      { label: 'Built', value: '2026', note: 'April' },
+    ],
+    shotsKind: 'mac',
+    shots: [
+      { src: '/img/shots/localcoder-1.webp', w: 1400, h: 875 },
+      { src: '/img/shots/localcoder-2.webp', w: 1400, h: 875 },
+      { src: '/img/shots/localcoder-3.webp', w: 560, h: 1212 },
+    ],
+    description: [
+      'A website for LocalCoder, a turnkey AI coding assistant for Czech companies. It runs entirely on their own Apple Silicon hardware, so the source code never leaves the building.',
+      'The site is in Czech and English, has a light and a dark theme, and a pilot-request form that emails the team.',
+    ],
+    features: [
+      'Czech and English',
+      'Light and dark theme',
+      'Pilot-request form with email',
+      'Product, hardware and security sections',
+    ],
+    info: [
+      ['Client', 'LocalCoder'],
+      ['Built', 'April 2026'],
+      ['Languages', 'Czech, English'],
+      ['Built with', 'Next.js, React, Tailwind CSS, shadcn/ui, next-intl, Resend'],
+    ],
+    links: [['Website', 'https://localcoder-site.vercel.app']],
+  },
+})
+
 // What goes where on the Discover page (ids from APPS).
 export const DISCOVER = {
   featured: 'drivepass',
   appStore: ['shadowlift', 'myhabitowl'],
   mac: ['bow', 'cc-settings', 'stayawake'],
   more: ['mealprepai', 'mycartally', 'applytailor', 'redstone'],
+  clients: ['trefa', 'b24', 'localcoder'],
 }
 
 // Lock-screen notifications. `app` opens that app's page; `href` jumps to a section.

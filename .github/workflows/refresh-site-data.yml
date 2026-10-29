@@ -1,0 +1,56 @@
+# Keeps the site's GitHub card and "What's New" release info fresh. Every night it runs the same
+# deploy as `npm run deploy` (snapshot → build → copy to the repo root) and pushes only if something
+# changed. It touches nothing but the root site's build output and site/src/data.
+name: Refresh site data
+
+on:
+  schedule:
+    - cron: '40 21 * * *' # 22:40 in Prague in winter, 23:40 in summer
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: refresh-site-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install
+        working-directory: site
+        run: npm ci
+
+      - name: Snapshot, build and copy to the repo root
+        working-directory: site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npm run deploy
+
+      - name: Commit and publish if anything changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add site/src/data index.html favicon.svg assets img
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898283+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Refresh GitHub card and release info'
+          git pull --rebase origin main
+          git push origin HEAD:main
+          # pushes made with the workflow token may not start a Pages build on their own
+          gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" > /dev/null || echo "Pages build request failed; the push may still have triggered one."
