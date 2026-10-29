@@ -10,7 +10,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
 
 concurrency:
   group: refresh-site-data
@@ -39,8 +38,6 @@ jobs:
         run: npm run deploy
 
       - name: Commit and publish if anything changed
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           git add site/src/data index.html favicon.svg assets img
           if git diff --cached --quiet; then
@@ -51,6 +48,4 @@ jobs:
           git config user.email '41898283+github-actions[bot]@users.noreply.github.com'
           git commit -m 'Refresh GitHub card and release info'
           git pull --rebase origin main
-          git push origin HEAD:main
-          # pushes made with the workflow token may not start a Pages build on their own
-          gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" > /dev/null || echo "Pages build request failed; the push may still have triggered one."
+          git push origin HEAD:main # the push itself starts the GitHub Pages build

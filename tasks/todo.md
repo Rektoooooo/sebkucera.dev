@@ -102,7 +102,9 @@ Clients per Seb: Autoškola Trefa, B24 Studios, LocalCoder. No section for his o
       photo; added og:image size/alt + twitter:card summary_large_image; HOW-TO-EDIT documents clients + preview
 - [x] GitHub card was a deploy-time snapshot only (Seb: "today it didn't update"). Added nightly Action
       .github/workflows/refresh-site-data.yml: npm run deploy at 21:40 UTC, commits site/src/data + root build
-      output only when changed (as github-actions[bot]), pull --rebase, push, then requests a Pages build
+      output only when changed (as github-actions[bot]), pull --rebase, push (the push starts the Pages build;
+      an extra build request only made a duplicate that got cancelled, so it was dropped). Test run 2026-10-29:
+      success, snapshot read from the profile grid (2265), bot commit 7b52795 published
 - Verified: 16/16 reviewer cases (Dock test now scrolls instantly; smooth scroll made it flaky in Chrome 116),
   width/aspect at 390 + 1440, all three client pages load with no errors or broken images
 - Spotted on the client's live Trefa site (separate repo, not touched): at 390px a 320px-wide card row
