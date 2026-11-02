@@ -20,15 +20,19 @@
     "store": true
   },
   "bow": {
-    "version": "0.1.1",
-    "date": "2026-10-29",
-    "summary": "A big update to Bow: a new first start, Reader view, sync between your Macs, and a lot more of what made Arc feel fast.",
-    "count": 2,
+    "version": "0.2.0",
+    "date": "2026-11-01",
+    "summary": "Bow remembers your passwords now, every Space gets its own Favorites, and signing in to Google works again.",
+    "count": 3,
     "first": {
       "version": "0.1.0",
       "date": "2026-10-28"
     },
     "history": [
+      {
+        "version": "0.2.0",
+        "date": "2026-11-01"
+      },
       {
         "version": "0.1.1",
         "date": "2026-10-29"
