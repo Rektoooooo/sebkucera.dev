@@ -440,6 +440,49 @@ export const APPS = {
     ],
   },
 
+  homerow: {
+    name: 'Home Row',
+    subtitle: 'Touch-typing trainer in the browser',
+    icon: '/img/apps/homerow.webp',
+    repo: 'home-row',
+    action: { label: 'Start practising', href: 'https://homerow.sebthe.dev' },
+    strip: [
+      { label: 'Platform', value: 'Web', note: 'Any browser' },
+      { label: 'Lessons', value: '22', note: 'Ten fingers' },
+      { label: 'Price', value: 'Free', note: 'No account' },
+      { label: 'Coach', value: 'Claude', note: 'Optional' },
+    ],
+    shotsKind: 'mac',
+    shots: [
+      { src: '/img/shots/homerow-1.webp', w: 1400, h: 875 },
+      { src: '/img/shots/homerow-2.webp', w: 1400, h: 875 },
+      { src: '/img/shots/homerow-3.webp', w: 1400, h: 875 },
+    ],
+    description: [
+      'Home Row teaches you to type with all ten fingers, without looking. A one-minute typing check gives you a personal plan, then 22 short lessons go from the home row through the top and bottom rows to capitals, punctuation and numbers, with the next key lit on the keyboard and the finger that presses it.',
+      'Practice is built around your weakest key or letter pair, and you can type real passages, code snippets or your own text, or take a 15 to 120 second test. Claude can coach you too: copy your progress into a chat and paste back lessons written for your weakest keys. It’s free, there’s no account, and your progress stays in your browser.',
+    ],
+    features: [
+      '22 lessons, from the home row to numbers',
+      'Practice built around your weakest keys',
+      'Real passages, code snippets or your own text',
+      'Timed tests with a share card',
+      'Levels, a daily streak and 21 achievements',
+      'Four key sounds, made in the browser',
+      'Claude coach that writes lessons for you',
+    ],
+    info: [
+      ['Platform', 'Web, any browser'],
+      ['Price', 'Free, no account'],
+      ['Privacy', 'Progress stays in your browser'],
+      ['Built with', 'HTML, CSS and JavaScript, no framework'],
+    ],
+    links: [
+      ['Website', 'https://homerow.sebthe.dev'],
+      ['Source code', gh('home-row')],
+    ],
+  },
+
   redstone: {
     name: 'Computational Redstone',
     subtitle: 'Agent skills for redstone computers',
@@ -594,7 +637,7 @@ export const DISCOVER = {
   featured: 'drivepass',
   appStore: ['shadowlift', 'myhabitowl'],
   mac: ['bow', 'cc-settings', 'stayawake'],
-  more: ['mealprepai', 'mycartally', 'applytailor', 'redstone'],
+  more: ['homerow', 'mealprepai', 'mycartally', 'applytailor', 'redstone'],
   clients: ['trefa', 'b24', 'localcoder'],
 }
 

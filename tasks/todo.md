@@ -109,6 +109,16 @@ Clients per Seb: Autoškola Trefa, B24 Studios, LocalCoder. No section for his o
       APPS from releases.json (title "<App> <version> is out", date, release-notes summary clamped to 3 lines,
       falls back to the subtitle); WHATS_NEW removed from content.js. Tested with a faked newer CC Settings
       release → card switched to it. 16/16 checks pass.
+
+## Home Row (Seb, 2026-11-23)
+New repo Rektoooooo/home-row: free touch-typing trainer in the browser, live at https://homerow.sebthe.dev.
+- [x] APPS.homerow (repo 'home-row' so future GitHub releases show up), first in DISCOVER.more
+- [x] Icon from site/assets/icon.svg rendered full-bleed at 256×256; three fresh 1400×875 shots of the live site
+      (landing, lesson 1 mid-typing, Learn tab). The README shots show the old vercel.app address, so they weren't used
+- [x] Facts checked in the source: 22 lessons, 21 achievements, 4 key sounds, 15–120 s tests, no framework
+- [x] Phone fixes: button says "Start practising" (the domain label wrapped), strip note "Ten fingers"
+- Verified: 16/16 on the production build (the dev server failed two timing-based checks; the live site and the
+  production build pass all 16), no errors, broken images or sideways scroll; Spotlight finds it
 - Verified: 16/16 reviewer cases (Dock test now scrolls instantly; smooth scroll made it flaky in Chrome 116),
   width/aspect at 390 + 1440, all three client pages load with no errors or broken images
 - Spotted on the client's live Trefa site (separate repo, not touched): at 390px a 320px-wide card row
