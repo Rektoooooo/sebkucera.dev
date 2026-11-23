@@ -101,8 +101,8 @@ export default function Discover({ date, time }) {
 
       <section className="sec" id="mac">
         <div className="sec-head">
-          <h3>Made for the Mac</h3>
-          <span>Free and open source</span>
+          <h3>For the Mac and the web</h3>
+          <span>Free to use</span>
         </div>
         <div className="mac">
           {DISCOVER.mac.map((id) => (

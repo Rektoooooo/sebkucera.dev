@@ -296,6 +296,7 @@ a.side-card:hover { transform: translateY(-2px); background: rgba(255, 255, 255,
 .bg-drivepass { background: radial-gradient(80% 90% at 85% 40%, #9a8bff, transparent 70%), linear-gradient(135deg, #43c6a8, #5a8cff 52%, #8e6bff); }
 .bg-bow { background: linear-gradient(160deg, #ff8fd0, #8a7dff 55%, #5ea8ff); }
 .bg-cc { background: radial-gradient(70% 60% at 50% 45%, #ff9d6e, transparent 75%), linear-gradient(160deg, #f0794a, #c9452a); }
+.bg-homerow { background: radial-gradient(55% 45% at 50% 58%, rgba(245, 165, 36, .42), transparent 72%), linear-gradient(160deg, #2b3147, #0c0f18); }
 .bg-stay { background: radial-gradient(60% 50% at 50% 50%, rgba(46, 230, 90, .38), transparent 70%), linear-gradient(160deg, #2a2b30, #111215); }
 
 /* list cards + rows */

@@ -445,6 +445,13 @@ export const APPS = {
     subtitle: 'Touch-typing trainer in the browser',
     icon: '/img/apps/homerow.webp',
     repo: 'home-row',
+    card: {
+      eyebrow: 'Web',
+      title: 'Type with all ten fingers.',
+      tagline: 'Free touch-typing lessons in your browser',
+      cta: 'OPEN',
+      bg: 'bg-homerow',
+    },
     action: { label: 'Start practising', href: 'https://homerow.sebthe.dev' },
     strip: [
       { label: 'Platform', value: 'Web', note: 'Any browser' },
@@ -636,8 +643,8 @@ Object.assign(APPS, {
 export const DISCOVER = {
   featured: 'drivepass',
   appStore: ['shadowlift', 'myhabitowl'],
-  mac: ['bow', 'cc-settings', 'stayawake'],
-  more: ['homerow', 'mealprepai', 'mycartally', 'applytailor', 'redstone'],
+  mac: ['bow', 'cc-settings', 'homerow'],
+  more: ['stayawake', 'mealprepai', 'mycartally', 'applytailor', 'redstone'],
   clients: ['trefa', 'b24', 'localcoder'],
 }
 

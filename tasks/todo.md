@@ -119,6 +119,9 @@ New repo Rektoooooo/home-row: free touch-typing trainer in the browser, live at 
 - [x] Phone fixes: button says "Start practising" (the domain label wrapped), strip note "Ten fingers"
 - Verified: 16/16 on the production build (the dev server failed two timing-based checks; the live site and the
   production build pass all 16), no errors, broken images or sideways scroll; Spotlight finds it
+- [x] Shipped a244a9e. Then (Seb) Home Row swapped with StayAwake: Home Row is a big card in the #mac row
+      (bg-homerow: navy + amber glow from its icon), StayAwake leads More. Row retitled "For the Mac and the web /
+      Free to use" (Home Row isn't a Mac app and its repo has no license). 16/16 on the production build
 - Verified: 16/16 reviewer cases (Dock test now scrolls instantly; smooth scroll made it flaky in Chrome 116),
   width/aspect at 390 + 1440, all three client pages load with no errors or broken images
 - Spotted on the client's live Trefa site (separate repo, not touched): at 390px a 320px-wide card row
