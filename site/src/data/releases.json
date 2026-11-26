@@ -1,4 +1,14 @@
 {
+  "drivepass": {
+    "version": "1.1",
+    "date": "2026-11-19",
+    "summary": "New: Junctions. See a junction from above, make your call and watch what happens. A wrong choice ends in a crash, so the rule sticks. The junctions come in 15 levels, from the easiest to the hardest, and every level earns stars. 3 junctions free every day, or all of them as often as you like with DrivePass Plus.",
+    "first": {
+      "date": "2026-11-04"
+    },
+    "url": "https://apps.apple.com/us/app/czech-driving-test-drivepass/id6763370703",
+    "store": true
+  },
   "shadowlift": {
     "version": "1.0",
     "date": "2026-01-15",

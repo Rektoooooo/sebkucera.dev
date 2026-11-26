@@ -70,14 +70,17 @@ const shots = (id, count, size = PHONE) =>
 const gh = (repo) => `https://github.com/Rektoooooo/${repo}`
 
 // Every app gets an App Store–style page at #/app/<id>.
-// `repo` / `appStoreId` feed the release snapshot (scripts/releases.mjs) behind "What's New".
+// `repo` / `appStoreId` feed the release snapshot (scripts/releases.mjs) behind "What's New" and the timeline;
+// `launched` puts an app with neither on the timeline.
 // `card` is how it looks on the Discover page; `strip` is the row of facts under the header.
 export const APPS = {
   drivepass: {
     name: 'DrivePass',
     subtitle: 'Pass the Czech driving test',
     icon: '/img/apps/drivepass.webp',
+    appStoreId: 6763370703,
     action: { label: 'Open drivepass.cz', href: 'https://drivepass.cz' },
+    secondary: { label: 'App Store', href: 'https://apps.apple.com/app/czech-driving-test-drivepass/id6763370703' },
     card: {
       eyebrow: 'Featured · Web & iPhone',
       title: 'Pass the Czech driving test. Have fun doing it.',
@@ -114,7 +117,10 @@ export const APPS = {
       ['Data', 'Stored in the EU'],
       ['Built with', 'SwiftUI, Next.js, Supabase'],
     ],
-    links: [['Website', 'https://drivepass.cz']],
+    links: [
+      ['Website', 'https://drivepass.cz'],
+      ['App Store', 'https://apps.apple.com/app/czech-driving-test-drivepass/id6763370703'],
+    ],
   },
 
   shadowlift: {
@@ -445,6 +451,7 @@ export const APPS = {
     subtitle: 'Touch-typing trainer in the browser',
     icon: '/img/apps/homerow.webp',
     repo: 'home-row',
+    launched: { date: '2026-11-23', note: 'Free, in your browser' },
     card: {
       eyebrow: 'Web',
       title: 'Type with all ten fingers.',

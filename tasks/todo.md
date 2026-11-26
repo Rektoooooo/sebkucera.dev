@@ -122,6 +122,17 @@ New repo Rektoooooo/home-row: free touch-typing trainer in the browser, live at 
 - [x] Shipped a244a9e. Then (Seb) Home Row swapped with StayAwake: Home Row is a big card in the #mac row
       (bg-homerow: navy + amber glow from its icon), StayAwake leads More. Row retitled "For the Mac and the web /
       Free to use" (Home Row isn't a Mac app and its repo has no license). 16/16 on the production build
+- [x] Shipped f4e62ef.
+
+## Timeline: DrivePass + Home Row (Seb, 2026-11-26)
+The "Shipped so far" timeline only showed apps with App Store or GitHub release data.
+- [x] DrivePass is on the App Store ("Czech Driving Test: DrivePass", id 6763370703, developer Code Frog = the
+      same account as MyHabitOwl, first release 2026-11-04, v1.1 2026-11-19) → added appStoreId. Its page now has
+      App Store "What's New", and the sidebar card shows DrivePass 1.1 (newest release)
+- [x] New `launched: { date, note }` for apps without releases; Home Row launched 2026-11-23 (repo created, site live)
+- [x] Check script: the Dock and mid-unlock checks were flaky (0.5s wait = 0.5s transition; smooth scroll).
+      Longer wait + instant scroll → 16/16 three times locally and live. Copy kept in the session folder (checks/)
+- [x] DrivePass page: grey "App Store" button next to "Open drivepass.cz" (+ App Store in its links)
 - Verified: 16/16 reviewer cases (Dock test now scrolls instantly; smooth scroll made it flaky in Chrome 116),
   width/aspect at 390 + 1440, all three client pages load with no errors or broken images
 - Spotted on the client's live Trefa site (separate repo, not touched): at 390px a 320px-wide card row

@@ -5,7 +5,8 @@ import { monthYear as month } from '../format'
 import { appHref } from '../hooks/useRoute'
 import { GitHubMark } from './Icons'
 
-// A timeline built from real dates: joining GitHub, then each app's first release.
+// A timeline built from real dates: joining GitHub, then each app's first release (or its launch date,
+// for apps without App Store or GitHub releases).
 function milestones() {
   const items = Object.entries(releases).map(([id, r]) => {
     const app = APPS[id]
@@ -18,6 +19,11 @@ function milestones() {
       note: r.store ? `Version ${r.version}` : r.count > 1 ? `${r.count} releases so far` : 'First release',
     }
   })
+  for (const [id, app] of Object.entries(APPS)) {
+    if (app.launched && !releases[id]) {
+      items.push({ key: id, date: app.launched.date, href: appHref(id), icon: app.icon, title: `${app.name} launched`, note: app.launched.note })
+    }
+  }
   if (github.joinedDate) items.push({ key: 'github', date: github.joinedDate, title: 'Joined GitHub', note: 'Where it all lives' })
   return items.sort((a, b) => a.date.localeCompare(b.date))
 }
