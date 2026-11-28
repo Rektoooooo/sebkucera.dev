@@ -30,15 +30,19 @@
     "store": true
   },
   "bow": {
-    "version": "0.2.0",
-    "date": "2026-11-01",
-    "summary": "Bow remembers your passwords now, every Space gets its own Favorites, and signing in to Google works again.",
-    "count": 3,
+    "version": "0.2.1",
+    "date": "2026-11-27",
+    "summary": "Take Bow to a new Mac with your passwords and extensions, see your downloads, and sign in through popups anywhere. Plus a round of fixes.",
+    "count": 4,
     "first": {
       "version": "0.1.0",
       "date": "2026-10-28"
     },
     "history": [
+      {
+        "version": "0.2.1",
+        "date": "2026-11-27"
+      },
       {
         "version": "0.2.0",
         "date": "2026-11-01"
